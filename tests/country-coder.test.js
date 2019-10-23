@@ -2,6 +2,13 @@ import CountryCoder from '..';
 
 describe('country-coder', () => {
 
+  describe('constructor', () => {
+      it('initializes without error', () => {
+        const coder = new CountryCoder();
+        expect(coder.borders).toHaveProperty('features');
+      });
+  });
+
   describe('feature', () => {
       it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
         const coder = new CountryCoder();

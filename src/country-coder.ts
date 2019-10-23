@@ -27,15 +27,15 @@ type FeatureCollection = { type: string; features: Array<Feature> };
 type Vec2 = [number, number]; // [lon, lat]
 
 export default class CountryCoder {
+  public borders: FeatureCollection = (<any>geojson).default;
   private featureQuery: any = {};
   private featuresByCode: any = {};
 
   // Constructs a new CountryCoder
   constructor() {
-    let borders: FeatureCollection = (<any>geojson).default;
     let geometryFeatures: Array<Feature> = [];
-    for (let i in borders.features) {
-      let feature = borders.features[i];
+    for (let i in this.borders.features) {
+      let feature = this.borders.features[i];
       this.featuresByCode[feature.properties.iso1A2] = feature;
       if (feature.geometry) {
         geometryFeatures.push(feature);
