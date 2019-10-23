@@ -33,7 +33,8 @@
   "scripts": {
     "all": "npm-run-all -s clean build pretty",
     "clean": "shx rm -rf ./built/*",
-    "build": "npm-run-all -s build:**",
+    "build": "npm-run-all -s format-json build:**",
+    "format-json": "node ./format-json.js",
     "build:es6": "tsc --project ./tsconfig.es6.json",
     "build:cjs": "tsc --project ./tsconfig.cjs.json",
     "test": "jest --config jest.config.js tests/*.js",
