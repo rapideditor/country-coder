@@ -61,23 +61,19 @@ export default class CountryCoder {
     let feature = this.smallestFeature(loc);
     if (!feature) return [];
 
-    let features: Array<Feature> = [];
-    let featuresByCode = this.featuresByCode;
-    function addAndCheckCode(code) {
-      let codeFeature = featuresByCode[code];
-      if (features.indexOf(codeFeature) !== -1) return;
-      features.push(codeFeature);
-      let properties = codeFeature.properties;
-      if (properties.groups) {
-        for (let i in properties.groups) {
-          addAndCheckCode(properties.groups[i]);
-        }
-      }
-      if (properties.country) {
-        addAndCheckCode(properties.country);
+    let features: Array<Feature> = [feature];
+
+    let properties = feature.properties;
+    if (properties.groups) {
+      for (let i in properties.groups) {
+        features.push(this.featuresByCode[properties.groups[i]]);
       }
     }
-    addAndCheckCode(feature.properties.iso1A2);
+
+    if (properties.country) {
+      features.push(this.featuresByCode[properties.country]);
+    }
+
     return features;
   }
 
@@ -117,7 +113,8 @@ export default class CountryCoder {
   countryWikidataQID(loc: Vec2): string | null {
     let feature = this.countryFeature(loc);
     if (!feature) return null;
-    return feature.properties.wikidata || null;
+    // all countries are linked to Wikidata
+    return <string>feature.properties.wikidata;
   }
 
   // Returns the smallest feature containing `loc` to have an officially-assigned code, if any
