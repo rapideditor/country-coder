@@ -49,6 +49,24 @@ export default class CountryCoder {
     this.featureQuery = whichPolygon(geometryOnlyCollection);
   }
 
+  // Returns the feature with an identifying property matching `id`, if any
+  feature(id: string): Feature | null {
+    if (id.length === 2) {
+      return this.featuresByCode[id] || null;
+    }
+    for (let code in this.featuresByCode) {
+      let feature = this.featuresByCode[code];
+      if (
+        feature.properties.iso1A3 === id ||
+        feature.properties.iso1N3 === id ||
+        feature.properties.wikidata === id
+      ) {
+        return feature;
+      }
+    }
+    return null;
+  }
+
   // Returns the smallest feature of any code status containing `loc`, if any
   smallestFeature(loc: Vec2): Feature | null {
     let featureProperties: FeatureProperties = this.featureQuery(loc);
