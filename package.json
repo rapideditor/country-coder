@@ -2,12 +2,12 @@
   "name": "country-coder",
   "version": "1.0.0-pre.0",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
-  "repository": "ideditor/country-coder",
+  "repository": "github:ideditor/country-coder",
   "main": "built/cjs/country-coder.js",
   "module": "built/es6/country-coder.js",
   "license": "ISC",
   "contributors": [
-    "Quincy Morgan <@quincylvania>"
+    "Quincy Morgan <q@quincylvania.com> (https://github.com/quincylvania)"
   ],
   "keywords": [
     "reverse geocoder",
