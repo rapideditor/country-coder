@@ -13,7 +13,7 @@
 - 🌐 [Wikidata QID](https://www.wikidata.org/wiki/Q43649390) (`Q258`)
 - 🇺🇳 [Emoji Flag](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol) (🇿🇦)
 
-There are separate endpoints to include non-country ISO 3166-1 features in the query, such as Puerto Rico and the Isle of Man. Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`).
+There are separate endpoints to include non-country ISO 3166-1 features in the query, such as Puerto Rico (`PR`) and the Isle of Man (`IM`). Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`).
 
 #### Advantages
 
