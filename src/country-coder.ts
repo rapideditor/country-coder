@@ -1,5 +1,4 @@
-import whichPolygon from 'which-polygon';
-import * as geojson from './data/borders.json';
+import * as whichPolygon from 'which-polygon';
 
 type FeatureProperties = {
   // ISO 3166-1 alpha-2 code
@@ -27,7 +26,7 @@ type FeatureCollection = { type: string; features: Array<Feature> };
 type Vec2 = [number, number]; // [lon, lat]
 
 export default class CountryCoder {
-  public borders: FeatureCollection = (<any>geojson).default;
+  public borders: FeatureCollection = require('./data/borders.json');
   private featureQuery: any = {};
   private featuresByCode: any = {};
 
