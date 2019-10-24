@@ -38,8 +38,33 @@ function roundCoordinatePrecision(feature) {
   }
 }
 
+let featureProperties = [
+  'iso1A2',
+  'iso1A3',
+  'iso1N3',
+  'wikidata',
+  'country',
+  'groups',
+  'isoStatus',
+  'type'
+];
+
+function processProperties(feature) {
+  let newProperties = {};
+  for (var j in featureProperties) {
+    let prop = featureProperties[j];
+    if (feature.properties[prop]) {
+      newProperties[prop] = feature.properties[prop];
+    }
+  }
+  feature.properties = newProperties;
+}
+
 for (let i in features) {
   let feature = features[i];
+
+  // sort properties and strip unrecognized ones
+  processProperties(feature);
 
   // remove any unncessary precision
   roundCoordinatePrecision(feature);
