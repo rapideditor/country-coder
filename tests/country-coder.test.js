@@ -75,189 +75,189 @@ describe('country-coder', () => {
     });
   });
 
-  describe('countryIso1A2Code', () => {
+  describe('iso1A2Code', () => {
     it('codes location in officially-assigned country: New York, United States as US', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([-74, 40.6])).toBe('US');
+      expect(coder.iso1A2Code([-74, 40.6])).toBe('US');
     });
 
     it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([6.1, 46.2])).toBe('CH');
+      expect(coder.iso1A2Code([6.1, 46.2])).toBe('CH');
     });
 
     it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark as DK', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([12.59, 55.68])).toBe('DK');
+      expect(coder.iso1A2Code([12.59, 55.68])).toBe('DK');
     });
 
     it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany as DE', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([13.4, 52.5])).toBe('DE');
+      expect(coder.iso1A2Code([13.4, 52.5])).toBe('DE');
     });
 
     it('codes location in officially-assigned subfeature of officially-assigned country: Isle of Man, United Kingdom as GB', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([-4.5, 54.2])).toBe('GB');
+      expect(coder.iso1A2Code([-4.5, 54.2])).toBe('GB');
     });
 
     it('codes location in exceptionally-reserved subfeature of officially-assigned country: Paris, Metropolitan France as FR', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([2.35, 48.85])).toBe('FR');
+      expect(coder.iso1A2Code([2.35, 48.85])).toBe('FR');
     });
 
     it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature of officially-assigned country: Tristan da Cunha, SH, UK as GB', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([-12.3, -37.1])).toBe('GB');
+      expect(coder.iso1A2Code([-12.3, -37.1])).toBe('GB');
     });
 
     it('codes location in user-assigned, de facto country: Kosovo as XK', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([21, 42.6])).toBe('XK');
+      expect(coder.iso1A2Code([21, 42.6])).toBe('XK');
     });
 
     it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([71.13, 39.96])).toBe('UZ');
+      expect(coder.iso1A2Code([71.13, 39.96])).toBe('UZ');
     });
 
     it('codes South Pole as AQ', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([0, -90])).toBe('AQ');
+      expect(coder.iso1A2Code([0, -90])).toBe('AQ');
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A2Code([0, 90])).toBeNull();
+      expect(coder.iso1A2Code([0, 90])).toBeNull();
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
-  describe('countryIso1A3Code', () => {
+  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  describe('iso1A3Code', () => {
     it('codes location in officially-assigned country: New York, United States as USA', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A3Code([-74, 40.6])).toBe('USA');
+      expect(coder.iso1A3Code([-74, 40.6])).toBe('USA');
     });
 
     it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A3Code([21, 42.6])).toBeNull();
+      expect(coder.iso1A3Code([21, 42.6])).toBeNull();
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1A3Code([0, 90])).toBeNull();
+      expect(coder.iso1A3Code([0, 90])).toBeNull();
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
-  describe('countryIso1N3Code', () => {
+  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  describe('iso1N3Code', () => {
     it('codes location in officially-assigned country: New York, United States as 840', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1N3Code([-74, 40.6])).toBe('840');
+      expect(coder.iso1N3Code([-74, 40.6])).toBe('840');
     });
 
     it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1N3Code([21, 42.6])).toBeNull();
+      expect(coder.iso1N3Code([21, 42.6])).toBeNull();
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.countryIso1N3Code([0, 90])).toBeNull();
+      expect(coder.iso1N3Code([0, 90])).toBeNull();
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
-  describe('countryWikidataQID', () => {
+  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  describe('wikidataQID', () => {
     it('codes location in officially-assigned country: New York, United States as Q30', () => {
       const coder = new CountryCoder();
-      expect(coder.countryWikidataQID([-74, 40.6])).toBe('Q30');
+      expect(coder.wikidataQID([-74, 40.6])).toBe('Q30');
     });
 
     it('codes location in user-assigned, de facto country: Kosovo as Q1246', () => {
       const coder = new CountryCoder();
-      expect(coder.countryWikidataQID([21, 42.6])).toBe('Q1246');
+      expect(coder.wikidataQID([21, 42.6])).toBe('Q1246');
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.countryWikidataQID([0, 90])).toBeNull();
+      expect(coder.wikidataQID([0, 90])).toBeNull();
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
-  describe('countryFlag', () => {
+  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  describe('flag', () => {
     it('codes location in officially-assigned country: New York, United States as 🇺🇸', () => {
       const coder = new CountryCoder();
-      expect(coder.countryFlag([-74, 40.6])).toBe('🇺🇸');
+      expect(coder.flag([-74, 40.6])).toBe('🇺🇸');
     });
 
     it('codes location in user-assigned, de facto country: Kosovo as 🇽🇰', () => {
       const coder = new CountryCoder();
-      expect(coder.countryFlag([21, 42.6])).toBe('🇽🇰');
+      expect(coder.flag([21, 42.6])).toBe('🇽🇰');
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.countryFlag([0, 90])).toBeNull();
+      expect(coder.flag([0, 90])).toBeNull();
     });
   });
 
-  describe('officialIso1A2Code', () => {
+  describe('iso1A2Code smallestOfficial', () => {
     it('codes location in officially-assigned country: New York, United States as US', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([-74, 40.6])).toBe('US');
+      expect(coder.iso1A2Code([-74, 40.6], { type: 'smallestOfficial' })).toBe('US');
     });
 
     it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([6.1, 46.2])).toBe('CH');
+      expect(coder.iso1A2Code([6.1, 46.2], { type: 'smallestOfficial' })).toBe('CH');
     });
 
     it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark as DK', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([12.59, 55.68])).toBe('DK');
+      expect(coder.iso1A2Code([12.59, 55.68], { type: 'smallestOfficial' })).toBe('DK');
     });
 
     it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany as DE', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([13.4, 52.5])).toBe('DE');
+      expect(coder.iso1A2Code([13.4, 52.5], { type: 'smallestOfficial' })).toBe('DE');
     });
 
     it('codes location in officially-assigned subfeature of officially-assigned country: Isle of Man, United Kingdom as IM', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([-4.5, 54.2])).toBe('IM');
+      expect(coder.iso1A2Code([-4.5, 54.2], { type: 'smallestOfficial' })).toBe('IM');
     });
 
     it('codes location in exceptionally-reserved subfeature of officially-assigned country: Paris, Metropolitan France as FR', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([2.35, 48.85])).toBe('FR');
+      expect(coder.iso1A2Code([2.35, 48.85], { type: 'smallestOfficial' })).toBe('FR');
     });
 
     it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature of officially-assigned country: Tristan da Cunha, SH, UK as SH', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([-12.3, -37.1])).toBe('SH');
+      expect(coder.iso1A2Code([-12.3, -37.1], { type: 'smallestOfficial' })).toBe('SH');
     });
 
     it('does not code location in user-assigned, de facto country: Kosovo as XK', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([21, 42.6])).toBeNull();
+      expect(coder.iso1A2Code([21, 42.6], { type: 'smallestOfficial' })).toBeNull();
     });
 
     it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([71.13, 39.96])).toBe('UZ');
+      expect(coder.iso1A2Code([71.13, 39.96], { type: 'smallestOfficial' })).toBe('UZ');
     });
 
     it('codes South Pole as AQ', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([0, -90])).toBe('AQ');
+      expect(coder.iso1A2Code([0, -90], { type: 'smallestOfficial' })).toBe('AQ');
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.officialIso1A2Code([0, 90])).toBeNull();
+      expect(coder.iso1A2Code([0, 90], { type: 'smallestOfficial' })).toBeNull();
     });
   });
 

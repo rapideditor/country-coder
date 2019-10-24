@@ -26,6 +26,7 @@ type FeatureProperties = {
 type Feature = { type: string; geometry: any; properties: FeatureProperties };
 type FeatureCollection = { type: string; features: Array<Feature> };
 type Vec2 = [number, number]; // [lon, lat]
+type GetterOptions = { type: string };
 
 export default class CountryCoder {
   public borders: FeatureCollection = require('./data/borders.json');
@@ -110,68 +111,71 @@ export default class CountryCoder {
     return features;
   }
 
-  // Returns the ISO 3166-1 alpha-2 code for the country containing `loc`, if any
+  // Returns the country feature containing `loc`, if any
   // e.g. a location in Puerto Rico will return US
-  countryIso1A2Code(loc: Vec2): string | null {
+  private countryFeature(loc: Vec2): Feature | null {
     let feature = this.smallestFeature(loc);
     if (!feature) return null;
     // `country` can be explicit;
     // a feature without `country` but with geometry is itself a country
-    return feature.properties.country || feature.properties.iso1A2;
-  }
-
-  // Returns the country feature containing `loc`, if any
-  countryFeature(loc: Vec2): Feature | null {
-    let countryCode = this.countryIso1A2Code(loc);
-    if (!countryCode) return null;
+    let countryCode = feature.properties.country || feature.properties.iso1A2;
     return this.featuresByCode[countryCode];
   }
 
-  // Returns the ISO 3166-1 alpha-3 code for the country containing `loc`, if any
+  // Returns the smallest feature containing `loc` to have an officially-assigned code, if any
+  // e.g. a location in Puerto Rico will return PR
+  private smallestOfficialIsoFeature(loc: Vec2): Feature | null {
+    let feature = this.features(loc).find(function(feature) {
+      // features without an explicit status are officially-assigned
+      return !feature.properties.isoStatus;
+    });
+    return feature || null;
+  }
+
+  // Returns the feature containing `loc` for the `opts`, if any
+  private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
+    if (opts && opts.type === 'smallestOfficial') {
+      // e.g. Puerto Rico
+      return this.smallestOfficialIsoFeature(loc);
+    }
+    // e.g. United States
+    return this.countryFeature(loc);
+  }
+
+  // Returns the ISO 3166-1 alpha-2 code for the region containing `loc`, if any
+  iso1A2Code(loc: Vec2, opts?: GetterOptions): string | null {
+    let feature = this.featureForLoc(loc, opts);
+    if (!feature) return null;
+    return feature.properties.iso1A2;
+  }
+
+  // Returns the ISO 3166-1 alpha-3 code for the region containing `loc`, if any
   // e.g. a location in Puerto Rico will return USA
-  countryIso1A3Code(loc: Vec2): string | null {
-    let feature = this.countryFeature(loc);
+  iso1A3Code(loc: Vec2, opts?: GetterOptions): string | null {
+    let feature = this.featureForLoc(loc, opts);
     if (!feature) return null;
     return feature.properties.iso1A3 || null;
   }
 
-  // Returns the ISO 3166-1 numeric-3 code for the country containing `loc`, if any
-  countryIso1N3Code(loc: Vec2): string | null {
-    let feature = this.countryFeature(loc);
+  // Returns the ISO 3166-1 numeric-3 code for the region containing `loc`, if any
+  iso1N3Code(loc: Vec2, opts?: GetterOptions): string | null {
+    let feature = this.featureForLoc(loc, opts);
     if (!feature) return null;
     return feature.properties.iso1N3 || null;
   }
 
-  // Returns the Wikidata QID code for the country containing `loc`
-  countryWikidataQID(loc: Vec2): string | null {
-    let feature = this.countryFeature(loc);
+  // Returns the Wikidata QID code for the region containing `loc`, if any
+  wikidataQID(loc: Vec2, opts?: GetterOptions): string | null {
+    let feature = this.featureForLoc(loc, opts);
     if (!feature) return null;
-    // all countries are linked to Wikidata
     return <string>feature.properties.wikidata;
   }
 
   // Returns the emoji flag sequence for the country containing `loc`
-  countryFlag(loc: Vec2): string | null {
-    let feature = this.countryFeature(loc);
+  flag(loc: Vec2, opts?: GetterOptions): string | null {
+    let feature = this.featureForLoc(loc);
     if (!feature) return null;
     return <string>feature.properties.flag;
-  }
-
-  // Returns the smallest feature containing `loc` to have an officially-assigned code, if any
-  smallestOfficialIsoFeature(loc: Vec2): Feature | null {
-    return (
-      this.features(loc).find(function(feature) {
-        return !feature.properties.isoStatus; // features without an explicit status are officially-assigned
-      }) || null
-    );
-  }
-
-  // Returns the ISO 3166-1 alpha-2 code of the smallest feature containing `loc` to have an officially-assigned code, if any
-  // e.g. a location in Puerto Rico will return PR
-  officialIso1A2Code(loc: Vec2): string | null {
-    let feature = this.smallestOfficialIsoFeature(loc);
-    if (!feature) return null;
-    return feature.properties.iso1A2;
   }
 
   // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc`, if any

@@ -5,15 +5,15 @@
 
 ## What is it?
 
-`country-coder` is a lightweight package that looks up region identifiers for geographic points without calling a server. It can retrieve and convert between several common IDs:
+`country-coder` is a lightweight package that looks up region identifiers for geographic points without calling a server. It can code and convert between several common IDs:
 
 - 🆎 [ISO 3166-1 alpha-2 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (`ZA`)
 - 🔤 [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) (`ZAF`)
 - 3️⃣ [ISO 3166-1 numeric-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_numeric) (`710`)
 - 🌐 [Wikidata QID](https://www.wikidata.org/wiki/Q43649390) (`Q258`)
-- 🇺🇳 [Emoji Flag](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol) (🇿🇦)
+- 🇺🇳 [Emoji flag](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol) (🇿🇦)
 
-There are separate endpoints to include non-country ISO 3166-1 features in the query, such as Puerto Rico (`PR`) and the Isle of Man (`IM`). Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`).
+Results can optionally include non-country ISO 3166-1 features, such as Puerto Rico (`PR`) or the Isle of Man (`IM`). Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`).
 
 #### Advantages
 
