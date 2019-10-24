@@ -9,17 +9,19 @@ type FeatureProperties = {
   iso1N3: string | undefined;
   // Wikidata QID
   wikidata: string | undefined;
-  // for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
+  // For features entirely within a country, the ISO 3166-1 alpha-2 code for that country
   country: string | undefined;
-  // the ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
+  // The ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
   groups: Array<string> | undefined;
-  // additional differentiator for some features which aren't countries
+  // Additional differentiator for some features which aren't countries
   // - `intGroup`: an international organization
   type: string | undefined;
-  // the status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
+  // The status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
   // - `excRes`: exceptionally-reserved
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
+  // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
+  flag: string | undefined;
 };
 type Feature = { type: string; geometry: any; properties: FeatureProperties };
 type FeatureCollection = { type: string; features: Array<Feature> };
@@ -35,6 +37,10 @@ export default class CountryCoder {
     let geometryFeatures: Array<Feature> = [];
     for (let i in this.borders.features) {
       let feature = this.borders.features[i];
+      // calculate the emoji flag sequence from the alpha-2 code
+      feature.properties.flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
+        return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
+      });
       this.featuresByCode[feature.properties.iso1A2] = feature;
       if (feature.geometry) {
         geometryFeatures.push(feature);
@@ -51,7 +57,17 @@ export default class CountryCoder {
   // Returns the feature with an identifying property matching `id`, if any
   feature(id: string): Feature | null {
     if (id.length === 2) {
+      // no other IDs can be two characters
       return this.featuresByCode[id] || null;
+    }
+    if (id.length === 4) {
+      // decode a possible emoji flag sequence
+      let codeFromFlag: string = id.replace(/../g, function(codePoint: string) {
+        return String.fromCharCode(<number>codePoint.codePointAt(0) - 127397);
+      });
+      if (this.featuresByCode[codeFromFlag]) {
+        return this.featuresByCode[codeFromFlag];
+      }
     }
     for (let code in this.featuresByCode) {
       let feature = this.featuresByCode[code];
@@ -126,12 +142,19 @@ export default class CountryCoder {
     return feature.properties.iso1N3 || null;
   }
 
-  // Returns the Wikidata QID code for the country containing `loc`, if any
+  // Returns the Wikidata QID code for the country containing `loc`
   countryWikidataQID(loc: Vec2): string | null {
     let feature = this.countryFeature(loc);
     if (!feature) return null;
     // all countries are linked to Wikidata
     return <string>feature.properties.wikidata;
+  }
+
+  // Returns the emoji flag sequence for the country containing `loc`
+  countryFlag(loc: Vec2): string | null {
+    let feature = this.countryFeature(loc);
+    if (!feature) return null;
+    return <string>feature.properties.flag;
   }
 
   // Returns the smallest feature containing `loc` to have an officially-assigned code, if any

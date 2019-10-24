@@ -14,24 +14,14 @@ describe('country-coder', () => {
       expect(coder.feature('US').properties.iso1N3).toBe('840');
     });
 
-    it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('USA').properties.iso1A2).toBe('US');
-    });
-
-    it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('840').properties.iso1A2).toBe('US');
-    });
-
-    it('finds feature by Wikidata QID: Q30', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('Q30').properties.iso1A2).toBe('US');
-    });
-
     it('does not find feature for unassigned alpha-2 code: AB', () => {
       const coder = new CountryCoder();
       expect(coder.feature('AB')).toBeNull();
+    });
+
+    it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('USA').properties.iso1A2).toBe('US');
     });
 
     it('does not find feature for unassigned alpha-3 code: ABC', () => {
@@ -39,9 +29,29 @@ describe('country-coder', () => {
       expect(coder.feature('ABC')).toBeNull();
     });
 
+    it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('840').properties.iso1A2).toBe('US');
+    });
+
     it('does not find feature for unassigned numeric-3 code: 123', () => {
       const coder = new CountryCoder();
       expect(coder.feature('123')).toBeNull();
+    });
+
+    it('finds feature for emoji flag sequence: 🇺🇸', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('🇺🇸').properties.iso1N3).toBe('840');
+    });
+
+    it('does not find feature for unassigned emoji flag sequence: 🇦🇧', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('🇦🇧')).toBeNull();
+    });
+
+    it('finds feature by Wikidata QID: Q30', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('Q30').properties.iso1A2).toBe('US');
     });
 
     it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
@@ -52,6 +62,11 @@ describe('country-coder', () => {
     it('does not find feature for empty string', () => {
       const coder = new CountryCoder();
       expect(coder.feature('')).toBeNull();
+    });
+
+    it('does not find feature for full English country name: The United State of America', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('The United State of America')).toBeNull();
     });
 
     it('does not find feature for garbage string', () => {
@@ -168,6 +183,24 @@ describe('country-coder', () => {
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
       expect(coder.countryWikidataQID([0, 90])).toBeNull();
+    });
+  });
+
+  // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
+  describe('countryFlag', () => {
+    it('codes location in officially-assigned country: New York, United States as 🇺🇸', () => {
+      const coder = new CountryCoder();
+      expect(coder.countryFlag([-74, 40.6])).toBe('🇺🇸');
+    });
+
+    it('codes location in user-assigned, de facto country: Kosovo as 🇽🇰', () => {
+      const coder = new CountryCoder();
+      expect(coder.countryFlag([21, 42.6])).toBe('🇽🇰');
+    });
+
+    it('does not code North Pole', () => {
+      const coder = new CountryCoder();
+      expect(coder.countryFlag([0, 90])).toBeNull();
     });
   });
 
