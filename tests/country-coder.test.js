@@ -1,68 +1,66 @@
 import CountryCoder from '..';
 
 describe('country-coder', () => {
-
   describe('constructor', () => {
-      it('initializes without error', () => {
-        const coder = new CountryCoder();
-        expect(coder.borders).toHaveProperty('features');
-      });
+    it('initializes without error', () => {
+      const coder = new CountryCoder();
+      expect(coder.borders).toHaveProperty('features');
+    });
   });
 
   describe('feature', () => {
-      it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('US').properties.iso1N3).toBe('840');
-      });
+    it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('US').properties.iso1N3).toBe('840');
+    });
 
-      it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('USA').properties.iso1A2).toBe('US');
-      });
+    it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('USA').properties.iso1A2).toBe('US');
+    });
 
-      it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('840').properties.iso1A2).toBe('US');
-      });
+    it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('840').properties.iso1A2).toBe('US');
+    });
 
-      it('finds feature by Wikidata QID: Q30', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('Q30').properties.iso1A2).toBe('US');
-      });
+    it('finds feature by Wikidata QID: Q30', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('Q30').properties.iso1A2).toBe('US');
+    });
 
-      it('does not find feature for unassigned alpha-2 code: AB', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('AB')).toBeNull();
-      });
+    it('does not find feature for unassigned alpha-2 code: AB', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('AB')).toBeNull();
+    });
 
-      it('does not find feature for unassigned alpha-3 code: ABC', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('ABC')).toBeNull();
-      });
+    it('does not find feature for unassigned alpha-3 code: ABC', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('ABC')).toBeNull();
+    });
 
-      it('does not find feature for unassigned numeric-3 code: 123', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('123')).toBeNull();
-      });
+    it('does not find feature for unassigned numeric-3 code: 123', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('123')).toBeNull();
+    });
 
-      it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('Q123456')).toBeNull();
-      });
+    it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('Q123456')).toBeNull();
+    });
 
-      it('does not find feature for empty string', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('')).toBeNull();
-      });
+    it('does not find feature for empty string', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('')).toBeNull();
+    });
 
-      it('does not find feature for garbage string', () => {
-        const coder = new CountryCoder();
-        expect(coder.feature('fv    239uasˇÁ¨·´€Óı¨ıÎ∆πˆç´œª -aÔ˚øØTˇ°\\asdf \nK')).toBeNull();
-      });
+    it('does not find feature for garbage string', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('fv    239uasˇÁ¨·´€Óı¨ıÎ∆πˆç´œª -aÔ˚øØTˇ°\\asdf \nK')).toBeNull();
+    });
   });
 
   describe('countryIso1A2Code', () => {
-
     it('codes location in officially-assigned country: New York, United States as US', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1A2Code([-74, 40.6])).toBe('US');
@@ -117,12 +115,10 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1A2Code([0, 90])).toBeNull();
     });
-
   });
 
   // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
   describe('countryIso1A3Code', () => {
-
     it('codes location in officially-assigned country: New York, United States as USA', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1A3Code([-74, 40.6])).toBe('USA');
@@ -137,12 +133,10 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1A3Code([0, 90])).toBeNull();
     });
-
   });
 
   // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
   describe('countryIso1N3Code', () => {
-
     it('codes location in officially-assigned country: New York, United States as 840', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1N3Code([-74, 40.6])).toBe('840');
@@ -157,12 +151,10 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.countryIso1N3Code([0, 90])).toBeNull();
     });
-
   });
 
   // this doesn't need extensive tests since it's just a fetcher using countryIso1A2Code
   describe('countryWikidataQID', () => {
-
     it('codes location in officially-assigned country: New York, United States as Q30', () => {
       const coder = new CountryCoder();
       expect(coder.countryWikidataQID([-74, 40.6])).toBe('Q30');
@@ -177,11 +169,9 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.countryWikidataQID([0, 90])).toBeNull();
     });
-
   });
 
   describe('officialIso1A2Code', () => {
-
     it('codes location in officially-assigned country: New York, United States as US', () => {
       const coder = new CountryCoder();
       expect(coder.officialIso1A2Code([-74, 40.6])).toBe('US');
@@ -236,11 +226,9 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.officialIso1A2Code([0, 90])).toBeNull();
     });
-
   });
 
   describe('iso1A2Codes', () => {
-
     it('codes location in officially-assigned country: New York, United States as US', () => {
       const coder = new CountryCoder();
       expect(coder.iso1A2Codes([-74, 40.6])).toStrictEqual(['US']);
@@ -295,7 +283,6 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.iso1A2Codes([0, 90])).toStrictEqual([]);
     });
-
   });
 
   describe('isInEuropeanUnion', () => {
@@ -338,7 +325,5 @@ describe('country-coder', () => {
       const coder = new CountryCoder();
       expect(coder.isInEuropeanUnion([21, 42.6])).toBe(false);
     });
-
   });
-
 });

@@ -38,7 +38,7 @@
     "build:es6": "tsc --project ./tsconfig.es6.json && cp -R src/data built/es6/",
     "build:cjs": "tsc --project ./tsconfig.cjs.json && cp -R src/data built/cjs/",
     "test": "jest --config jest.config.js tests/*.js",
-    "pretty": "prettier --write \"./**/*.ts\""
+    "pretty": "prettier --write \"./**/*.{ts,js}\""
   },
   "engines": {
     "node": ">=8.15.0",
