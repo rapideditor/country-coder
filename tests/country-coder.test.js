@@ -9,69 +9,14 @@ describe('country-coder', () => {
   });
 
   describe('feature', () => {
-    it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('US').properties.iso1N3).toBe('840');
-    });
-
-    it('does not find feature for unassigned alpha-2 code: AB', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('AB')).toBeNull();
-    });
-
-    it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('USA').properties.iso1A2).toBe('US');
-    });
-
-    it('does not find feature for unassigned alpha-3 code: ABC', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('ABC')).toBeNull();
-    });
-
-    it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('840').properties.iso1A2).toBe('US');
-    });
-
-    it('does not find feature for unassigned numeric-3 code: 123', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('123')).toBeNull();
-    });
-
-    it('finds feature for emoji flag sequence: 🇺🇸', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('🇺🇸').properties.iso1N3).toBe('840');
-    });
-
-    it('does not find feature for unassigned emoji flag sequence: 🇦🇧', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('🇦🇧')).toBeNull();
-    });
-
-    it('finds feature by Wikidata QID: Q30', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('Q30').properties.iso1A2).toBe('US');
-    });
-
-    it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('Q123456')).toBeNull();
-    });
-
-    it('finds Greece by European Commission code: EL', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('EL').properties.iso1N3).toBe('300');
-    });
-
-    it('finds United Kingdom by European Commission code: UK', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('UK').properties.iso1N3).toBe('826');
-    });
-
     it('does not find feature for empty string', () => {
       const coder = new CountryCoder();
       expect(coder.feature('')).toBeNull();
+    });
+
+    it('does not find feature for garbage string', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('fv    239uasˇÁ¨·´€Óı¨ıÎ∆πˆç´œª -aÔ˚øØTˇ°\\asdf \nK')).toBeNull();
     });
 
     it('does not find feature for full English country name: The United State of America', () => {
@@ -79,9 +24,91 @@ describe('country-coder', () => {
       expect(coder.feature('The United State of America')).toBeNull();
     });
 
-    it('does not find feature for garbage string', () => {
-      const coder = new CountryCoder();
-      expect(coder.feature('fv    239uasˇÁ¨·´€Óı¨ıÎ∆πˆç´œª -aÔ˚øØTˇ°\\asdf \nK')).toBeNull();
+    describe('by ISO 3166-1 alpha-2', () => {
+      it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('US').properties.iso1N3).toBe('840');
+      });
+
+      it('does not find feature for unassigned alpha-2 code: AB', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('AB')).toBeNull();
+      });
+    });
+
+    describe('by ISO 3166-1 alpha-3', () => {
+      it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('USA').properties.iso1A2).toBe('US');
+      });
+
+      it('does not find feature for unassigned alpha-3 code: ABC', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('ABC')).toBeNull();
+      });
+    });
+
+    describe('by ISO 3166-1 numeric-3', () => {
+      it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('840').properties.iso1A2).toBe('US');
+      });
+
+      it('does not find feature for unassigned numeric-3 code: 123', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('123')).toBeNull();
+      });
+    });
+
+    describe('by emoji flag sequence', () => {
+      it('finds feature for emoji flag sequence: 🇺🇸', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('🇺🇸').properties.iso1N3).toBe('840');
+      });
+
+      it('does not find feature for unassigned emoji flag sequence: 🇦🇧', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('🇦🇧')).toBeNull();
+      });
+    });
+
+    describe('by Wikidata QID', () => {
+      it('finds feature by Wikidata QID: Q30', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('Q30').properties.iso1A2).toBe('US');
+      });
+
+      it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('Q123456')).toBeNull();
+      });
+    });
+
+    describe('by alias', () => {
+      it('finds Greece by European Commission code: EL', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('EL').properties.iso1N3).toBe('300');
+      });
+
+      it('finds United Kingdom by European Commission code: UK', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('UK').properties.iso1N3).toBe('826');
+      });
+
+      it('finds Myanmar by transitionally-reserved code: BU', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('BU').properties.iso1N3).toBe('104');
+      });
+
+      it('finds Philippines by indeterminately-reserved code 1: PI', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('PI').properties.iso1N3).toBe('608');
+      });
+
+      it('finds Philippines by indeterminately-reserved code 2: RP', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('RP').properties.iso1N3).toBe('608');
+      });
     });
   });
 

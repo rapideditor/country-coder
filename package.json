@@ -31,7 +31,7 @@
     "which-polygon": "^2.2.0"
   },
   "scripts": {
-    "all": "npm-run-all -s clean build pretty",
+    "all": "npm-run-all -s clean build pretty test",
     "clean": "shx rm -rf ./built/*",
     "build": "npm-run-all -s format-json build:**",
     "format-json": "node ./format-json.js",
