@@ -319,44 +319,97 @@ describe('country-coder', () => {
   });
 
   describe('isInEuropeanUnion', () => {
-    it('returns false for location in officially-assigned country, outside EU: New York, United States', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([-74, 40.6])).toBe(false);
-    });
+    describe('by location', () => {
+      it('returns false for location in officially-assigned country, outside EU: New York, United States', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([-74, 40.6])).toBe(false);
+      });
 
-    it('returns false for location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([6.1, 46.2])).toBe(false);
-    });
+      it('returns false for location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([6.1, 46.2])).toBe(false);
+      });
 
-    it('returns true for location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([12.59, 55.68])).toBe(true);
-    });
+      it('returns true for location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([12.59, 55.68])).toBe(true);
+      });
 
-    it('returns true for location in officially-assigned country, in EU, in Eurozone: Berlin, Germany', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([13.4, 52.5])).toBe(true);
-    });
+      it('returns true for location in officially-assigned country, in EU, in Eurozone: Berlin, Germany', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([13.4, 52.5])).toBe(true);
+      });
 
-    it('returns false for location in officially-assigned subfeature, oustide EU, of officially-assigned country, in EU: Isle of Man, United Kingdom ', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([-4.5, 54.2])).toBe(false);
-    });
+      it('returns false for location in officially-assigned subfeature, oustide EU, of officially-assigned country, in EU: Isle of Man, United Kingdom ', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([-4.5, 54.2])).toBe(false);
+      });
 
-    it('returns true for location in exceptionally-reserved subfeature, in EU: Paris, Metropolitan France', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([2.35, 48.85])).toBe(true);
-    });
+      it('returns true for location in exceptionally-reserved subfeature, in EU: Paris, Metropolitan France', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([2.35, 48.85])).toBe(true);
+      });
 
-    it('returns false for location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([-12.3, -37.1])).toBe(false);
-    });
+      it('returns false for location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([-12.3, -37.1])).toBe(false);
+      });
 
-    it('returns false for location in user-assigned, de facto country, in Europe, outside EU: Kosovo', () => {
-      const coder = new CountryCoder();
-      expect(coder.isInEuropeanUnion([21, 42.6])).toBe(false);
+      it('returns false for location in user-assigned, de facto country, in Europe, outside EU: Kosovo', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion([21, 42.6])).toBe(false);
+      });
+    });
+    describe('by code', () => {
+      it('returns true for European Union itself: EU', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('EU')).toBe(true);
+      });
+
+      it('returns false for officially-assigned country, outside EU: US', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('US')).toBe(false);
+      });
+
+      it('returns false for officially-assigned country, outside but surrounded by EU: CH', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('CH')).toBe(false);
+      });
+
+      it('returns true for officially-assigned country, in EU: DE', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('DE')).toBe(true);
+      });
+
+      it('returns false for officially-assigned subfeature, oustide EU, of officially-assigned country, in EU: IM', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('IM')).toBe(false);
+      });
+
+      it('returns true for exceptionally-reserved subfeature, in EU: FX', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('FX')).toBe(true);
+      });
+
+      it('returns false for exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: TA', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('TA')).toBe(false);
+      });
+
+      it('returns false for user-assigned, de facto country, in Europe, outside EU: XK', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('XK')).toBe(false);
+      });
+
+      it('returns false for unassigned alpha-2 code: AB', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('AB')).toBe(false);
+      });
+
+      it('returns false for empty string', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('')).toBe(false);
+      });
     });
   });
 });

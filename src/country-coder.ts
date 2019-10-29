@@ -30,7 +30,7 @@ type GetterOptions = {
   // For overlapping features, the division level of the one to get
   // - `country` (default): the "sovereign state" feature
   // - `smallest`: the lowest-level feature with an official or user-assigned ISO code
-  level: string
+  level: string;
 };
 
 export default class CountryCoder {
@@ -139,8 +139,8 @@ export default class CountryCoder {
   // Returns the feature containing `loc` for the `opts`, if any
   private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
     if (opts && opts.level === 'smallest') {
-        // e.g. Puerto Rico
-        return this.smallestNonExceptedIsoFeature(loc);
+      // e.g. Puerto Rico
+      return this.smallestNonExceptedIsoFeature(loc);
     }
     // e.g. United States
     return this.countryFeature(loc);
@@ -190,10 +190,17 @@ export default class CountryCoder {
   }
 
   // Returns true if `loc` is in an EU member state
-  isInEuropeanUnion(loc: Vec2): boolean {
-    let feature = this.smallestFeature(loc);
-    let groups = feature && feature.properties.groups;
-    if (!groups) return false;
-    return groups.indexOf('EU') !== -1;
+  isInEuropeanUnion(arg: Vec2 | string): boolean {
+    let feature: Feature | null;
+    if (typeof arg === 'string') {
+      feature = this.feature(<string>arg);
+    } else {
+      feature = this.smallestFeature(<Vec2>arg);
+    }
+
+    if (!feature) return false;
+    if (feature.properties.iso1A2 === 'EU') return true;
+    if (!feature.properties.groups) return false;
+    return feature.properties.groups.indexOf('EU') !== -1;
   }
 }
