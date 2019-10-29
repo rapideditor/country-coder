@@ -59,6 +59,16 @@ describe('country-coder', () => {
       expect(coder.feature('Q123456')).toBeNull();
     });
 
+    it('finds Greece by European Commission code: EL', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('EL').properties.iso1N3).toBe('300');
+    });
+
+    it('finds United Kingdom by European Commission code: UK', () => {
+      const coder = new CountryCoder();
+      expect(coder.feature('UK').properties.iso1N3).toBe('826');
+    });
+
     it('does not find feature for empty string', () => {
       const coder = new CountryCoder();
       expect(coder.feature('')).toBeNull();

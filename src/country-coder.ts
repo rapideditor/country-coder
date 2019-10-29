@@ -3,23 +3,35 @@ import * as whichPolygon from 'which-polygon';
 type FeatureProperties = {
   // ISO 3166-1 alpha-2 code
   iso1A2: string;
+
   // ISO 3166-1 alpha-3 code
   iso1A3: string | undefined;
+
   // ISO 3166-1 numeric-3 code
   iso1N3: string | undefined;
+
   // Wikidata QID
   wikidata: string | undefined;
+
+  // Additional identifiers which can be used to look up this feature;
+  // these cannot collide with the identifiers for any other feature
+  aliases: Array<string> | undefined;
+
   // For features entirely within a country, the ISO 3166-1 alpha-2 code for that country
   country: string | undefined;
+
   // The ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
   groups: Array<string> | undefined;
+
   // Additional differentiator for some features which aren't countries
   // - `intGroup`: an international organization
   type: string | undefined;
+
   // The status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
   // - `excRes`: exceptionally-reserved
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
+
   // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   flag: string | undefined;
 };
@@ -41,17 +53,32 @@ export default class CountryCoder {
   // Constructs a new CountryCoder
   constructor() {
     let geometryFeatures: Array<Feature> = [];
+    let identifierProps = ['iso1A2', 'iso1A3', 'iso1N3', 'wikidata', 'flag'];
+
     for (let i in this.borders.features) {
       let feature = this.borders.features[i];
       // calculate the emoji flag sequence from the alpha-2 code
       feature.properties.flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
         return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
       });
-      this.featuresByCode[feature.properties.iso1A2] = feature;
+      for (let k in identifierProps) {
+        let prop = identifierProps[k];
+        let id = prop && feature.properties[prop];
+        if (id) {
+          this.featuresByCode[id] = feature;
+        }
+      }
+      if (feature.properties.aliases) {
+        for (let j in feature.properties.aliases) {
+          let alias = feature.properties.aliases[j];
+          this.featuresByCode[alias] = feature;
+        }
+      }
       if (feature.geometry) {
         geometryFeatures.push(feature);
       }
     }
+
     // whichPolygon doesn't support null geometry even though GeoJSON does
     let geometryOnlyCollection: FeatureCollection = {
       type: 'FeatureCollection',
@@ -62,28 +89,8 @@ export default class CountryCoder {
 
   // Returns the feature with an identifying property matching `id`, if any
   feature(id: string): Feature | null {
-    if (id.length === 2) {
-      // no other IDs can be two characters
-      return this.featuresByCode[id] || null;
-    }
-    if (id.length === 4) {
-      // decode a possible emoji flag sequence
-      let codeFromFlag: string = id.replace(/../g, function(codePoint: string) {
-        return String.fromCharCode(<number>codePoint.codePointAt(0) - 127397);
-      });
-      if (this.featuresByCode[codeFromFlag]) {
-        return this.featuresByCode[codeFromFlag];
-      }
-    }
-    for (let code in this.featuresByCode) {
-      let feature = this.featuresByCode[code];
-      if (
-        feature.properties.iso1A3 === id ||
-        feature.properties.iso1N3 === id ||
-        feature.properties.wikidata === id
-      ) {
-        return feature;
-      }
+    if (this.featuresByCode[id]) {
+      return this.featuresByCode[id];
     }
     return null;
   }
