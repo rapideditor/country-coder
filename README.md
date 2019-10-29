@@ -1,6 +1,6 @@
 # country-coder
 
-📍 ➡️ 🇩🇰 Convert longitude-latitude pairs to [ISO 3166-1 codes](https://en.wikipedia.org/wiki/ISO_3166-1) quickly and locally
+📍 ➡️ 🇩🇰 Convert longitude-latitude pairs to [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) codes quickly and locally
 
 
 ## What is it?
@@ -28,11 +28,11 @@ Client-side coding has a number of benefits over server-side solutions:
 
 `country-coder` prioritizes package size and lookup speed over precision. Thus, it's **not** suitable for some situations and use cases:
 
-- 🚫 🛂 *Disputed Borders*: only one country is returned per point, the "de facto controlling country"
+- 🚫 🛂 *Disputed Borders*: only one country is coded per point, roughly the "de facto controlling country"
 - 🚫 🚢 *Maritime Borders*: only points on land are supported; borders over water are highly generalized
 - 🚫 🖋 *Complex Borders*: land borders are of varying detail and may be imprecise at granular scales
-- 🚫 🧩 *Country Subdivisions*: provinces and similar features under ISO 3166-2 cannot be coded
-- 🚫 📇 *Naming*: feature names are omitted; get them via another package or the Wikidata API
+- 🚫 🧩 *Country Subdivisions*: provinces and similar features under [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) cannot be coded
+- 🚫 📇 *Naming*: feature names are omitted; get them via another package or the [Wikidata API](https://www.wikidata.org/wiki/Special:ApiSandbox#action=wbgetentities&format=json&ids=Q258&sites=&props=labels)
 - 🚫 📐 *Spatial Operations*: a feature's calculated area, bounding box, etc. will likely be inaccurate
 - 🚫 🗺 *Mapmaking*: the border data is not intended for rendering
 

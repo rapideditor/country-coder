@@ -26,7 +26,12 @@ type FeatureProperties = {
 type Feature = { type: string; geometry: any; properties: FeatureProperties };
 type FeatureCollection = { type: string; features: Array<Feature> };
 type Vec2 = [number, number]; // [lon, lat]
-type GetterOptions = { type: string };
+type GetterOptions = {
+  // For overlapping features, the division level of the one to get
+  // - `country` (default): the "sovereign state" feature
+  // - `smallest`: the lowest-level feature with an official or user-assigned ISO code
+  level: string
+};
 
 export default class CountryCoder {
   public borders: FeatureCollection = require('./data/borders.json');
@@ -122,21 +127,20 @@ export default class CountryCoder {
     return this.featuresByCode[countryCode];
   }
 
-  // Returns the smallest feature containing `loc` to have an officially-assigned code, if any
+  // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
   // e.g. a location in Puerto Rico will return PR
-  private smallestOfficialIsoFeature(loc: Vec2): Feature | null {
+  private smallestNonExceptedIsoFeature(loc: Vec2): Feature | null {
     let feature = this.features(loc).find(function(feature) {
-      // features without an explicit status are officially-assigned
-      return !feature.properties.isoStatus;
+      return feature.properties.isoStatus !== 'excRes';
     });
     return feature || null;
   }
 
   // Returns the feature containing `loc` for the `opts`, if any
   private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
-    if (opts && opts.type === 'smallestOfficial') {
-      // e.g. Puerto Rico
-      return this.smallestOfficialIsoFeature(loc);
+    if (opts && opts.level === 'smallest') {
+        // e.g. Puerto Rico
+        return this.smallestNonExceptedIsoFeature(loc);
     }
     // e.g. United States
     return this.countryFeature(loc);
@@ -173,7 +177,7 @@ export default class CountryCoder {
 
   // Returns the emoji flag sequence for the country containing `loc`
   flag(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc);
+    let feature = this.featureForLoc(loc, opts);
     if (!feature) return null;
     return <string>feature.properties.flag;
   }
@@ -187,6 +191,9 @@ export default class CountryCoder {
 
   // Returns true if `loc` is in an EU member state
   isInEuropeanUnion(loc: Vec2): boolean {
-    return this.iso1A2Codes(loc).indexOf('EU') !== -1;
+    let feature = this.smallestFeature(loc);
+    let groups = feature && feature.properties.groups;
+    if (!groups) return false;
+    return groups.indexOf('EU') !== -1;
   }
 }
