@@ -38,6 +38,7 @@ type FeatureProperties = {
 type Feature = { type: string; geometry: any; properties: FeatureProperties };
 type FeatureCollection = { type: string; features: Array<Feature> };
 type Vec2 = [number, number]; // [lon, lat]
+type LocOrID = Vec2 | string;
 type GetterOptions = {
   // For overlapping features, the division level of the one to get
   // - `country` (default): the "sovereign state" feature
@@ -46,37 +47,52 @@ type GetterOptions = {
 };
 
 export default class CountryCoder {
+  // The base GeoJSON feature collection
   public borders: FeatureCollection = require('./data/borders.json');
+
+  // The whichPolygon getter for looking up a feature by point
   private featureQuery: any = {};
+  // The cache for looking up a feature by identifier
   private featuresByCode: any = {};
 
   // Constructs a new CountryCoder
   constructor() {
-    let geometryFeatures: Array<Feature> = [];
+    let featuresByCode = this.featuresByCode;
     let identifierProps = ['iso1A2', 'iso1A3', 'iso1N3', 'wikidata', 'flag'];
 
-    for (let i in this.borders.features) {
-      let feature = this.borders.features[i];
-      // calculate the emoji flag sequence from the alpha-2 code
-      feature.properties.flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
-        return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
-      });
+    // Caches features by their identifying strings for rapid lookup
+    function cacheFeatureByIDs(feature: Feature) {
       for (let k in identifierProps) {
         let prop = identifierProps[k];
         let id = prop && feature.properties[prop];
         if (id) {
-          this.featuresByCode[id] = feature;
+          featuresByCode[id] = feature;
         }
       }
       if (feature.properties.aliases) {
         for (let j in feature.properties.aliases) {
           let alias = feature.properties.aliases[j];
-          this.featuresByCode[alias] = feature;
+          featuresByCode[alias] = feature;
         }
       }
-      if (feature.geometry) {
-        geometryFeatures.push(feature);
-      }
+    }
+
+    // Calculates the emoji flag sequence from the alpha-2 code and caches it
+    function loadFlag(feature: Feature) {
+      feature.properties.flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
+        return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
+      });
+    }
+
+    let geometryFeatures: Array<Feature> = [];
+    for (let i in this.borders.features) {
+      let feature = this.borders.features[i];
+
+      loadFlag(feature);
+
+      cacheFeatureByIDs(feature);
+
+      if (feature.geometry) geometryFeatures.push(feature);
     }
 
     // whichPolygon doesn't support null geometry even though GeoJSON does
@@ -87,19 +103,51 @@ export default class CountryCoder {
     this.featureQuery = whichPolygon(geometryOnlyCollection);
   }
 
-  // Returns the feature with an identifying property matching `id`, if any
-  feature(id: string): Feature | null {
-    if (this.featuresByCode[id]) {
-      return this.featuresByCode[id];
-    }
-    return null;
-  }
-
   // Returns the smallest feature of any code status containing `loc`, if any
-  smallestFeature(loc: Vec2): Feature | null {
+  private smallestFeature(loc: Vec2): Feature | null {
     let featureProperties: FeatureProperties = this.featureQuery(loc);
     if (!featureProperties) return null;
     return this.featuresByCode[featureProperties.iso1A2];
+  }
+
+  // Returns the country feature containing `loc`, if any
+  private countryFeature(loc: Vec2): Feature | null {
+    let feature = this.smallestFeature(loc);
+    if (!feature) return null;
+    // a feature without `country` but with geometry is itself a country
+    let countryCode = feature.properties.country || feature.properties.iso1A2;
+    return this.featuresByCode[countryCode];
+  }
+
+  // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
+  private smallestNonExceptedIsoFeature(loc: Vec2): Feature | null {
+    let feature = this.features(loc).find(function(feature) {
+      return feature.properties.isoStatus !== 'excRes';
+    });
+    return feature || null;
+  }
+
+  // Returns the feature containing `loc` for the `opts`, if any
+  private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
+    if (opts && opts.level === 'smallest') {
+      // e.g. Puerto Rico
+      return this.smallestNonExceptedIsoFeature(loc);
+    }
+    // e.g. United States
+    return this.countryFeature(loc);
+  }
+
+  // Returns the feature with an identifying property matching `id`, if any
+  private featureForID(id: string): Feature | null {
+    return this.featuresByCode[id] || null;
+  }
+
+  // Returns the feature matching the given arguments, if any
+  feature(arg: LocOrID, opts?: GetterOptions): Feature | null {
+    if (typeof arg === 'string') {
+      return this.featureForID(<string>arg);
+    }
+    return this.featureForLoc(<Vec2>arg, opts);
   }
 
   // Returns all the features containing `loc`, if any
@@ -123,68 +171,37 @@ export default class CountryCoder {
     return features;
   }
 
-  // Returns the country feature containing `loc`, if any
-  // e.g. a location in Puerto Rico will return US
-  private countryFeature(loc: Vec2): Feature | null {
-    let feature = this.smallestFeature(loc);
-    if (!feature) return null;
-    // `country` can be explicit;
-    // a feature without `country` but with geometry is itself a country
-    let countryCode = feature.properties.country || feature.properties.iso1A2;
-    return this.featuresByCode[countryCode];
-  }
-
-  // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
-  // e.g. a location in Puerto Rico will return PR
-  private smallestNonExceptedIsoFeature(loc: Vec2): Feature | null {
-    let feature = this.features(loc).find(function(feature) {
-      return feature.properties.isoStatus !== 'excRes';
-    });
-    return feature || null;
-  }
-
-  // Returns the feature containing `loc` for the `opts`, if any
-  private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
-    if (opts && opts.level === 'smallest') {
-      // e.g. Puerto Rico
-      return this.smallestNonExceptedIsoFeature(loc);
-    }
-    // e.g. United States
-    return this.countryFeature(loc);
-  }
-
-  // Returns the ISO 3166-1 alpha-2 code for the region containing `loc`, if any
-  iso1A2Code(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc, opts);
+  // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
+  iso1A2Code(arg: LocOrID, opts?: GetterOptions): string | null {
+    let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1A2;
   }
 
-  // Returns the ISO 3166-1 alpha-3 code for the region containing `loc`, if any
-  // e.g. a location in Puerto Rico will return USA
-  iso1A3Code(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc, opts);
+  // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
+  iso1A3Code(arg: LocOrID, opts?: GetterOptions): string | null {
+    let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1A3 || null;
   }
 
-  // Returns the ISO 3166-1 numeric-3 code for the region containing `loc`, if any
-  iso1N3Code(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc, opts);
+  // Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
+  iso1N3Code(arg: LocOrID, opts?: GetterOptions): string | null {
+    let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1N3 || null;
   }
 
-  // Returns the Wikidata QID code for the region containing `loc`, if any
-  wikidataQID(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc, opts);
+  // Returns the Wikidata QID code for the feature matching the arguments, if any
+  wikidataQID(arg: LocOrID, opts?: GetterOptions): string | null {
+    let feature = this.feature(arg, opts);
     if (!feature) return null;
     return <string>feature.properties.wikidata;
   }
 
-  // Returns the emoji flag sequence for the country containing `loc`
-  flag(loc: Vec2, opts?: GetterOptions): string | null {
-    let feature = this.featureForLoc(loc, opts);
+  // Returns the emoji flag sequence for the feature matching the arguments, if any
+  flag(arg: LocOrID, opts?: GetterOptions): string | null {
+    let feature = this.feature(arg, opts);
     if (!feature) return null;
     return <string>feature.properties.flag;
   }
@@ -196,8 +213,8 @@ export default class CountryCoder {
     });
   }
 
-  // Returns true if `loc` is in an EU member state
-  isInEuropeanUnion(arg: Vec2 | string): boolean {
+  // Returns true if the feature matching `arg` is within EU jurisdiction
+  isInEuropeanUnion(arg: LocOrID): boolean {
     let feature: Feature | null;
     if (typeof arg === 'string') {
       feature = this.feature(<string>arg);
