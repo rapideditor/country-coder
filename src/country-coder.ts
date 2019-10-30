@@ -28,8 +28,8 @@ type FeatureProperties = {
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
 
-  // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
-  flag: string | undefined;
+  // The emoji emojiFlag sequence derived from this feature's ISO 3166-1 alpha-2 code
+  emojiFlag: string | undefined;
 };
 type Feature = { type: string; geometry: any; properties: FeatureProperties };
 type FeatureCollection = { type: string; features: Array<Feature> };
@@ -54,7 +54,7 @@ export default class CountryCoder {
   // Constructs a new CountryCoder
   constructor() {
     let featuresByCode = this.featuresByCode;
-    let identifierProps = ['iso1A2', 'iso1A3', 'iso1N3', 'wikidata', 'flag'];
+    let identifierProps = ['iso1A2', 'iso1A3', 'iso1N3', 'wikidata', 'emojiFlag'];
 
     // Caches features by their identifying strings for rapid lookup
     function cacheFeatureByIDs(feature: Feature) {
@@ -75,7 +75,9 @@ export default class CountryCoder {
 
     // Calculates the emoji flag sequence from the alpha-2 code and caches it
     function loadFlag(feature: Feature) {
-      feature.properties.flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
+      feature.properties.emojiFlag = feature.properties.iso1A2.replace(/./g, function(
+        char: string
+      ) {
         return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
       });
     }
@@ -195,11 +197,11 @@ export default class CountryCoder {
     return <string>feature.properties.wikidata;
   }
 
-  // Returns the emoji flag sequence for the feature matching the arguments, if any
-  flag(arg: LocOrID, opts?: GetterOptions): string | null {
+  // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
+  emojiFlag(arg: LocOrID, opts?: GetterOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
-    return <string>feature.properties.flag;
+    return <string>feature.properties.emojiFlag;
   }
 
   // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc`, if any

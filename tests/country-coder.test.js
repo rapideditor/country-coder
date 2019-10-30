@@ -371,17 +371,17 @@ describe('country-coder', () => {
   describe('flag', () => {
     it('codes location in officially-assigned country: New York, United States as 🇺🇸', () => {
       const coder = new CountryCoder();
-      expect(coder.flag([-74, 40.6], { level: 'country' })).toBe('🇺🇸');
+      expect(coder.emojiFlag([-74, 40.6], { level: 'country' })).toBe('🇺🇸');
     });
 
     it('codes location in user-assigned, de facto country: Kosovo as 🇽🇰', () => {
       const coder = new CountryCoder();
-      expect(coder.flag([21, 42.6], { level: 'country' })).toBe('🇽🇰');
+      expect(coder.emojiFlag([21, 42.6], { level: 'country' })).toBe('🇽🇰');
     });
 
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
-      expect(coder.flag([0, 90], { level: 'country' })).toBeNull();
+      expect(coder.emojiFlag([0, 90], { level: 'country' })).toBeNull();
     });
   });
 
