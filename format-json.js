@@ -46,8 +46,7 @@ let featureProperties = [
   'aliases',
   'country',
   'groups',
-  'isoStatus',
-  'type'
+  'isoStatus'
 ];
 
 function processProperties(feature) {

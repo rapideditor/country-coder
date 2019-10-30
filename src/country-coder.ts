@@ -23,10 +23,6 @@ type FeatureProperties = {
   // The ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
   groups: Array<string> | undefined;
 
-  // Additional differentiator for some features which aren't countries
-  // - `intGroup`: an international organization
-  type: string | undefined;
-
   // The status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
   // - `excRes`: exceptionally-reserved
   // - `usrAssn`: user-assigned
