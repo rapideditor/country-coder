@@ -38,7 +38,7 @@ type LocOrID = Vec2 | string;
 type GetterOptions = {
   // For overlapping features, the division level of the one to get
   // - `country` (default): the "sovereign state" feature
-  // - `smallest`: the lowest-level feature with an official or user-assigned ISO code
+  // - `region`: the lowest-level feature with an official or user-assigned ISO code
   level: string;
 };
 
@@ -127,7 +127,7 @@ export default class CountryCoder {
 
   // Returns the feature containing `loc` for the `opts`, if any
   private featureForLoc(loc: Vec2, opts?: GetterOptions): Feature | null {
-    if (opts && opts.level === 'smallest') {
+    if (opts && opts.level === 'region') {
       // e.g. Puerto Rico
       return this.smallestNonExceptedIsoFeature(loc);
     }
@@ -146,27 +146,6 @@ export default class CountryCoder {
       return this.featureForID(<string>arg);
     }
     return this.featureForLoc(<Vec2>arg, opts);
-  }
-
-  // Returns all the features containing `loc`, if any
-  features(loc: Vec2): Array<Feature> {
-    let feature = this.smallestFeature(loc);
-    if (!feature) return [];
-
-    let features: Array<Feature> = [feature];
-
-    let properties = feature.properties;
-    if (properties.groups) {
-      for (let i in properties.groups) {
-        features.push(this.featuresByCode[properties.groups[i]]);
-      }
-    }
-
-    if (properties.country) {
-      features.push(this.featuresByCode[properties.country]);
-    }
-
-    return features;
   }
 
   // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
@@ -204,7 +183,28 @@ export default class CountryCoder {
     return <string>feature.properties.emojiFlag;
   }
 
-  // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc`, if any
+  // Returns all the features containing `loc` (zero or more)
+  features(loc: Vec2): Array<Feature> {
+    let feature = this.smallestFeature(loc);
+    if (!feature) return [];
+
+    let features: Array<Feature> = [feature];
+
+    let properties = feature.properties;
+    if (properties.groups) {
+      for (let i in properties.groups) {
+        features.push(this.featuresByCode[properties.groups[i]]);
+      }
+    }
+
+    if (properties.country) {
+      features.push(this.featuresByCode[properties.country]);
+    }
+
+    return features;
+  }
+
+  // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc` (zero or more)
   iso1A2Codes(loc: Vec2): Array<string> {
     return this.features(loc).map(function(feature) {
       return feature.properties.iso1A2;
