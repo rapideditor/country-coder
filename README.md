@@ -49,12 +49,31 @@ const CountryCoder = require('country-coder').CountryCoder;   // CommonJS
 import { CountryCoder } from 'country-coder';     // ES6
 ```
 
-Coding is quick and easy.
+
+## Quick Start
+
+Simply pass in a `[longitude, latitude]` to `iso1A2Code` to get the country code.
 
 ```js
 const coder = new CountryCoder();
-coder.iso1A2Code([71.13, 39.96]);	// returns 'UZ'
+coder.iso1A2Code([-4.5, 54.2]);	 // returns 'GB'
 ```
+
+To include non-country regions, pass in `region` for the `level` option.
+
+```js
+const coder = new CountryCoder();
+coder.iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+```
+
+You can also use the coder methods to convert between identifiers.
+
+```js
+const coder = new CountryCoder();
+coder.iso1A2Code('Q145');  // returns 'GB'
+```
+
+Read the [full API reference](#api-reference) to see everything `country-coder` can do.
 
 
 ## Contributing
