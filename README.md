@@ -185,15 +185,15 @@ Returns the Wikidata QID for the given location or identifier and options, if fo
 
 ```js
 const coder = new CountryCoder();
-coder.wikidataQID([-4.5, 54.2]); 						// returns 'Q145'
-coder.wikidataQID([-4.5, 54.2], { level: 'region' });	// returns 'Q9676'
-coder.wikidataQID([0, 90]); 							// returns null
-coder.wikidataQID('GB'); 								// returns 'Q145'
-coder.wikidataQID('GBR'); 								// returns 'Q145'
-coder.wikidataQID('826'); 								// returns 'Q145'
-coder.wikidataQID('🇬🇧'); 								// returns 'Q145'
-coder.wikidataQID('UK'); 								// returns 'Q145'
-coder.wikidataQID('IM'); 								// returns 'Q9676'
+coder.wikidataQID([-4.5, 54.2]);  // returns 'Q145'
+coder.wikidataQID([-4.5, 54.2], { level: 'region' });  // returns 'Q9676'
+coder.wikidataQID([0, 90]);  // returns null
+coder.wikidataQID('GB');     // returns 'Q145'
+coder.wikidataQID('GBR');    // returns 'Q145'
+coder.wikidataQID('826');    // returns 'Q145'
+coder.wikidataQID('🇬🇧');     // returns 'Q145'
+coder.wikidataQID('UK');     // returns 'Q145'
+coder.wikidataQID('IM');     // returns 'Q9676'
 ```
 
 
@@ -204,15 +204,15 @@ Returns the emoji flag sequence for the given location or identifier and options
 
 ```js
 const coder = new CountryCoder();
-coder.emojiFlag([-4.5, 54.2]); 							// returns '🇬🇧'
-coder.emojiFlag([-4.5, 54.2], { level: 'region' });		// returns '🇮🇲'
-coder.emojiFlag([0, 90]); 								// returns null
-coder.emojiFlag('GB'); 									// returns '🇬🇧'
-coder.emojiFlag('GBR'); 								// returns '🇬🇧'
-coder.emojiFlag('826'); 								// returns '🇬🇧'
-coder.emojiFlag('Q145'); 								// returns '🇬🇧'
-coder.emojiFlag('UK'); 									// returns '🇬🇧'
-coder.emojiFlag('IM'); 									// returns '🇮🇲'
+coder.emojiFlag([-4.5, 54.2]);  // returns '🇬🇧'
+coder.emojiFlag([-4.5, 54.2], { level: 'region' });  // returns '🇮🇲'
+coder.emojiFlag([0, 90]);  // returns null
+coder.emojiFlag('GB');     // returns '🇬🇧'
+coder.emojiFlag('GBR');    // returns '🇬🇧'
+coder.emojiFlag('826');    // returns '🇬🇧'
+coder.emojiFlag('Q145');   // returns '🇬🇧'
+coder.emojiFlag('UK');     // returns '🇬🇧'
+coder.emojiFlag('IM');     // returns '🇮🇲'
 ```
 
 
@@ -223,10 +223,10 @@ Returns all the the features containing the given location.
 
 ```js
 const coder = new CountryCoder();
-coder.features([-4.5, 54.2]); 	// returns [{Isle of Man feature}, {United Kingdom feature}]
-coder.features([0, 54.2]); 		// returns [{United Kingdom feature}, {European Union feature}]
-coder.features([6.1, 46.2]); 	// returns [{Switzerland feature}]
-coder.features([0, 90]); 		// returns []
+coder.features([-4.5, 54.2]);  // returns [{Isle of Man feature}, {United Kingdom feature}]
+coder.features([0, 54.2]);     // returns [{United Kingdom feature}, {European Union feature}]
+coder.features([6.1, 46.2]);   // returns [{Switzerland feature}]
+coder.features([0, 90]);       // returns []
 ```
 
 
@@ -237,32 +237,32 @@ Returns the ISO 3166-1 alpha-2 codes for all the the features containing the giv
 
 ```js
 const coder = new CountryCoder();
-coder.iso1A2Codes([-4.5, 54.2]); 	// returns ['IM', 'GB']
-coder.iso1A2Codes([0, 54.2]); 		// returns ['GB', 'EU']
-coder.iso1A2Codes([6.1, 46.2]); 	// returns ['CH']
-coder.iso1A2Codes([0, 90]); 		// returns []
+coder.iso1A2Codes([-4.5, 54.2]);   // returns ['IM', 'GB']
+coder.iso1A2Codes([0, 54.2]);      // returns ['GB', 'EU']
+coder.iso1A2Codes([6.1, 46.2]);    // returns ['CH']
+coder.iso1A2Codes([0, 90]);        // returns []
 ```
 
 
 <a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(arg: LocOrID): boolean
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
 
-Returns `true` if the feature with the given location or identifier is found to be part of the European Union. 
+Returns `true` if the feature with the given location or identifier is found to be part of the European Union.
 
 ```js
 const coder = new CountryCoder();
-coder.isInEuropeanUnion([0, 54.2]); 		// returns true (Britain)
-coder.isInEuropeanUnion([-4.5, 54.2]); 		// returns false (Isle of Man)
-coder.isInEuropeanUnion([6.1, 46.2]); 		// returns false (Switzerland)
-coder.isInEuropeanUnion([0, 90]); 			// returns false (North Pole)
-coder.isInEuropeanUnion('GB'); 				// returns true
-coder.isInEuropeanUnion('GBR'); 			// returns true
-coder.isInEuropeanUnion('826'); 			// returns true
-coder.isInEuropeanUnion('Q145'); 			// returns true
-coder.isInEuropeanUnion('🇬🇧'); 				// returns true
-coder.isInEuropeanUnion('UK'); 				// returns true
-coder.isInEuropeanUnion('IM'); 				// returns false
-coder.isInEuropeanUnion('CH'); 				// returns false
+coder.isInEuropeanUnion([0, 54.2]);    // returns true (Britain)
+coder.isInEuropeanUnion([-4.5, 54.2]); // returns false (Isle of Man)
+coder.isInEuropeanUnion([6.1, 46.2]);  // returns false (Switzerland)
+coder.isInEuropeanUnion([0, 90]);      // returns false (North Pole)
+coder.isInEuropeanUnion('GB');         // returns true
+coder.isInEuropeanUnion('GBR');        // returns true
+coder.isInEuropeanUnion('826');        // returns true
+coder.isInEuropeanUnion('Q145');       // returns true
+coder.isInEuropeanUnion('🇬🇧');         // returns true
+coder.isInEuropeanUnion('UK');         // returns true
+coder.isInEuropeanUnion('IM');         // returns false
+coder.isInEuropeanUnion('CH');         // returns false
 ```
 
 
