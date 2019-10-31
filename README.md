@@ -108,16 +108,16 @@ Returns the GeoJSON feature for the given location or identifier and options, if
 
 ```js
 const coder = new CountryCoder();
-coder.feature([-4.5, 54.2]); 						// returns United Kingdom feature
-coder.feature([-4.5, 54.2], { level: 'region' });	// returns Isle of Man feature
-coder.feature([0, 90]); 							// returns null
-coder.feature('GB'); 								// returns United Kingdom feature
-coder.feature('GBR'); 								// returns United Kingdom feature
-coder.feature('826'); 								// returns United Kingdom feature
-coder.feature('Q145'); 								// returns United Kingdom feature
-coder.feature('🇬🇧'); 								// returns United Kingdom feature
-coder.feature('UK'); 								// returns United Kingdom feature
-coder.feature('IM'); 								// returns Isle of Man feature
+coder.feature([-4.5, 54.2]);  // returns United Kingdom feature
+coder.feature([-4.5, 54.2], { level: 'region' });  // returns Isle of Man feature
+coder.feature([0, 90]);       // returns null
+coder.feature('GB');          // returns United Kingdom feature
+coder.feature('GBR');         // returns United Kingdom feature
+coder.feature('826');         // returns United Kingdom feature
+coder.feature('Q145');        // returns United Kingdom feature
+coder.feature('🇬🇧');          // returns United Kingdom feature
+coder.feature('UK');          // returns United Kingdom feature
+coder.feature('IM');          // returns Isle of Man feature
 ```
 
 
@@ -128,15 +128,15 @@ Returns the ISO 3166-1 alpha-2 code for the given location or identifier and opt
 
 ```js
 const coder = new CountryCoder();
-coder.iso1A2Code([-4.5, 54.2]); 						// returns 'GB'
-coder.iso1A2Code([-4.5, 54.2], { level: 'region' });	// returns 'IM'
-coder.iso1A2Code([0, 90]); 								// returns null
-coder.iso1A2Code('GBR'); 								// returns 'GB'
-coder.iso1A2Code('826'); 								// returns 'GB'
-coder.iso1A2Code('Q145'); 								// returns 'GB'
-coder.iso1A2Code('🇬🇧'); 								// returns 'GB'
-coder.iso1A2Code('UK'); 								// returns 'GB'
-coder.iso1A2Code('IMN'); 								// returns 'IM'
+coder.iso1A2Code([-4.5, 54.2]);  // returns 'GB'
+coder.iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+coder.iso1A2Code([0, 90]);       // returns null
+coder.iso1A2Code('GBR');         // returns 'GB'
+coder.iso1A2Code('826');         // returns 'GB'
+coder.iso1A2Code('Q145');        // returns 'GB'
+coder.iso1A2Code('🇬🇧');          // returns 'GB'
+coder.iso1A2Code('UK');          // returns 'GB'
+coder.iso1A2Code('IMN');         // returns 'IM'
 ```
 
 
@@ -147,15 +147,15 @@ Returns the ISO 3166-1 alpha-3 code for the given location or identifier and opt
 
 ```js
 const coder = new CountryCoder();
-coder.iso1A3Code([-4.5, 54.2]); 						// returns 'GBR'
-coder.iso1A3Code([-4.5, 54.2], { level: 'region' });	// returns 'IMN'
-coder.iso1A3Code([0, 90]); 								// returns null
-coder.iso1A3Code('GB'); 								// returns 'GBR'
-coder.iso1A3Code('826'); 								// returns 'GBR'
-coder.iso1A3Code('Q145'); 								// returns 'GBR'
-coder.iso1A3Code('🇬🇧'); 								// returns 'GBR'
-coder.iso1A3Code('UK'); 								// returns 'GBR'
-coder.iso1A3Code('IM'); 								// returns 'IMN'
+coder.iso1A3Code([-4.5, 54.2]);  // returns 'GBR'
+coder.iso1A3Code([-4.5, 54.2], { level: 'region' });  // returns 'IMN'
+coder.iso1A3Code([0, 90]);       // returns null
+coder.iso1A3Code('GB');          // returns 'GBR'
+coder.iso1A3Code('826');         // returns 'GBR'
+coder.iso1A3Code('Q145');        // returns 'GBR'
+coder.iso1A3Code('🇬🇧');          // returns 'GBR'
+coder.iso1A3Code('UK');          // returns 'GBR'
+coder.iso1A3Code('IM');          // returns 'IMN'
 ```
 
 
@@ -166,15 +166,15 @@ Returns the ISO 3166-1 numeric-3 code for the given location or identifier and o
 
 ```js
 const coder = new CountryCoder();
-coder.iso1N3Code([-4.5, 54.2]); 						// returns '826'
-coder.iso1N3Code([-4.5, 54.2], { level: 'region' });	// returns '833'
-coder.iso1N3Code([0, 90]); 								// returns null
-coder.iso1N3Code('GB'); 								// returns '826'
-coder.iso1N3Code('GBR'); 								// returns '826'
-coder.iso1N3Code('Q145'); 								// returns '826'
-coder.iso1N3Code('🇬🇧'); 								// returns '826'
-coder.iso1N3Code('UK'); 								// returns '826'
-coder.iso1N3Code('IM'); 								// returns '833'
+coder.iso1N3Code([-4.5, 54.2]);  // returns '826'
+coder.iso1N3Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+coder.iso1N3Code([0, 90]);       // returns null
+coder.iso1N3Code('GB');          // returns '826'
+coder.iso1N3Code('GBR');         // returns '826'
+coder.iso1N3Code('Q145');        // returns '826'
+coder.iso1N3Code('🇬🇧');          // returns '826'
+coder.iso1N3Code('UK');          // returns '826'
+coder.iso1N3Code('IM');          // returns '833'
 ```
 
 
@@ -187,13 +187,13 @@ Returns the Wikidata QID for the given location or identifier and options, if fo
 const coder = new CountryCoder();
 coder.wikidataQID([-4.5, 54.2]);  // returns 'Q145'
 coder.wikidataQID([-4.5, 54.2], { level: 'region' });  // returns 'Q9676'
-coder.wikidataQID([0, 90]);  // returns null
-coder.wikidataQID('GB');     // returns 'Q145'
-coder.wikidataQID('GBR');    // returns 'Q145'
-coder.wikidataQID('826');    // returns 'Q145'
-coder.wikidataQID('🇬🇧');     // returns 'Q145'
-coder.wikidataQID('UK');     // returns 'Q145'
-coder.wikidataQID('IM');     // returns 'Q9676'
+coder.wikidataQID([0, 90]);       // returns null
+coder.wikidataQID('GB');          // returns 'Q145'
+coder.wikidataQID('GBR');         // returns 'Q145'
+coder.wikidataQID('826');         // returns 'Q145'
+coder.wikidataQID('🇬🇧');          // returns 'Q145'
+coder.wikidataQID('UK');          // returns 'Q145'
+coder.wikidataQID('IM');          // returns 'Q9676'
 ```
 
 
@@ -206,13 +206,13 @@ Returns the emoji flag sequence for the given location or identifier and options
 const coder = new CountryCoder();
 coder.emojiFlag([-4.5, 54.2]);  // returns '🇬🇧'
 coder.emojiFlag([-4.5, 54.2], { level: 'region' });  // returns '🇮🇲'
-coder.emojiFlag([0, 90]);  // returns null
-coder.emojiFlag('GB');     // returns '🇬🇧'
-coder.emojiFlag('GBR');    // returns '🇬🇧'
-coder.emojiFlag('826');    // returns '🇬🇧'
-coder.emojiFlag('Q145');   // returns '🇬🇧'
-coder.emojiFlag('UK');     // returns '🇬🇧'
-coder.emojiFlag('IM');     // returns '🇮🇲'
+coder.emojiFlag([0, 90]);       // returns null
+coder.emojiFlag('GB');          // returns '🇬🇧'
+coder.emojiFlag('GBR');         // returns '🇬🇧'
+coder.emojiFlag('826');         // returns '🇬🇧'
+coder.emojiFlag('Q145');        // returns '🇬🇧'
+coder.emojiFlag('UK');          // returns '🇬🇧'
+coder.emojiFlag('IM');          // returns '🇮🇲'
 ```
 
 
