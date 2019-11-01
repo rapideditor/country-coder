@@ -66,7 +66,7 @@ const coder = new CountryCoder();
 coder.iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
 ```
 
-You can also use the coder methods to convert between identifiers.
+The same method can convert from other identifiers.
 
 ```js
 const coder = new CountryCoder();
@@ -81,37 +81,38 @@ Read the [full API reference](#api-reference) to see everything `country-coder` 
 This package is kept intentionally minimal. However, if you find a bug or have an interesting idea for an enhancement, feel free to open an [Issue](https://github.com/ideditor/country-coder/issues) and/or [Pull Request](https://github.com/ideditor/country-coder/pulls).
 
 
-
 ## API Reference
 
 ##### Methods
 * [new CountryCoder](#constructor)() _constructor_
-* [feature](#feature)(arg: LocOrID, opts?: GetterOptions): Feature?
-* [iso1A2Code](#iso1A2Code)(arg: LocOrID, opts?: GetterOptions): string?
-* [iso1A3Code](#iso1A3Code)(arg: LocOrID, opts?: GetterOptions): string?
-* [iso1N3Code](#iso1N3Code)(arg: LocOrID, opts?: GetterOptions): string?
-* [wikidataQID](#wikidataQID)(arg: LocOrID, opts?: GetterOptions): string?
-* [emojiFlag](#emojiFlag)(arg: LocOrID, opts?: GetterOptions): string?
-* [features](#features)(loc: Vec2): [Feature]
-* [iso1A2Codes](#iso1A2Codes)(loc: Vec2): [string]
-* [isInEuropeanUnion](#isInEuropeanUnion)(arg: LocOrID): boolean
+* [feature](#feature)(arg: string | Location, opts?: CodingOptions): RegionFeature?
+* [iso1A2Code](#iso1A2Code)(arg: string | Location, opts?: CodingOptions): string?
+* [iso1A3Code](#iso1A3Code)(arg: string | Location, opts?: CodingOptions): string?
+* [iso1N3Code](#iso1N3Code)(arg: string | Location, opts?: CodingOptions): string?
+* [wikidataQID](#wikidataQID)(arg: string | Location, opts?: CodingOptions): string?
+* [emojiFlag](#emojiFlag)(arg: string | Location, opts?: CodingOptions): string?
+* [features](#features)(loc: Location): [RegionFeature]
+* [iso1A2Codes](#iso1A2Codes)(loc: Location): [string]
+* [isInEuropeanUnion](#isInEuropeanUnion)(arg: string | Location): boolean
 
 ##### Properties
-* [borders](#min): FeatureCollection - the base GeoJSON containing all features
+* [borders](#borders): RegionFeatureCollection - the base GeoJSON containing all features
 
 ##### Types
 * [Vec2](#Vec2): [number, number]
-* [LocOrID](#LocOrID): Vec2 | string
-* [GetterOptions](#GetterOptions): options object for coding locations
-* [Feature](#Feature): a GeoJSON feature
-* [FeatureProperties](#FeatureProperties): the `properties` object of Feature objects
-* [FeatureCollection](#FeatureCollection): a GeoJSON feature collection
+* [PointGeometry](#PointGeometry): a GeoJSON Point geometry object
+* [PointFeature](#PointFeature): a GeoJSON feature object with a Point geometry type
+* [Location](#Location): Vec2 | PointGeometry | PointFeature
+* [CodingOptions](#CodingOptions)
+* [RegionFeature](#RegionFeature)
+* [RegionFeatureProperties](#RegionFeatureProperties)
+* [RegionFeatureCollection](#RegionFeatureCollection)
 
 
 ## Methods
 
 <a name="constructor" href="#constructor">#</a> <b>new CountryCoder</b>()
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L55 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L58 "Source")
 
 Constructs a new CountryCoder.
 
@@ -120,10 +121,10 @@ const coder = new CountryCoder();
 ```
 
 
-<a name="feature" href="#feature">#</a> <b>feature</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L144 "Source")
+<a name="feature" href="#feature">#</a> <b>feature</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L158 "Source")
 
-Returns the GeoJSON feature for the given location or identifier and options, if found.
+Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found.
 
 ```js
 const coder = new CountryCoder();
@@ -137,11 +138,15 @@ coder.feature('Q145');        // returns United Kingdom feature
 coder.feature('🇬🇧');          // returns United Kingdom feature
 coder.feature('UK');          // returns United Kingdom feature
 coder.feature('IM');          // returns Isle of Man feature
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.feature(pointGeoJSON);           // returns United Kingdom feature
+coder.feature(pointGeoJSON.geometry);  // returns United Kingdom feature
 ```
 
 
-<a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L152 "Source")
+<a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L166 "Source")
 
 Returns the ISO 3166-1 alpha-2 code for the given location or identifier and options, if found.
 
@@ -156,11 +161,15 @@ coder.iso1A2Code('Q145');        // returns 'GB'
 coder.iso1A2Code('🇬🇧');          // returns 'GB'
 coder.iso1A2Code('UK');          // returns 'GB'
 coder.iso1A2Code('IMN');         // returns 'IM'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.iso1A2Code(pointGeoJSON);           // returns 'GB'
+coder.iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 ```
 
 
-<a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L159 "Source")
+<a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L173 "Source")
 
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
 
@@ -175,11 +184,15 @@ coder.iso1A3Code('Q145');        // returns 'GBR'
 coder.iso1A3Code('🇬🇧');          // returns 'GBR'
 coder.iso1A3Code('UK');          // returns 'GBR'
 coder.iso1A3Code('IM');          // returns 'IMN'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.iso1A3Code(pointGeoJSON);           // returns 'GBR'
+coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 ```
 
 
-<a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L166 "Source")
+<a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L180 "Source")
 
 Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found.
 
@@ -194,11 +207,15 @@ coder.iso1N3Code('Q145');        // returns '826'
 coder.iso1N3Code('🇬🇧');          // returns '826'
 coder.iso1N3Code('UK');          // returns '826'
 coder.iso1N3Code('IM');          // returns '833'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.iso1N3Code(pointGeoJSON);           // returns '826'
+coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
-<a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L173 "Source")
+<a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L187 "Source")
 
 Returns the Wikidata QID for the given location or identifier and options, if found.
 
@@ -213,11 +230,15 @@ coder.wikidataQID('826');         // returns 'Q145'
 coder.wikidataQID('🇬🇧');          // returns 'Q145'
 coder.wikidataQID('UK');          // returns 'Q145'
 coder.wikidataQID('IM');          // returns 'Q9676'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.wikidataQID(pointGeoJSON);           // returns 'Q145'
+coder.wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 ```
 
 
-<a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(arg: LocOrID, opts?: GetterOptions): Feature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L180 "Source")
+<a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
 
 Returns the emoji flag sequence for the given location or identifier and options, if found.
 
@@ -232,48 +253,61 @@ coder.emojiFlag('826');         // returns '🇬🇧'
 coder.emojiFlag('Q145');        // returns '🇬🇧'
 coder.emojiFlag('UK');          // returns '🇬🇧'
 coder.emojiFlag('IM');          // returns '🇮🇲'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.emojiFlag(pointGeoJSON);           // returns '🇬🇧'
+coder.emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
-<a name="features" href="#features">#</a> <b>features</b>(loc: Vec2): [Feature]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L187 "Source")
+<a name="features" href="#features">#</a> <b>features</b>(loc: Location): [RegionFeature]
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L201 "Source")
 
 Returns all the the features containing the given location.
 
 ```js
 const coder = new CountryCoder();
 coder.features([-4.5, 54.2]);  // returns [{Isle of Man feature}, {United Kingdom feature}]
-coder.features([0, 54.2]);     // returns [{United Kingdom feature}, {European Union feature}]
+coder.features([0, 51.5]);     // returns [{United Kingdom feature}, {European Union feature}]
 coder.features([6.1, 46.2]);   // returns [{Switzerland feature}]
 coder.features([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [6.1, 46.2] } };
+coder.features(pointGeoJSON);            // returns [{Switzerland feature}]
+coder.features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
 ```
 
 
-<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(loc: Vec2): [string]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L208 "Source")
+<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(loc: Location): [string]
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L222 "Source")
 
 Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location.
 
 ```js
 const coder = new CountryCoder();
 coder.iso1A2Codes([-4.5, 54.2]);   // returns ['IM', 'GB']
-coder.iso1A2Codes([0, 54.2]);      // returns ['GB', 'EU']
+coder.iso1A2Codes([0, 51.5]);      // returns ['GB', 'EU']
 coder.iso1A2Codes([6.1, 46.2]);    // returns ['CH']
 coder.iso1A2Codes([0, 90]);        // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.iso1A2Codes(pointGeoJSON);           // returns ['IM', 'GB']
+coder.iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
 ```
 
 
-<a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(arg: LocOrID): boolean
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
+<a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(arg: string | Location): boolean
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L229 "Source")
 
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union.
 
 ```js
 const coder = new CountryCoder();
-coder.isInEuropeanUnion([0, 54.2]);    // returns true (Britain)
+coder.isInEuropeanUnion([0, 51.5]);    // returns true (Britain)
 coder.isInEuropeanUnion([-4.5, 54.2]); // returns false (Isle of Man)
 coder.isInEuropeanUnion([6.1, 46.2]);  // returns false (Switzerland)
 coder.isInEuropeanUnion([0, 90]);      // returns false (North Pole)
+coder.isInEuropeanUnion('EU');         // returns true
 coder.isInEuropeanUnion('GB');         // returns true
 coder.isInEuropeanUnion('GBR');        // returns true
 coder.isInEuropeanUnion('826');        // returns true
@@ -282,20 +316,78 @@ coder.isInEuropeanUnion('🇬🇧');         // returns true
 coder.isInEuropeanUnion('UK');         // returns true
 coder.isInEuropeanUnion('IM');         // returns false
 coder.isInEuropeanUnion('CH');         // returns false
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
+coder.isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
+coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
 ```
 
 
 ## Properties
 
-<a name="borders" href="#borders">#</a> <b>borders</b>: FeatureCollection<br/>
+<a name="borders" href="#borders">#</a> <b>borders</b>: RegionFeatureCollection
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#50 "Source")<br/>
 
-The base GeoJSON feature collection used for feature lookup. While this property is public, modifying it is not recommended and may not have the desired results.
+The base GeoJSON feature collection used for feature lookup. While this property is public, modifying it is not recommended and may have unintended effects.
 
 
 ## Types
 
 <a name="Vec2" href="#Vec2">#</a> <b>Vec2</b>
 
-An array of two numbers understood as [longitude, latitude]
+An array of two numbers as `[longitude, latitude]` referenced to the WGS 84 datum.
 
 `[number, number]`
+
+
+<a name="PointGeometry" href="#PointGeometry">#</a> <b>PointGeometry</b>
+
+GeoJSON [Point geometry](https://tools.ietf.org/html/rfc7946#section-3.1.2) as specified by RFC 7946.
+
+
+<a name="PointFeature" href="#PointFeature">#</a> <b>PointFeature</b>
+
+A GeoJSON Feature with [Point geometry](https://tools.ietf.org/html/rfc7946#section-3.1.2) as specified by RFC 7946.
+
+
+<a name="Location" href="#Location">#</a> <b>Location</b>
+
+A geographic location in one of the supported formats.
+
+`Vec2 | PointGeometry | PointFeature`
+
+
+<a name="CodingOptions" href="#CodingOptions">#</a> <b>CodingOptions</b>
+
+An object containing options used for geocoding.
+
+- `level`: `string`, for overlapping features, the division level of the one to get
+    - `country` (default): the "sovereign state" feature
+    - `region`: the lowest-level feature with an official or user-assigned ISO code
+
+
+<a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>
+
+A GeoJSON feature representing a codable geographic area.
+
+
+<a name="RegionFeatureProperties" href="#RegionFeatureProperties">#</a> <b>RegionFeatureProperties</b>
+
+An object containing the attributes of a RegionFeature object.
+
+- `iso1A2`: `string`, ISO 3166-1 alpha-2 code
+- `iso1A3`: `string`, ISO 3166-1 alpha-3 code
+- `iso1N3`: `string`, ISO 3166-1 numeric-3 code
+- `wikidata`: `string`, Wikidata QID
+- `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
+- `aliases`: `[string]`, additional identifiers which can be used to look up this feature
+- `country`: `string`, for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
+- `groups`: `[string]`, the ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
+- `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
+    - `excRes`: exceptionally-reserved
+    - `usrAssn`: user-assigned
+
+
+<a name="RegionFeatureCollection" href="#RegionFeatureCollection">#</a> <b>RegionFeatureCollection</b>
+
+A GeoJSON feature collection containing RegionFeature objects.

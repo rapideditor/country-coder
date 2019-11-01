@@ -1,6 +1,6 @@
 import * as whichPolygon from 'which-polygon';
 
-type FeatureProperties = {
+type RegionFeatureProperties = {
   // ISO 3166-1 alpha-2 code
   iso1A2: string;
 
@@ -28,18 +28,17 @@ type FeatureProperties = {
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
 
-  // The emoji emojiFlag sequence derived from this feature's ISO 3166-1 alpha-2 code
+  // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   emojiFlag: string | undefined;
 };
-type RegionFeature = { type: string; geometry: any; properties: FeatureProperties };
+type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
 type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
 
 type Vec2 = [number, number]; // [lon, lat]
 type PointGeometry = { type: string; coordinates: Vec2 };
 type PointFeature = { type: string; geometry: PointGeometry; properties: any };
 type Location = Vec2 | PointGeometry | PointFeature;
-type GetterArg = string | Location;
-type GetterOptions = {
+type CodingOptions = {
   // For overlapping features, the division level of the one to get
   // - `country` (default): the "sovereign state" feature
   // - `region`: the lowest-level feature with an official or user-assigned ISO code
@@ -118,7 +117,7 @@ export default class CountryCoder {
   // Returns the smallest feature of any kind containing `loc`, if any
   private smallestFeature(loc: Location): RegionFeature | null {
     let basicLoc = this.basicLoc(loc);
-    let featureProperties: FeatureProperties = this.featureQuery(basicLoc);
+    let featureProperties: RegionFeatureProperties = this.featureQuery(basicLoc);
     if (!featureProperties) return null;
     return this.featuresByCode[featureProperties.iso1A2];
   }
@@ -141,7 +140,7 @@ export default class CountryCoder {
   }
 
   // Returns the feature containing `loc` for the `opts`, if any
-  private featureForLoc(loc: Location, opts?: GetterOptions): RegionFeature | null {
+  private featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
     if (opts && opts.level === 'region') {
       // e.g. Puerto Rico
       return this.smallestNonExceptedIsoFeature(loc);
@@ -156,7 +155,7 @@ export default class CountryCoder {
   }
 
   // Returns the feature matching the given arguments, if any
-  feature(arg: GetterArg, opts?: GetterOptions): RegionFeature | null {
+  feature(arg: string | Location, opts?: CodingOptions): RegionFeature | null {
     if (typeof arg === 'string') {
       return this.featureForID(<string>arg);
     }
@@ -164,35 +163,35 @@ export default class CountryCoder {
   }
 
   // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
-  iso1A2Code(arg: GetterArg, opts?: GetterOptions): string | null {
+  iso1A2Code(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1A2;
   }
 
   // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
-  iso1A3Code(arg: GetterArg, opts?: GetterOptions): string | null {
+  iso1A3Code(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1A3 || null;
   }
 
   // Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
-  iso1N3Code(arg: GetterArg, opts?: GetterOptions): string | null {
+  iso1N3Code(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
     return feature.properties.iso1N3 || null;
   }
 
   // Returns the Wikidata QID code for the feature matching the arguments, if any
-  wikidataQID(arg: GetterArg, opts?: GetterOptions): string | null {
+  wikidataQID(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
-    return <string>feature.properties.wikidata;
+    return feature.properties.wikidata || null;
   }
 
   // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
-  emojiFlag(arg: GetterArg, opts?: GetterOptions): string | null {
+  emojiFlag(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
     return <string>feature.properties.emojiFlag;
@@ -227,7 +226,7 @@ export default class CountryCoder {
   }
 
   // Returns true if the feature matching `arg` is within EU jurisdiction
-  isInEuropeanUnion(arg: GetterArg): boolean {
+  isInEuropeanUnion(arg: string | Location): boolean {
     let feature: RegionFeature | null;
     if (typeof arg === 'string') {
       feature = this.feature(<string>arg);

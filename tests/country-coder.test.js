@@ -385,6 +385,11 @@ describe('country-coder', () => {
       expect(coder.wikidataQID([21, 42.6], { level: 'country' })).toBe('Q1246');
     });
 
+    it('does not find QID for EA', () => {
+      const coder = new CountryCoder();
+      expect(coder.wikidataQID('EA')).toBeNull();
+    });
+
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
       expect(coder.wikidataQID([0, 90], { level: 'country' })).toBeNull();
@@ -506,6 +511,26 @@ describe('country-coder', () => {
       it('returns false for location in user-assigned, de facto country, in Europe, outside EU: Kosovo', () => {
         const coder = new CountryCoder();
         expect(coder.isInEuropeanUnion([21, 42.6])).toBe(false);
+      });
+      it('returns true for GeoJSON point feature in Germany', () => {
+        const coder = new CountryCoder();
+        let pointFeature = {
+          type: 'Feature',
+          properties: null,
+          geometry: {
+            type: 'Point',
+            coordinates: [13.4, 52.5]
+          }
+        };
+        expect(coder.isInEuropeanUnion(pointFeature)).toBe(true);
+      });
+      it('returns true for GeoJSON point geometry in Germany', () => {
+        const coder = new CountryCoder();
+        let pointGeometry = {
+          type: 'Point',
+          coordinates: [13.4, 52.5]
+        };
+        expect(coder.isInEuropeanUnion(pointGeometry)).toBe(true);
       });
     });
     describe('by code', () => {
