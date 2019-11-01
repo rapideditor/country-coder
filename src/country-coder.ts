@@ -1,4 +1,4 @@
-import * as whichPolygon from 'which-polygon';
+const whichPolygon = require('which-polygon');
 
 type RegionFeatureProperties = {
   // ISO 3166-1 alpha-2 code
