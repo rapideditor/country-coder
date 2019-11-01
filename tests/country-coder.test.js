@@ -311,6 +311,30 @@ describe('country-coder', () => {
         expect(coder.iso1A2Code([0, 90], { level: 'region' })).toBeNull();
       });
     });
+    describe('by GeoJSON point feature, country level', () => {
+      it('codes location in officially-assigned country: New York, United States as US', () => {
+        const coder = new CountryCoder();
+        let pointFeature = {
+          type: 'Feature',
+          properties: null,
+          geometry: {
+            type: 'Point',
+            coordinates: [-74, 40.6]
+          }
+        };
+        expect(coder.iso1A2Code(pointFeature)).toBe('US');
+      });
+    });
+    describe('by GeoJSON point geometry, country level', () => {
+      it('codes location in officially-assigned country: New York, United States as US', () => {
+        const coder = new CountryCoder();
+        let pointGeometry = {
+          type: 'Point',
+          coordinates: [-74, 40.6]
+        };
+        expect(coder.iso1A2Code(pointGeometry)).toBe('US');
+      });
+    });
   });
 
   // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
