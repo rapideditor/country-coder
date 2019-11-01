@@ -1,6 +1,6 @@
 # country-coder
 
-📍 ➡️ 🇩🇰 Convert longitude-latitude pairs to [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1) codes quickly and locally
+📍 ➡️ 🇩🇰 Convert longitude-latitude pairs to [ISO 3166-1 codes](https://en.wikipedia.org/wiki/ISO_3166-1) quickly and locally
 
 
 ## What is it?
@@ -145,7 +145,7 @@ coder.feature(pointGeoJSON.geometry);  // returns United Kingdom feature
 ```
 
 
-<a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+<a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(arg: string | Location, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L166 "Source")
 
 Returns the ISO 3166-1 alpha-2 code for the given location or identifier and options, if found.
@@ -168,7 +168,7 @@ coder.iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 ```
 
 
-<a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+<a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(arg: string | Location, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L173 "Source")
 
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
@@ -191,7 +191,7 @@ coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 ```
 
 
-<a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+<a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: string | Location, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L180 "Source")
 
 Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found.
@@ -214,7 +214,7 @@ coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
-<a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+<a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(arg: string | Location, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L187 "Source")
 
 Returns the Wikidata QID for the given location or identifier and options, if found.
@@ -237,7 +237,7 @@ coder.wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 ```
 
 
-<a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
+<a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(arg: string | Location, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
 
 Returns the emoji flag sequence for the given location or identifier and options, if found.
