@@ -326,7 +326,7 @@ coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
 ## Properties
 
 <a name="borders" href="#borders">#</a> <b>borders</b>: RegionFeatureCollection
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#50 "Source")<br/>
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L50 "Source")<br/>
 
 The base GeoJSON feature collection used for feature lookup. While this property is public, modifying it is not recommended and may have unintended effects.
 
