@@ -1,4 +1,5 @@
-const whichPolygon = require('which-polygon');
+import whichPolygon from 'which-polygon';
+import borders from './data/borders.json';
 
 type RegionFeatureProperties = {
   // ISO 3166-1 alpha-2 code
@@ -33,7 +34,6 @@ type RegionFeatureProperties = {
 };
 type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
 type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
-
 type Vec2 = [number, number]; // [lon, lat]
 type PointGeometry = { type: string; coordinates: Vec2 };
 type PointFeature = { type: string; geometry: PointGeometry; properties: any };
@@ -47,7 +47,7 @@ type CodingOptions = {
 
 export default class CountryCoder {
   // The base GeoJSON feature collection
-  public borders: RegionFeatureCollection = require('./data/borders.json');
+  public borders: RegionFeatureCollection = <RegionFeatureCollection>borders;
 
   // The whichPolygon getter for looking up a feature by point
   private featureQuery: any = {};
