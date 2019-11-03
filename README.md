@@ -94,6 +94,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [features](#features)(loc: Location): [RegionFeature]
 * [iso1A2Codes](#iso1A2Codes)(loc: Location): [string]
 * [isInEuropeanUnion](#isInEuropeanUnion)(arg: string | Location): boolean
+* [roadSpeedUnit](#roadSpeedUnit)(arg: string | Location): string?
 
 ##### Properties
 * [borders](#borders): RegionFeatureCollection - the base GeoJSON containing all features
@@ -112,7 +113,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 ## Methods
 
 <a name="constructor" href="#constructor">#</a> <b>new CountryCoder</b>()
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L58 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L63 "Source")
 
 Constructs a new CountryCoder.
 
@@ -122,7 +123,7 @@ const coder = new CountryCoder();
 
 
 <a name="feature" href="#feature">#</a> <b>feature</b>(arg: string | Location, opts?: CodingOptions): RegionFeature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L158 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L172 "Source")
 
 Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found.
 
@@ -146,7 +147,7 @@ coder.feature(pointGeoJSON.geometry);  // returns United Kingdom feature
 
 
 <a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(arg: string | Location, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L166 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L180 "Source")
 
 Returns the ISO 3166-1 alpha-2 code for the given location or identifier and options, if found.
 
@@ -169,7 +170,7 @@ coder.iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 
 
 <a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(arg: string | Location, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L173 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L187 "Source")
 
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
 
@@ -192,7 +193,7 @@ coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 
 
 <a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: string | Location, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L180 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
 
 Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found.
 
@@ -215,7 +216,7 @@ coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 
 
 <a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(arg: string | Location, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L187 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L201 "Source")
 
 Returns the Wikidata QID for the given location or identifier and options, if found.
 
@@ -238,7 +239,7 @@ coder.wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 
 
 <a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(arg: string | Location, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L208 "Source")
 
 Returns the emoji flag sequence for the given location or identifier and options, if found.
 
@@ -261,7 +262,7 @@ coder.emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 
 
 <a name="features" href="#features">#</a> <b>features</b>(loc: Location): [RegionFeature]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L201 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
 
 Returns all the the features containing the given location.
 
@@ -279,7 +280,7 @@ coder.features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
 
 
 <a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(loc: Location): [string]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L222 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L236 "Source")
 
 Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location.
 
@@ -297,7 +298,7 @@ coder.iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
 
 
 <a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(arg: string | Location): boolean
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L229 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L243 "Source")
 
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union.
 
@@ -320,6 +321,31 @@ coder.isInEuropeanUnion('CH');         // returns false
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
 coder.isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
 coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
+```
+
+
+<a name="roadSpeedUnit" href="#roadSpeedUnit">#</a> <b>roadSpeedUnit</b>(arg: string | Location): string?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L258 "Source")
+
+Returns the unit of the speed used on traffic signs for the given location or identifier, if found.
+
+```js
+const coder = new CountryCoder();
+coder.roadSpeedUnit([0, 51.5]);    // returns 'mph' (Britain)
+coder.roadSpeedUnit([6.1, 46.2]);  // returns 'km/h' (Switzerland)
+coder.roadSpeedUnit([0, 90]);      // returns null (North Pole)
+coder.roadSpeedUnit('EU');         // returns null
+coder.roadSpeedUnit('GB');         // returns 'mph'
+coder.roadSpeedUnit('GBR');        // returns 'mph'
+coder.roadSpeedUnit('826');        // returns 'mph'
+coder.roadSpeedUnit('Q145');       // returns 'mph'
+coder.roadSpeedUnit('🇬🇧');         // returns 'mph'
+coder.roadSpeedUnit('UK');         // returns 'mph'
+coder.roadSpeedUnit('CH');         // returns 'km/h'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
+coder.roadSpeedUnit(pointGeoJSON);           // returns mph (Britain)
+coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns mph (Britain)
 ```
 
 
@@ -386,6 +412,9 @@ An object containing the attributes of a RegionFeature object.
 - `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
     - `excRes`: exceptionally-reserved
     - `usrAssn`: user-assigned
+- `roadSpeedUnit`: `string`, the speed unit used on traffic signs in this feature
+    - `mph`: miles per hour
+    - `km/h`: kilometers per hour
 
 
 <a name="RegionFeatureCollection" href="#RegionFeatureCollection">#</a> <b>RegionFeatureCollection</b>

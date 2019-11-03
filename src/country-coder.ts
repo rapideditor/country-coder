@@ -31,6 +31,11 @@ type RegionFeatureProperties = {
 
   // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   emojiFlag: string | undefined;
+
+  // The unit used for road traffic speeds within this feature
+  // - `mph`: miles per hour
+  // - `km/h`: kilometers per hour
+  roadSpeedUnit: string | undefined;
 };
 type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
 type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
@@ -88,6 +93,15 @@ export default class CountryCoder {
     let geometryFeatures: Array<RegionFeature> = [];
     for (let i in this.borders.features) {
       let feature = this.borders.features[i];
+
+      if (
+        !feature.properties.roadSpeedUnit &&
+        // no common unit in the EU
+        feature.properties.iso1A2 !== 'EU'
+      ) {
+        // only `mph` regions are listed explicitly, else assume `km/h`
+        feature.properties.roadSpeedUnit = 'km/h';
+      }
 
       loadFlag(feature);
 
@@ -238,5 +252,16 @@ export default class CountryCoder {
     if (feature.properties.iso1A2 === 'EU') return true;
     if (!feature.properties.groups) return false;
     return feature.properties.groups.indexOf('EU') !== -1;
+  }
+
+  // Returns the road speed unit for the feature matching `arg` as a string (`mph` or `km/h`)
+  roadSpeedUnit(arg: string | Location): string | null {
+    let feature: RegionFeature | null;
+    if (typeof arg === 'string') {
+      feature = this.feature(<string>arg);
+    } else {
+      feature = this.smallestFeature(<Location>arg);
+    }
+    return (feature && feature.properties.roadSpeedUnit) || null;
   }
 }

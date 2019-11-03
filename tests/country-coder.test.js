@@ -585,4 +585,36 @@ describe('country-coder', () => {
       });
     });
   });
+
+  describe('roadSpeedUnit', () => {
+    it('finds feature using km/h by location', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit([2.35, 48.85])).toBe('km/h');
+    });
+
+    it('finds feature using mph by location', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit([-74, 40.6])).toBe('mph');
+    });
+
+    it('finds feature using km/h by code', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit('IO')).toBe('km/h');
+    });
+
+    it('finds feature using mph by code', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit('VI')).toBe('mph');
+    });
+
+    it('finds null for EU', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit('EU')).toBeNull();
+    });
+
+    it('finds null for North Pole', () => {
+      const coder = new CountryCoder();
+      expect(coder.roadSpeedUnit([0, 90])).toBeNull();
+    });
+  });
 });

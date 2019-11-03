@@ -46,7 +46,8 @@ let featureProperties = [
   'aliases',
   'country',
   'groups',
-  'isoStatus'
+  'isoStatus',
+  'roadSpeedUnit'
 ];
 
 function processProperties(feature) {
