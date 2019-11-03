@@ -30,6 +30,11 @@ describe('country-coder', () => {
         expect(coder.feature('US').properties.iso1N3).toBe('840');
       });
 
+      it('finds feature by ISO 3166-1 alpha-2 code, lowercase: us', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('us').properties.iso1N3).toBe('840');
+      });
+
       it('does not find feature for unassigned alpha-2 code: AB', () => {
         const coder = new CountryCoder();
         expect(coder.feature('AB')).toBeNull();
@@ -40,6 +45,11 @@ describe('country-coder', () => {
       it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
         const coder = new CountryCoder();
         expect(coder.feature('USA').properties.iso1A2).toBe('US');
+      });
+
+      it('finds feature by ISO 3166-1 alpha-3 code, lowercase: usa', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('usa').properties.iso1A2).toBe('US');
       });
 
       it('does not find feature for unassigned alpha-3 code: ABC', () => {
@@ -78,6 +88,11 @@ describe('country-coder', () => {
         expect(coder.feature('Q30').properties.iso1A2).toBe('US');
       });
 
+      it('finds feature by Wikidata QID, lowercase: q30', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('q30').properties.iso1A2).toBe('US');
+      });
+
       it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
         const coder = new CountryCoder();
         expect(coder.feature('Q123456')).toBeNull();
@@ -88,6 +103,11 @@ describe('country-coder', () => {
       it('finds Greece by European Commission code: EL', () => {
         const coder = new CountryCoder();
         expect(coder.feature('EL').properties.iso1N3).toBe('300');
+      });
+
+      it('finds Greece by European Commission code, lowercase: el', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('el').properties.iso1N3).toBe('300');
       });
 
       it('finds United Kingdom by European Commission code: UK', () => {

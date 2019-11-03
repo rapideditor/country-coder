@@ -165,7 +165,7 @@ export default class CountryCoder {
 
   // Returns the feature with an identifying property matching `id`, if any
   private featureForID(id: string): RegionFeature | null {
-    return this.featuresByCode[id] || null;
+    return this.featuresByCode[id.toUpperCase()] || null;
   }
 
   // Returns the feature matching the given arguments, if any
