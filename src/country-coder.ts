@@ -32,6 +32,11 @@ type RegionFeatureProperties = {
   // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   emojiFlag: string | undefined;
 
+  // The side of the road that traffic drives on within this feature
+  // - `right`
+  // - `left`
+  driveSide: string | undefined;
+
   // The unit used for road traffic speeds within this feature
   // - `mph`: miles per hour
   // - `km/h`: kilometers per hour
@@ -95,12 +100,21 @@ export default class CountryCoder {
       let feature = this.borders.features[i];
 
       if (
-        !feature.properties.roadSpeedUnit &&
+        feature.properties.roadSpeedUnit === undefined &&
         // no common unit in the EU
         feature.properties.iso1A2 !== 'EU'
       ) {
         // only `mph` regions are listed explicitly, else assume `km/h`
         feature.properties.roadSpeedUnit = 'km/h';
+      }
+
+      if (
+        feature.properties.driveSide === undefined &&
+        // no common side in the EU
+        feature.properties.iso1A2 !== 'EU'
+      ) {
+        // only `left` regions are listed explicitly, else assume `right`
+        feature.properties.driveSide = 'right';
       }
 
       loadFlag(feature);
@@ -252,6 +266,17 @@ export default class CountryCoder {
     if (feature.properties.iso1A2 === 'EU') return true;
     if (!feature.properties.groups) return false;
     return feature.properties.groups.indexOf('EU') !== -1;
+  }
+
+  // Returns the side traffic drives on in the feature matching `arg` as a string (`right` or `left`)
+  driveSide(arg: string | Location): string | null {
+    let feature: RegionFeature | null;
+    if (typeof arg === 'string') {
+      feature = this.feature(<string>arg);
+    } else {
+      feature = this.smallestFeature(<Location>arg);
+    }
+    return (feature && feature.properties.driveSide) || null;
   }
 
   // Returns the road speed unit for the feature matching `arg` as a string (`mph` or `km/h`)

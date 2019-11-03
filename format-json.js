@@ -47,6 +47,7 @@ let featureProperties = [
   'country',
   'groups',
   'isoStatus',
+  'driveSide',
   'roadSpeedUnit'
 ];
 

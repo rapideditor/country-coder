@@ -94,6 +94,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [features](#features)(loc: Location): [RegionFeature]
 * [iso1A2Codes](#iso1A2Codes)(loc: Location): [string]
 * [isInEuropeanUnion](#isInEuropeanUnion)(arg: string | Location): boolean
+* [driveSide](#driveSide)(arg: string | Location): string?
 * [roadSpeedUnit](#roadSpeedUnit)(arg: string | Location): string?
 
 ##### Properties
@@ -324,10 +325,35 @@ coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
 ```
 
 
+<a name="driveSide" href="#driveSide">#</a> <b>driveSide</b>(arg: string | Location): string?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L258 "Source")
+
+Returns the side of the road on which traffic drives for the given location or identifier, if found.
+
+```js
+const coder = new CountryCoder();
+coder.driveSide([0, 51.5]);    // returns 'left' (Britain)
+coder.driveSide([6.1, 46.2]);  // returns 'right' (Switzerland)
+coder.driveSide([0, 90]);      // returns null (North Pole)
+coder.driveSide('EU');         // returns null
+coder.driveSide('GB');         // returns 'left'
+coder.driveSide('GBR');        // returns 'left'
+coder.driveSide('826');        // returns 'left'
+coder.driveSide('Q145');       // returns 'left'
+coder.driveSide('🇬🇧');         // returns 'left'
+coder.driveSide('UK');         // returns 'left'
+coder.driveSide('CH');         // returns 'right'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
+coder.driveSide(pointGeoJSON);           // returns 'left' (Britain)
+coder.driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
+```
+
+
 <a name="roadSpeedUnit" href="#roadSpeedUnit">#</a> <b>roadSpeedUnit</b>(arg: string | Location): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L258 "Source")
 
-Returns the unit of the speed used on traffic signs for the given location or identifier, if found.
+Returns the unit of speed used on traffic signs for the given location or identifier, if found.
 
 ```js
 const coder = new CountryCoder();
@@ -344,8 +370,8 @@ coder.roadSpeedUnit('UK');         // returns 'mph'
 coder.roadSpeedUnit('CH');         // returns 'km/h'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.roadSpeedUnit(pointGeoJSON);           // returns mph (Britain)
-coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns mph (Britain)
+coder.roadSpeedUnit(pointGeoJSON);           // returns 'mph' (Britain)
+coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 ```
 
 
@@ -412,6 +438,9 @@ An object containing the attributes of a RegionFeature object.
 - `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
     - `excRes`: exceptionally-reserved
     - `usrAssn`: user-assigned
+- `driveSide`: `string`, the side of the road on which traffic drives within this feature
+    - `right`
+    - `left`
 - `roadSpeedUnit`: `string`, the speed unit used on traffic signs in this feature
     - `mph`: miles per hour
     - `km/h`: kilometers per hour

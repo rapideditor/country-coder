@@ -606,6 +606,38 @@ describe('country-coder', () => {
     });
   });
 
+  describe('driveSide', () => {
+    it('finds feature using right by location', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide([-74, 40.6])).toBe('right');
+    });
+
+    it('finds feature using left by location', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide([-4.5, 54.2])).toBe('left');
+    });
+
+    it('finds feature using right by code', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide('IO')).toBe('right');
+    });
+
+    it('finds feature using left by code', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide('VI')).toBe('left');
+    });
+
+    it('finds null for EU', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide('EU')).toBeNull();
+    });
+
+    it('finds null for North Pole', () => {
+      const coder = new CountryCoder();
+      expect(coder.driveSide([0, 90])).toBeNull();
+    });
+  });
+
   describe('roadSpeedUnit', () => {
     it('finds feature using km/h by location', () => {
       const coder = new CountryCoder();
