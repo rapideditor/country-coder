@@ -18,7 +18,11 @@ outstring = outstring.substring(0, outstring.length - 1);
 outstring += ',"features":[\n';
 
 features.sort(function(feature1, feature2) {
-  return feature1.properties.iso1A2 > feature2.properties.iso1A2 ? 1 : -1;
+  return feature1.properties.iso1A2 ||
+    feature1.properties.m49 > feature2.properties.iso1A2 ||
+    feature2.properties.m49
+    ? 1
+    : -1;
 });
 
 function roundCoordinatePrecision(feature) {
@@ -42,11 +46,13 @@ let featureProperties = [
   'iso1A2',
   'iso1A3',
   'iso1N3',
+  'm49',
   'wikidata',
   'aliases',
   'country',
   'groups',
   'isoStatus',
+  'nameEn',
   'driveSide',
   'roadSpeedUnit',
   'callingCodes'

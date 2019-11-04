@@ -10,6 +10,7 @@
 - 🆎 [ISO 3166-1 alpha-2 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) (`ZA`)
 - 🔤 [ISO 3166-1 alpha-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3) (`ZAF`)
 - 3️⃣ [ISO 3166-1 numeric-3 code](https://en.wikipedia.org/wiki/ISO_3166-1_numeric) (`710`)
+- 3️⃣ [United Nations M49 code](https://en.wikipedia.org/wiki/UN_M49) (`710`)
 - 🌐 [Wikidata QID](https://www.wikidata.org/wiki/Q43649390) (`Q258`)
 - 🇺🇳 [Emoji flag](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol) (🇿🇦)
 
@@ -292,7 +293,7 @@ coder.features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
 <a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(loc: Location): [string]
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L236 "Source")
 
-Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location.
+Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location that have ISO codes.
 
 ```js
 const coder = new CountryCoder();
@@ -464,12 +465,14 @@ An object containing the attributes of a RegionFeature object.
 - `iso1A2`: `string`, ISO 3166-1 alpha-2 code
 - `iso1A3`: `string`, ISO 3166-1 alpha-3 code
 - `iso1N3`: `string`, ISO 3166-1 numeric-3 code
+- `m49`: `string`, UN M49 code
 - `wikidata`: `string`, Wikidata QID
 - `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
 - `aliases`: `[string]`, additional identifiers which can be used to look up this feature
 - `country`: `string`, for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
-- `groups`: `[string]`, the ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
-- `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
+- `groups`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, other than its country
+- `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s), if any
+    - `official`: officially-assigned
     - `excRes`: exceptionally-reserved
     - `usrAssn`: user-assigned
 - `driveSide`: `string`, the side of the road on which traffic drives within this feature

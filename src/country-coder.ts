@@ -11,6 +11,9 @@ type RegionFeatureProperties = {
   // ISO 3166-1 numeric-3 code
   iso1N3: string | undefined;
 
+  // The UN M49 code
+  m49: string | undefined;
+
   // Wikidata QID
   wikidata: string | undefined;
 
@@ -21,10 +24,11 @@ type RegionFeatureProperties = {
   // For features entirely within a country, the ISO 3166-1 alpha-2 code for that country
   country: string | undefined;
 
-  // The ISO 3166-1 alpha-2 codes of other features this feature is entirely within, other than its country
+  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, other than its country
   groups: Array<string> | undefined;
 
-  // The status of this feature's ISO 3166-1 code(s) if they are not officially-assigned
+  // The status of this feature's ISO 3166-1 code(s), if any
+  // - `official`: officially-assigned
   // - `excRes`: exceptionally-reserved
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
@@ -71,7 +75,7 @@ export default class CountryCoder {
   // Constructs a new CountryCoder
   constructor() {
     let featuresByCode = this.featuresByCode;
-    let identifierProps = ['iso1A2', 'iso1A3', 'iso1N3', 'wikidata', 'emojiFlag'];
+    let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag'];
 
     // Caches features by their identifying strings for rapid lookup
     function cacheFeatureByIDs(feature: RegionFeature) {
@@ -92,6 +96,7 @@ export default class CountryCoder {
 
     // Calculates the emoji flag sequence from the alpha-2 code and caches it
     function loadFlag(feature: RegionFeature) {
+      if (!feature.properties.iso1A2) return;
       feature.properties.emojiFlag = feature.properties.iso1A2.replace(/./g, function(
         char: string
       ) {
@@ -99,12 +104,20 @@ export default class CountryCoder {
       });
     }
 
-    let geometryFeatures: Array<RegionFeature> = [];
-    for (let i in this.borders.features) {
-      let feature = this.borders.features[i];
+    function loadDerivedData(feature: RegionFeature) {
+      if (!feature.properties.m49 && feature.properties.iso1N3) {
+        // M49 is a superset of ISO numerics so we only need to store one
+        feature.properties.m49 = feature.properties.iso1N3;
+      }
+
+      if (!feature.properties.isoStatus && feature.properties.iso1A2) {
+        // Features with an ISO code but no explicit status are officially-assigned
+        feature.properties.isoStatus = 'official';
+      }
 
       if (
         feature.properties.roadSpeedUnit === undefined &&
+        feature.properties.iso1A2 &&
         // no common unit in the EU
         feature.properties.iso1A2 !== 'EU'
       ) {
@@ -114,6 +127,7 @@ export default class CountryCoder {
 
       if (
         feature.properties.driveSide === undefined &&
+        feature.properties.iso1A2 &&
         // no common side in the EU
         feature.properties.iso1A2 !== 'EU'
       ) {
@@ -122,6 +136,13 @@ export default class CountryCoder {
       }
 
       loadFlag(feature);
+    }
+
+    let geometryFeatures: Array<RegionFeature> = [];
+    for (let i in this.borders.features) {
+      let feature = this.borders.features[i];
+
+      loadDerivedData(feature);
 
       cacheFeatureByIDs(feature);
 
@@ -151,7 +172,8 @@ export default class CountryCoder {
     let basicLoc = this.basicLoc(loc);
     let featureProperties: RegionFeatureProperties = this.featureQuery(basicLoc);
     if (!featureProperties) return null;
-    return this.featuresByCode[featureProperties.iso1A2];
+    let code = featureProperties.iso1A2 || featureProperties.m49;
+    return this.featuresByCode[<string>code];
   }
 
   // Returns the country feature containing `loc`, if any
@@ -160,13 +182,15 @@ export default class CountryCoder {
     if (!feature) return null;
     // a feature without `country` but with geometry is itself a country
     let countryCode = feature.properties.country || feature.properties.iso1A2;
-    return this.featuresByCode[countryCode];
+    return this.featuresByCode[<string>countryCode];
   }
 
   // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
   private smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
     let feature = this.features(loc).find(function(feature) {
-      return feature.properties.isoStatus !== 'excRes';
+      return (
+        feature.properties.isoStatus === 'official' || feature.properties.isoStatus === 'usrAssn'
+      );
     });
     return feature || null;
   }
@@ -198,7 +222,7 @@ export default class CountryCoder {
   iso1A2Code(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
-    return feature.properties.iso1A2;
+    return feature.properties.iso1A2 || null;
   }
 
   // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
@@ -215,6 +239,13 @@ export default class CountryCoder {
     return feature.properties.iso1N3 || null;
   }
 
+  // Returns the UN M49 code for the feature matching the arguments, if any
+  m49Code(arg: string | Location, opts?: CodingOptions): string | null {
+    let feature = this.feature(arg, opts);
+    if (!feature) return null;
+    return feature.properties.m49 || null;
+  }
+
   // Returns the Wikidata QID code for the feature matching the arguments, if any
   wikidataQID(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
@@ -226,7 +257,7 @@ export default class CountryCoder {
   emojiFlag(arg: string | Location, opts?: CodingOptions): string | null {
     let feature = this.feature(arg, opts);
     if (!feature) return null;
-    return <string>feature.properties.emojiFlag;
+    return <string>feature.properties.emojiFlag || null;
   }
 
   // Returns all the features containing `loc` (zero or more)
@@ -252,9 +283,11 @@ export default class CountryCoder {
 
   // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc` (zero or more)
   iso1A2Codes(loc: Location): Array<string> {
-    return this.features(loc).map(function(feature) {
-      return feature.properties.iso1A2;
-    });
+    return this.features(loc)
+      .map(function(feature) {
+        return feature.properties.iso1A2;
+      })
+      .filter(Boolean);
   }
 
   // Returns true if the feature matching `arg` is within EU jurisdiction

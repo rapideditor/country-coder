@@ -219,6 +219,16 @@ describe('country-coder', () => {
         expect(coder.iso1A2Code('RP')).toBe('PH');
       });
     });
+    describe('by M49', () => {
+      it('does not find for feature with geography but no ISO code', () => {
+        const coder = new CountryCoder();
+        expect(coder.iso1A2Code('680')).toBeNull();
+      });
+      it('does not find for feature with no geography and no ISO code', () => {
+        const coder = new CountryCoder();
+        expect(coder.iso1A2Code('142')).toBeNull();
+      });
+    });
     describe('by location, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         const coder = new CountryCoder();
@@ -263,6 +273,11 @@ describe('country-coder', () => {
       it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
         const coder = new CountryCoder();
         expect(coder.iso1A2Code([71.13, 39.96], { level: 'country' })).toBe('UZ');
+      });
+
+      it('codes location in feature without an ISO code: Sark as GB', () => {
+        const coder = new CountryCoder();
+        expect(coder.iso1A2Code([-2.35, 49.43], { level: 'country' })).toBe('GB');
       });
 
       it('codes South Pole as AQ', () => {
@@ -321,6 +336,11 @@ describe('country-coder', () => {
         expect(coder.iso1A2Code([71.13, 39.96], { level: 'region' })).toBe('UZ');
       });
 
+      it('codes location in feature without an ISO code: Sark as GG', () => {
+        const coder = new CountryCoder();
+        expect(coder.iso1A2Code([-2.35, 49.43], { level: 'region' })).toBe('GG');
+      });
+
       it('codes South Pole as AQ', () => {
         const coder = new CountryCoder();
         expect(coder.iso1A2Code([0, -90], { level: 'region' })).toBe('AQ');
@@ -357,7 +377,7 @@ describe('country-coder', () => {
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  // this doesn't need extensive tests since it's just a fetcher using `feature`
   describe('iso1A3Code', () => {
     it('codes location in officially-assigned country: New York, United States as USA', () => {
       const coder = new CountryCoder();
@@ -375,7 +395,7 @@ describe('country-coder', () => {
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  // this doesn't need extensive tests since it's just a fetcher using `feature`
   describe('iso1N3Code', () => {
     it('codes location in officially-assigned country: New York, United States as 840', () => {
       const coder = new CountryCoder();
@@ -387,13 +407,40 @@ describe('country-coder', () => {
       expect(coder.iso1N3Code([21, 42.6], { level: 'country' })).toBeNull();
     });
 
+    it('does not code non-geography, non-ISO feature by Wikidata QID: Q48', () => {
+      const coder = new CountryCoder();
+      expect(coder.iso1N3Code('Q48')).toBeNull();
+    });
+
     it('does not code North Pole', () => {
       const coder = new CountryCoder();
       expect(coder.iso1N3Code([0, 90], { level: 'country' })).toBeNull();
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  describe('m49Code', () => {
+    it('codes location in officially-assigned country: New York, United States as 840', () => {
+      const coder = new CountryCoder();
+      expect(coder.m49Code([-74, 40.6], { level: 'country' })).toBe('840');
+    });
+
+    it('codes non-geography, non-ISO feature by Wikidata QID: Q48 as 142', () => {
+      const coder = new CountryCoder();
+      expect(coder.m49Code('Q48')).toBe('142');
+    });
+
+    it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
+      const coder = new CountryCoder();
+      expect(coder.m49Code([21, 42.6], { level: 'country' })).toBeNull();
+    });
+
+    it('does not code North Pole', () => {
+      const coder = new CountryCoder();
+      expect(coder.m49Code([0, 90], { level: 'country' })).toBeNull();
+    });
+  });
+
+  // this doesn't need extensive tests since it's just a fetcher using `feature`
   describe('wikidataQID', () => {
     it('codes location in officially-assigned country: New York, United States as Q30', () => {
       const coder = new CountryCoder();
@@ -416,7 +463,7 @@ describe('country-coder', () => {
     });
   });
 
-  // this doesn't need extensive tests since it's just a fetcher using iso1A2Code
+  // this doesn't need extensive tests since it's just a fetcher using `feature`
   describe('flag', () => {
     it('codes location in officially-assigned country: New York, United States as 🇺🇸', () => {
       const coder = new CountryCoder();
@@ -426,6 +473,11 @@ describe('country-coder', () => {
     it('codes location in user-assigned, de facto country: Kosovo as 🇽🇰', () => {
       const coder = new CountryCoder();
       expect(coder.emojiFlag([21, 42.6], { level: 'country' })).toBe('🇽🇰');
+    });
+
+    it('does not find for M49 code with no corresponding ISO code', () => {
+      const coder = new CountryCoder();
+      expect(coder.emojiFlag('150')).toBeNull();
     });
 
     it('does not code North Pole', () => {
@@ -592,6 +644,11 @@ describe('country-coder', () => {
       it('returns false for user-assigned, de facto country, in Europe, outside EU: XK', () => {
         const coder = new CountryCoder();
         expect(coder.isInEuropeanUnion('XK')).toBe(false);
+      });
+
+      it('returns false for M49 super-region code: 150', () => {
+        const coder = new CountryCoder();
+        expect(coder.isInEuropeanUnion('150')).toBe(false);
       });
 
       it('returns false for unassigned alpha-2 code: AB', () => {
