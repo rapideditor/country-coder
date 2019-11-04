@@ -15,6 +15,14 @@
 
 Results can optionally include non-country ISO 3166-1 features, such as Puerto Rico (`PR`) or the Isle of Man (`IM`). Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`).
 
+In addition to identifiers, `country-coder` can provide basic regional information:
+
+- ☎️ [Telephone Calling Codes](https://en.wikipedia.org/wiki/List_of_country_calling_codes) (+44)
+- 🛣 [Driving Side](https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic) (right, left)
+- 🚗 [Traffic Speed Unit](https://en.wikipedia.org/wiki/Speed_limit) (km/h, mph)
+- 🇪🇺 [European Union Membership](https://en.wikipedia.org/wiki/Member_state_of_the_European_Union)
+
+
 #### Advantages
 
 Client-side coding has a number of benefits over server-side solutions:
