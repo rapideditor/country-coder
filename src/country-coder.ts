@@ -41,6 +41,10 @@ type RegionFeatureProperties = {
   // - `mph`: miles per hour
   // - `km/h`: kilometers per hour
   roadSpeedUnit: string | undefined;
+
+  // The international calling codes for this feature, sometimes including area codes
+  // e.g. `1`, `1 340`
+  callingCodes: Array<string> | undefined;
 };
 type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
 type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
@@ -257,7 +261,7 @@ export default class CountryCoder {
   isInEuropeanUnion(arg: string | Location): boolean {
     let feature: RegionFeature | null;
     if (typeof arg === 'string') {
-      feature = this.feature(<string>arg);
+      feature = this.featureForID(<string>arg);
     } else {
       feature = this.smallestFeature(<Location>arg);
     }
@@ -272,7 +276,7 @@ export default class CountryCoder {
   driveSide(arg: string | Location): string | null {
     let feature: RegionFeature | null;
     if (typeof arg === 'string') {
-      feature = this.feature(<string>arg);
+      feature = this.featureForID(<string>arg);
     } else {
       feature = this.smallestFeature(<Location>arg);
     }
@@ -283,10 +287,21 @@ export default class CountryCoder {
   roadSpeedUnit(arg: string | Location): string | null {
     let feature: RegionFeature | null;
     if (typeof arg === 'string') {
-      feature = this.feature(<string>arg);
+      feature = this.featureForID(<string>arg);
     } else {
       feature = this.smallestFeature(<Location>arg);
     }
     return (feature && feature.properties.roadSpeedUnit) || null;
+  }
+
+  // Returns the full international calling codes for phone numbers in the feature matching `arg`, if any
+  callingCodes(arg: string | Location): Array<string> {
+    let feature: RegionFeature | null;
+    if (typeof arg === 'string') {
+      feature = this.featureForID(<string>arg);
+    } else {
+      feature = this.smallestFeature(<Location>arg);
+    }
+    return (feature && feature.properties.callingCodes) || [];
   }
 }

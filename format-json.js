@@ -48,7 +48,8 @@ let featureProperties = [
   'groups',
   'isoStatus',
   'driveSide',
-  'roadSpeedUnit'
+  'roadSpeedUnit',
+  'callingCodes'
 ];
 
 function processProperties(feature) {

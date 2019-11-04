@@ -669,4 +669,26 @@ describe('country-coder', () => {
       expect(coder.roadSpeedUnit([0, 90])).toBeNull();
     });
   });
+
+  describe('callingCodes', () => {
+    it('finds one prefix for feature with one', () => {
+      const coder = new CountryCoder();
+      expect(coder.callingCodes([2.35, 48.85])).toStrictEqual(['33']);
+    });
+
+    it('finds multiple prefixes for feature with multiple', () => {
+      const coder = new CountryCoder();
+      expect(coder.callingCodes('PR')).toStrictEqual(['1 787', '1 939']);
+    });
+
+    it('finds none for feature without data', () => {
+      const coder = new CountryCoder();
+      expect(coder.callingCodes('EU')).toStrictEqual([]);
+    });
+
+    it('finds none for North Pole', () => {
+      const coder = new CountryCoder();
+      expect(coder.callingCodes([0, 90])).toStrictEqual([]);
+    });
+  });
 });

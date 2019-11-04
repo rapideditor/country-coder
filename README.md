@@ -96,6 +96,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [isInEuropeanUnion](#isInEuropeanUnion)(arg: string | Location): boolean
 * [driveSide](#driveSide)(arg: string | Location): string?
 * [roadSpeedUnit](#roadSpeedUnit)(arg: string | Location): string?
+* [callingCodes](#callingCodes)(arg: string | Location): [string]
 
 ##### Properties
 * [borders](#borders): RegionFeatureCollection - the base GeoJSON containing all features
@@ -375,6 +376,31 @@ coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 ```
 
 
+<a name="callingCodes" href="#callingCodes">#</a> <b>callingCodes</b>(arg: string | Location): [string]
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L258 "Source")
+
+Returns the full international calling code prefix of phone numbers for the given location or identifier, if any. All prefixes have a country code, with some also including an area code separated by a space character. These are commonly formatted with a preceding plus sign (e.g. `+1 242`).
+
+```js
+const coder = new CountryCoder();
+coder.callingCodes([0, 51.5]);    // returns ['44'] (Britain)
+coder.callingCodes([0, 90]);      // returns [] (North Pole)
+coder.callingCodes('EU');         // returns []
+coder.callingCodes('GB');         // returns ['44']
+coder.callingCodes('GBR');        // returns ['44']
+coder.callingCodes('826');        // returns ['44']
+coder.callingCodes('Q145');       // returns ['44']
+coder.callingCodes('🇬🇧');         // returns ['44']
+coder.callingCodes('UK');         // returns ['44']
+coder.callingCodes('BS');         // returns ['1 242']
+coder.callingCodes('JA');         // returns ['1 876', '1 658']
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
+coder.callingCodes(pointGeoJSON);           // returns ['44'] (Britain)
+coder.callingCodes(pointGeoJSON.geometry);  // returns ['44'] (Britain)
+```
+
+
 ## Properties
 
 <a name="borders" href="#borders">#</a> <b>borders</b>: RegionFeatureCollection
@@ -444,6 +470,7 @@ An object containing the attributes of a RegionFeature object.
 - `roadSpeedUnit`: `string`, the speed unit used on traffic signs in this feature
     - `mph`: miles per hour
     - `km/h`: kilometers per hour
+- `callingCodes`: `[string]`, the international calling codes for this feature, sometimes including area codes
 
 
 <a name="RegionFeatureCollection" href="#RegionFeatureCollection">#</a> <b>RegionFeatureCollection</b>
