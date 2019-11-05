@@ -98,6 +98,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [iso1A2Code](#iso1A2Code)(arg: Location | string | number, opts?: CodingOptions): string?
 * [iso1A3Code](#iso1A3Code)(arg: Location | string | number, opts?: CodingOptions): string?
 * [iso1N3Code](#iso1N3Code)(arg: Location | string | number, opts?: CodingOptions): string?
+* [m49Code](#m49Code)(arg: Location | string | number, opts?: CodingOptions): string?
 * [wikidataQID](#wikidataQID)(arg: Location | string | number, opts?: CodingOptions): string?
 * [emojiFlag](#emojiFlag)(arg: Location | string | number, opts?: CodingOptions): string?
 * [features](#features)(loc: Location): [RegionFeature]
@@ -209,7 +210,7 @@ coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 <a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(arg: Location | string | number, opts?: CodingOptions): string?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
 
-Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found.
+Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found. For more comprehensive coverage, see [m49Code](#m49Code).
 
 ```js
 const coder = new CountryCoder();
@@ -222,10 +223,35 @@ coder.iso1N3Code('Q145');        // returns '826'
 coder.iso1N3Code('🇬🇧');          // returns '826'
 coder.iso1N3Code('UK');          // returns '826'
 coder.iso1N3Code('IM');          // returns '833'
+coder.iso1N3Code('Q15');         // returns null (Africa)
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 coder.iso1N3Code(pointGeoJSON);           // returns '826'
 coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
+```
+
+
+<a name="m49Code" href="#m49Code">#</a> <b>m49Code</b>(arg: Location | string | number, opts?: CodingOptions): string?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L194 "Source")
+
+Returns the United Nations M49 code for the given location or identifier and options, if found. These codes are a superset of ISO 3166-1 numeric-3 codes, adding a subdivision (Sark) and transnational regions (e.g. Asia, Central America, Polynesia).
+
+```js
+const coder = new CountryCoder();
+coder.m49Code([-4.5, 54.2]);  // returns '826'
+coder.m49Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+coder.m49Code([0, 90]);       // returns null
+coder.m49Code('GB');          // returns '826'
+coder.m49Code('GBR');         // returns '826'
+coder.m49Code('Q145');        // returns '826'
+coder.m49Code('🇬🇧');          // returns '826'
+coder.m49Code('UK');          // returns '826'
+coder.m49Code('IM');          // returns '833'
+coder.m49Code('Q15');         // returns '002' (Africa)
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+coder.m49Code(pointGeoJSON);           // returns '826'
+coder.m49Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
