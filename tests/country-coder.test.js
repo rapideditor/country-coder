@@ -25,48 +25,83 @@ describe('country-coder', () => {
     });
 
     describe('by ISO 3166-1 alpha-2', () => {
-      it('finds feature by ISO 3166-1 alpha-2 code: US', () => {
+      it('finds feature by uppercase code: US', () => {
         const coder = new CountryCoder();
         expect(coder.feature('US').properties.iso1N3).toBe('840');
       });
 
-      it('finds feature by ISO 3166-1 alpha-2 code, lowercase: us', () => {
+      it('finds feature by lowercase code: us', () => {
         const coder = new CountryCoder();
         expect(coder.feature('us').properties.iso1N3).toBe('840');
       });
 
-      it('does not find feature for unassigned alpha-2 code: AB', () => {
+      it('finds feature by mixed-case code: Us', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('Us').properties.iso1N3).toBe('840');
+      });
+
+      it('does not find feature for unassigned code in range: AB', () => {
         const coder = new CountryCoder();
         expect(coder.feature('AB')).toBeNull();
       });
     });
 
     describe('by ISO 3166-1 alpha-3', () => {
-      it('finds feature by ISO 3166-1 alpha-3 code: USA', () => {
+      it('finds feature by uppercase code: USA', () => {
         const coder = new CountryCoder();
         expect(coder.feature('USA').properties.iso1A2).toBe('US');
       });
 
-      it('finds feature by ISO 3166-1 alpha-3 code, lowercase: usa', () => {
+      it('finds feature by lowercase code: usa', () => {
         const coder = new CountryCoder();
         expect(coder.feature('usa').properties.iso1A2).toBe('US');
       });
 
-      it('does not find feature for unassigned alpha-3 code: ABC', () => {
+      it('finds feature by mixed-case code: Usa', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature('Usa').properties.iso1A2).toBe('US');
+      });
+
+      it('does not find feature for unassigned code in range: ABC', () => {
         const coder = new CountryCoder();
         expect(coder.feature('ABC')).toBeNull();
       });
     });
 
-    describe('by ISO 3166-1 numeric-3', () => {
-      it('finds feature by ISO 3166-1 numeric-3 code: 840', () => {
+    describe('by ISO 3166-1 numeric-3 / M49', () => {
+      it('finds feature by string: "840"', () => {
         const coder = new CountryCoder();
         expect(coder.feature('840').properties.iso1A2).toBe('US');
       });
 
-      it('does not find feature for unassigned numeric-3 code: 123', () => {
+      it('finds feature by three-digit number: 840', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature(840).properties.iso1A2).toBe('US');
+      });
+
+      it('finds feature by two-digit number: 61', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature(61).properties.wikidata).toBe('Q35942');
+      });
+
+      it('finds feature by one-digit number: 2', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature(2).properties.wikidata).toBe('Q15');
+      });
+
+      it('finds feature by number with extra precision: 840.000', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature(840.0).properties.iso1A2).toBe('US');
+      });
+
+      it('does not find feature for unassigned code in range: "123"', () => {
         const coder = new CountryCoder();
         expect(coder.feature('123')).toBeNull();
+      });
+
+      it('does not find feature for number outside range: 1234', () => {
+        const coder = new CountryCoder();
+        expect(coder.feature(1234)).toBeNull();
       });
     });
 
@@ -83,17 +118,17 @@ describe('country-coder', () => {
     });
 
     describe('by Wikidata QID', () => {
-      it('finds feature by Wikidata QID: Q30', () => {
+      it('finds feature by uppercase QID: Q30', () => {
         const coder = new CountryCoder();
         expect(coder.feature('Q30').properties.iso1A2).toBe('US');
       });
 
-      it('finds feature by Wikidata QID, lowercase: q30', () => {
+      it('finds feature by lowercase QID: q30', () => {
         const coder = new CountryCoder();
         expect(coder.feature('q30').properties.iso1A2).toBe('US');
       });
 
-      it('does not find feature for non-feature Wikidata QID code: Q123456', () => {
+      it('does not find feature for non-feature QID: Q123456', () => {
         const coder = new CountryCoder();
         expect(coder.feature('Q123456')).toBeNull();
       });
@@ -158,12 +193,12 @@ describe('country-coder', () => {
     });
 
     describe('by ISO 3166-1 numeric-3', () => {
-      it('finds by ISO 3166-1 numeric-3 code: 840', () => {
+      it('finds by ISO 3166-1 numeric-3 code: "840"', () => {
         const coder = new CountryCoder();
         expect(coder.iso1A2Code('840')).toBe('US');
       });
 
-      it('does not find for unassigned numeric-3 code: 123', () => {
+      it('does not find for unassigned numeric-3 code: "123"', () => {
         const coder = new CountryCoder();
         expect(coder.iso1A2Code('123')).toBeNull();
       });
