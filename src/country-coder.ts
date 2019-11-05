@@ -11,7 +11,7 @@ type RegionFeatureProperties = {
   // ISO 3166-1 numeric-3 code
   iso1N3: string | undefined;
 
-  // The UN M49 code
+  // UN M49 code
   m49: string | undefined;
 
   // Wikidata QID
@@ -24,8 +24,12 @@ type RegionFeatureProperties = {
   // For features entirely within a country, the ISO 3166-1 alpha-2 code for that country
   country: string | undefined;
 
-  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, other than its country
+  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, including its country
   groups: Array<string> | undefined;
+
+  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature contains;
+  // the inverse of `groups`
+  members: Array<string> | undefined;
 
   // The status of this feature's ISO 3166-1 code(s), if any
   // - `official`: officially-assigned
@@ -63,6 +67,113 @@ type CodingOptions = {
   level: string;
 };
 
+loadDerivedData(borders.features);
+// Some data is implicit, load before using
+function loadDerivedData(features) {
+  let featuresByID = {};
+  for (let i in features) {
+    let feature = features[i];
+    loadGroups(feature);
+    loadM49(feature);
+    loadIsoStatus(feature);
+    loadRoadSpeedUnit(feature);
+    loadDriveSide(feature);
+    loadFlag(feature);
+
+    let m49 = feature.properties.m49;
+    if (m49) featuresByID[m49] = feature;
+
+    let iso1A2 = feature.properties.iso1A2;
+    if (iso1A2) featuresByID[iso1A2] = feature;
+  }
+
+  // must load `members` only after fully loading `featuresByID`
+  for (let i in features) {
+    let feature = features[i];
+    loadMembersForGroupsOf(feature);
+  }
+
+  function loadGroups(feature: RegionFeature) {
+    let props = feature.properties;
+    if (props.country) {
+      // Add `country` to `groups`
+      if (props.groups) {
+        props.groups.push(props.country);
+      } else {
+        props.groups = [props.country];
+      }
+    }
+  }
+
+  function loadM49(feature: RegionFeature) {
+    let props = feature.properties;
+    if (!props.m49 && props.iso1N3) {
+      // M49 is a superset of ISO numerics so we only need to store one
+      props.m49 = props.iso1N3;
+    }
+  }
+
+  function loadIsoStatus(feature: RegionFeature) {
+    let props = feature.properties;
+    if (!props.isoStatus && props.iso1A2) {
+      // Features with an ISO code but no explicit status are officially-assigned
+      props.isoStatus = 'official';
+    }
+  }
+
+  function loadRoadSpeedUnit(feature: RegionFeature) {
+    let props = feature.properties;
+    if (
+      props.roadSpeedUnit === undefined &&
+      props.iso1A2 &&
+      // no common unit in the EU
+      props.iso1A2 !== 'EU'
+    ) {
+      // only `mph` regions are listed explicitly, else assume `km/h`
+      props.roadSpeedUnit = 'km/h';
+    }
+  }
+
+  function loadDriveSide(feature: RegionFeature) {
+    let props = feature.properties;
+    if (
+      props.driveSide === undefined &&
+      props.iso1A2 &&
+      // no common side in the EU
+      props.iso1A2 !== 'EU'
+    ) {
+      // only `left` regions are listed explicitly, else assume `right`
+      props.driveSide = 'right';
+    }
+  }
+
+  // Calculates the emoji flag sequence from the alpha-2 code (if any) and caches it
+  function loadFlag(feature: RegionFeature) {
+    if (!feature.properties.iso1A2) return;
+    let flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
+      return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
+    });
+    feature.properties.emojiFlag = flag;
+  }
+
+  // Populate `members` as the inverse relationship of `groups`
+  function loadMembersForGroupsOf(feature: RegionFeature) {
+    if (!feature.properties.groups) return;
+
+    let featureID = feature.properties.m49 || feature.properties.iso1A2;
+    for (let j in feature.properties.groups) {
+      let groupID = feature.properties.groups[j];
+
+      let groupFeature = featuresByID[groupID];
+      if (groupFeature.properties.members) {
+        groupFeature.properties.members.push(featureID);
+      } else {
+        groupFeature.properties.members = [featureID];
+      }
+    }
+  }
+}
+
 export default class CountryCoder {
   // The base GeoJSON feature collection
   public borders: RegionFeatureCollection = <RegionFeatureCollection>borders;
@@ -94,55 +205,9 @@ export default class CountryCoder {
       }
     }
 
-    // Calculates the emoji flag sequence from the alpha-2 code and caches it
-    function loadFlag(feature: RegionFeature) {
-      if (!feature.properties.iso1A2) return;
-      feature.properties.emojiFlag = feature.properties.iso1A2.replace(/./g, function(
-        char: string
-      ) {
-        return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
-      });
-    }
-
-    function loadDerivedData(feature: RegionFeature) {
-      if (!feature.properties.m49 && feature.properties.iso1N3) {
-        // M49 is a superset of ISO numerics so we only need to store one
-        feature.properties.m49 = feature.properties.iso1N3;
-      }
-
-      if (!feature.properties.isoStatus && feature.properties.iso1A2) {
-        // Features with an ISO code but no explicit status are officially-assigned
-        feature.properties.isoStatus = 'official';
-      }
-
-      if (
-        feature.properties.roadSpeedUnit === undefined &&
-        feature.properties.iso1A2 &&
-        // no common unit in the EU
-        feature.properties.iso1A2 !== 'EU'
-      ) {
-        // only `mph` regions are listed explicitly, else assume `km/h`
-        feature.properties.roadSpeedUnit = 'km/h';
-      }
-
-      if (
-        feature.properties.driveSide === undefined &&
-        feature.properties.iso1A2 &&
-        // no common side in the EU
-        feature.properties.iso1A2 !== 'EU'
-      ) {
-        // only `left` regions are listed explicitly, else assume `right`
-        feature.properties.driveSide = 'right';
-      }
-
-      loadFlag(feature);
-    }
-
     let geometryFeatures: Array<RegionFeature> = [];
     for (let i in this.borders.features) {
       let feature = this.borders.features[i];
-
-      loadDerivedData(feature);
 
       cacheFeatureByIDs(feature);
 
@@ -188,9 +253,8 @@ export default class CountryCoder {
   // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
   private smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
     let feature = this.features(loc).find(function(feature) {
-      return (
-        feature.properties.isoStatus === 'official' || feature.properties.isoStatus === 'usrAssn'
-      );
+      let isoStatus = feature.properties.isoStatus;
+      return isoStatus === 'official' || isoStatus === 'usrAssn';
     });
     return feature || null;
   }
@@ -281,14 +345,10 @@ export default class CountryCoder {
     let properties = feature.properties;
     if (properties.groups) {
       for (let i in properties.groups) {
-        features.push(this.featuresByCode[properties.groups[i]]);
+        let groupID = properties.groups[i];
+        features.push(this.featuresByCode[groupID]);
       }
     }
-
-    if (properties.country) {
-      features.push(this.featuresByCode[properties.country]);
-    }
-
     return features;
   }
 
