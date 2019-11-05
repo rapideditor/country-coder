@@ -578,6 +578,94 @@ describe('country-coder', () => {
     });
   });
 
+  describe('isIn', () => {
+    describe('by location', () => {
+      it('returns true: US location in US', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn([-74, 40.6], 'US')).toBe(true);
+      });
+      it('returns false: US location in CH', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn([-74, 40.6], 'CH')).toBe(false);
+      });
+      it('returns true: US location in 19 (Americas)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn([-74, 40.6], 19)).toBe(true);
+      });
+      it('returns true: US location in "021" (Northern America)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn([-74, 40.6], '021')).toBe(true);
+      });
+      it('returns false: US location in Q15 (Africa)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn([-74, 40.6], 'Q15')).toBe(false);
+      });
+    });
+
+    describe('by code', () => {
+      it('returns true: US in US', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('US', 'US')).toBe(true);
+      });
+      it('returns false: US in CH', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('US', 'CH')).toBe(false);
+      });
+      it('returns true: USA in 19 (Americas)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('USA', 19)).toBe(true);
+      });
+      it('returns true: US in "021" (Northern America)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('US', '021')).toBe(true);
+      });
+      it('returns false: US location in Q15 (Africa)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('US', 'Q15')).toBe(false);
+      });
+      it('returns true: PR in US', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('PR', 'US')).toBe(true);
+      });
+      it('returns false: US in PR', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('US', 'PR')).toBe(false);
+      });
+      it('returns true: TA in SH', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('TA', 'SH')).toBe(true);
+      });
+      it('returns true: TA in GB', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('TA', 'GB')).toBe(true);
+      });
+      it('returns false: TA in EU', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('TA', 'EU')).toBe(false);
+      });
+      it('returns true: "021" in "019" (Northern America in Americas)', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('021', '019')).toBe(true);
+      });
+      it('returns true: "XK" in "europe"', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('XK', 'europe')).toBe(true);
+      });
+      it('returns true: "TW" in "Asia"', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('TW', 'Asia')).toBe(true);
+      });
+      it('returns true: 🇵🇷 in 🇺🇸', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('🇵🇷', '🇺🇸')).toBe(true);
+      });
+      it('returns true: "Subsaharan africa" in "AFRICA"', () => {
+        const coder = new CountryCoder();
+        expect(coder.isIn('Subsaharan africa', 'AFRICA')).toBe(true);
+      });
+    });
+  });
+
   describe('isInEuropeanUnion', () => {
     describe('by location', () => {
       it('returns false for location in officially-assigned country, outside EU: New York, United States', () => {

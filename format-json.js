@@ -52,7 +52,6 @@ let featureProperties = [
   'country',
   'groups',
   'isoStatus',
-  'nameEn',
   'driveSide',
   'roadSpeedUnit',
   'callingCodes'
