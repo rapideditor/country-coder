@@ -440,6 +440,15 @@ describe('country-coder', () => {
         expect(features[3].properties.m49).toBe('019');
       });
 
+      it('codes location in officially-assigned country: New York, United States as US, strict', () => {
+        let features = coder.featuresContaining([-74, 40.6], true);
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('US');
+        expect(features[1].properties.m49).toBe('021');
+        expect(features[2].properties.m49).toBe('003');
+        expect(features[3].properties.m49).toBe('019');
+      });
+
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
         let features = coder.featuresContaining([6.1, 46.2]);
         expect(features.length).toBe(3);
@@ -532,6 +541,14 @@ describe('country-coder', () => {
         expect(features[3].properties.m49).toBe('019');
       });
 
+      it('codes USA, strict', () => {
+        let features = coder.featuresContaining('USA', true);
+        expect(features.length).toBe(3);
+        expect(features[0].properties.m49).toBe('021');
+        expect(features[1].properties.m49).toBe('003');
+        expect(features[2].properties.m49).toBe('019');
+      });
+
       it('codes CH', () => {
         let features = coder.featuresContaining('CH');
         expect(features.length).toBe(3);
@@ -609,6 +626,69 @@ describe('country-coder', () => {
         expect(features.length).toBe(1);
         expect(features[0].properties.iso1A2).toBe('AQ');
       });
+    });
+  });
+
+  describe('featuresIn', () => {
+    it('codes CN', () => {
+      let features = coder.featuresIn('CN');
+      expect(features.length).toBe(3);
+      expect(features[0].properties.iso1A2).toBe('CN');
+      expect(features[1].properties.iso1A2).toBe('HK');
+      expect(features[2].properties.iso1A2).toBe('MO');
+    });
+
+    it('codes CN, strict', () => {
+      let features = coder.featuresIn('CN', true);
+      expect(features.length).toBe(2);
+      expect(features[0].properties.iso1A2).toBe('HK');
+      expect(features[1].properties.iso1A2).toBe('MO');
+    });
+
+    it('codes 830', () => {
+      let features = coder.featuresIn(830);
+      expect(features.length).toBe(4);
+      expect(features[0].properties.m49).toBe('830');
+      expect(features[1].properties.m49).toBe('680');
+      expect(features[2].properties.iso1A2).toBe('GG');
+      expect(features[3].properties.iso1A2).toBe('JE');
+    });
+
+    it('codes 830, strict', () => {
+      let features = coder.featuresIn(830, true);
+      expect(features.length).toBe(3);
+      expect(features[0].properties.m49).toBe('680');
+      expect(features[1].properties.iso1A2).toBe('GG');
+      expect(features[2].properties.iso1A2).toBe('JE');
+    });
+
+    it('codes 🇸🇭 (Saint Helena)', () => {
+      let features = coder.featuresIn('🇸🇭');
+      expect(features.length).toBe(3);
+      expect(features[0].properties.iso1A2).toBe('SH');
+      expect(features[1].properties.iso1A2).toBe('AC');
+      expect(features[2].properties.iso1A2).toBe('TA');
+    });
+
+    it('codes 🇸🇭 (Saint Helena), strict', () => {
+      let features = coder.featuresIn('🇸🇭', true);
+      expect(features.length).toBe(2);
+      expect(features[0].properties.iso1A2).toBe('AC');
+      expect(features[1].properties.iso1A2).toBe('TA');
+    });
+
+    it('codes AQ', () => {
+      let features = coder.featuresIn('AQ');
+      expect(features.length).toBe(1);
+      expect(features[0].properties.iso1A2).toBe('AQ');
+    });
+
+    it('codes AQ, strict', () => {
+      expect(coder.featuresIn('AQ', true)).toStrictEqual([]);
+    });
+
+    it('does not code ABC', () => {
+      expect(coder.featuresIn('ABC')).toStrictEqual([]);
     });
   });
 

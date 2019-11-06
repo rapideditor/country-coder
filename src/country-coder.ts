@@ -342,18 +342,48 @@ export function emojiFlag(query: Location | string | number, opts?: CodingOption
   return match.properties.emojiFlag || null;
 }
 
-// Returns the feature matching `query` and all features containing it, if any
-export function featuresContaining(query: Location | string | number): Array<RegionFeature> {
+// Returns the feature matching `query` and all features containing it, if any.
+// If passing `true` for `strict`, an exact match will not be included
+export function featuresContaining(
+  query: Location | string | number,
+  strict?: boolean
+): Array<RegionFeature> {
   let feature = smallestOrMatchingFeature(query);
   if (!feature) return [];
 
-  let features: Array<RegionFeature> = [feature];
+  let features: Array<RegionFeature> = [];
+
+  if (!strict || typeof query === 'object') {
+    features.push(feature);
+  }
 
   let properties = feature.properties;
   if (properties.groups) {
     for (let i in properties.groups) {
       let groupID = properties.groups[i];
       features.push(featuresByCode[groupID]);
+    }
+  }
+  return features;
+}
+
+// Returns the feature matching `id` and all features it contains, if any.
+// If passing `true` for `strict`, an exact match will not be included
+export function featuresIn(id: string | number, strict?: boolean): Array<RegionFeature> {
+  let feature = featureForID(id);
+  if (!feature) return [];
+
+  let features: Array<RegionFeature> = [];
+
+  if (!strict) {
+    features.push(feature);
+  }
+
+  let properties = feature.properties;
+  if (properties.members) {
+    for (let i in properties.members) {
+      let memberID = properties.members[i];
+      features.push(featuresByCode[memberID]);
     }
   }
   return features;

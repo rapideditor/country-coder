@@ -100,6 +100,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [wikidataQID](#wikidataQID)(query: Location | string | number, opts?: CodingOptions): string?
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
 * [featuresContaining](#featuresContaining)(query: Location | string | number): [RegionFeature]
+* [featuresIn](#featuresIn)(id: string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
 * [driveSide](#driveSide)(query: Location | string | number): string?
@@ -287,7 +288,7 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 <a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number): [RegionFeature]
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
 
-Returns all the the features of any type that contain or match the given location or identifier, if any.
+Returns all the the features of any type that contain or match the given location or identifier, if any. If `strict` is `true` then only features that are strictly containing are returned.
 
 ```js
 featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Northern Europe}, {Europe}, {United Kingdom}]
@@ -302,10 +303,28 @@ featuresContaining('Q145');        // returns [{United Kingdom}, {Northern Europ
 featuresContaining('🇬🇧');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
 featuresContaining('UK');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
 featuresContaining('154');         // returns [{Northern Europe}, {Europe}]
+featuresContaining('GB', true);    // returns [{Northern Europe}, {Europe}, {European Union}]
+featuresContaining('154', true);   // returns [{Europe}]
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, -90] } };
 featuresContaining(pointGeoJSON);            // returns [{Antarctica}]
 featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
+```
+
+
+<a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number): [RegionFeature]
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
+
+Returns all the the features that match or are contained within the given identifier, if any. If `strict` is `true` then only features that are strictly contained are returned.
+
+```js
+featuresIn('CN');          // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('CHN');         // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('156');         // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn(156);           // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('Q148');        // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('🇨🇳');          // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
 ```
 
 
