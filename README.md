@@ -99,8 +99,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [m49Code](#m49Code)(query: Location | string | number, opts?: CodingOptions): string?
 * [wikidataQID](#wikidataQID)(query: Location | string | number, opts?: CodingOptions): string?
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
-* [features](#features)(loc: Location): [RegionFeature]
-* [iso1A2Codes](#iso1A2Codes)(loc: Location): [string]
+* [featuresContaining](#featuresContaining)(query: Location | string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
 * [driveSide](#driveSide)(query: Location | string | number): string?
@@ -130,20 +129,20 @@ Returns the GeoJSON feature from `borders` for the given location or identifier 
 
 ```js
 feature([-4.5, 54.2]);  // returns United Kingdom feature
-feature([-4.5, 54.2], { level: 'region' });  // returns Isle of Man feature
+feature([-4.5, 54.2], { level: 'region' });  // returns {Isle of Man}
 feature([0, 90]);       // returns null
-feature('GB');          // returns United Kingdom feature
-feature('GBR');         // returns United Kingdom feature
-feature('826');         // returns United Kingdom feature
-feature(826);           // returns United Kingdom feature
-feature('Q145');        // returns United Kingdom feature
-feature('🇬🇧');          // returns United Kingdom feature
-feature('UK');          // returns United Kingdom feature
-feature('IM');          // returns Isle of Man feature
+feature('GB');          // returns {United Kingdom}
+feature('GBR');         // returns {United Kingdom}
+feature('826');         // returns {United Kingdom}
+feature(826);           // returns {United Kingdom}
+feature('Q145');        // returns {United Kingdom}
+feature('🇬🇧');          // returns {United Kingdom}
+feature('UK');          // returns {United Kingdom}
+feature('IM');          // returns {Isle of Man}
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-feature(pointGeoJSON);           // returns United Kingdom feature
-feature(pointGeoJSON.geometry);  // returns United Kingdom feature
+feature(pointGeoJSON);           // returns {United Kingdom}
+feature(pointGeoJSON.geometry);  // returns {United Kingdom}
 ```
 
 
@@ -285,37 +284,28 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
-<a name="features" href="#features">#</a> <b>features</b>(loc: Location): [RegionFeature]
+<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number): [RegionFeature]
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
 
-Returns all the the features containing the given location.
+Returns all the the features of any type that contain or match the given location or identifier, if any.
 
 ```js
-features([-4.5, 54.2]);  // returns [{Isle of Man feature}, {United Kingdom feature}]
-features([0, 51.5]);     // returns [{United Kingdom feature}, {European Union feature}]
-features([6.1, 46.2]);   // returns [{Switzerland feature}]
-features([0, 90]);       // returns []
+featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Northern Europe}, {Europe}, {United Kingdom}]
+featuresContaining([0, 51.5]);     // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining([6.1, 46.2]);   // returns [{Switzerland}, {Western Europe}, {Europe}]
+featuresContaining([0, 90]);       // returns []
+featuresContaining('GB');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('GBR');         // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('826');         // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining(826);           // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('Q145');        // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('🇬🇧');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('UK');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('154');         // returns [{Northern Europe}, {Europe}]
 
-let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [6.1, 46.2] } };
-features(pointGeoJSON);            // returns [{Switzerland feature}]
-features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
-```
-
-
-<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(loc: Location): [string]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L236 "Source")
-
-Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location that have ISO codes.
-
-```js
-iso1A2Codes([-4.5, 54.2]);   // returns ['IM', 'GB']
-iso1A2Codes([0, 51.5]);      // returns ['GB', 'EU']
-iso1A2Codes([6.1, 46.2]);    // returns ['CH']
-iso1A2Codes([0, 90]);        // returns []
-
-let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-iso1A2Codes(pointGeoJSON);           // returns ['IM', 'GB']
-iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, -90] } };
+featuresContaining(pointGeoJSON);            // returns [{Antarctica}]
+featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
 ```
 
 

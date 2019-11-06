@@ -73,8 +73,8 @@ type CodingOptions = {
 // The base GeoJSON feature collection
 export let borders: RegionFeatureCollection = <RegionFeatureCollection>rawBorders;
 
-// The whichPolygon getter for looking up a feature by point
-let featureQuery: any = {};
+// The whichPolygon interface for looking up a feature by point
+let whichPolygonGetter: any = {};
 // The cache for looking up a feature by identifier
 let featuresByCode: any = {};
 
@@ -113,7 +113,7 @@ function loadDerivedDataAndCaches(borders) {
     type: 'RegionFeatureCollection',
     features: geometryFeatures
   };
-  featureQuery = whichPolygon(geometryOnlyCollection);
+  whichPolygonGetter = whichPolygon(geometryOnlyCollection);
 
   function loadGroups(feature: RegionFeature) {
     let props = feature.properties;
@@ -230,7 +230,7 @@ function locArray(loc: Location): Vec2 {
 // Returns the smallest feature of any kind containing `loc`, if any
 function smallestFeature(loc: Location): RegionFeature | null {
   let query = locArray(loc);
-  let featureProperties: RegionFeatureProperties = featureQuery(query);
+  let featureProperties: RegionFeatureProperties = whichPolygonGetter(query);
   if (!featureProperties) return null;
   return featuresByCode[featureProperties.id];
 }
@@ -246,7 +246,7 @@ function countryFeature(loc: Location): RegionFeature | null {
 
 // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
 function smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
-  let feature = features(loc).find(function(feature) {
+  let feature = featuresContaining(loc).find(function(feature) {
     let isoStatus = feature.properties.isoStatus;
     return isoStatus === 'official' || isoStatus === 'usrAssn';
   });
@@ -277,6 +277,13 @@ function featureForID(id: string | number): RegionFeature | null {
     stringID = id.toUpperCase().replace(/[-_ ]/g, '');
   }
   return featuresByCode[stringID] || null;
+}
+
+function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
+  if (typeof query === 'object') {
+    return smallestFeature(<Location>query);
+  }
+  return featureForID(query);
 }
 
 // Returns the feature matching the given arguments, if any
@@ -335,9 +342,9 @@ export function emojiFlag(query: Location | string | number, opts?: CodingOption
   return match.properties.emojiFlag || null;
 }
 
-// Returns all the features containing `loc` (zero or more)
-export function features(loc: Location): Array<RegionFeature> {
-  let feature = smallestFeature(loc);
+// Returns the feature matching `query` and all features containing it, if any
+export function featuresContaining(query: Location | string | number): Array<RegionFeature> {
+  let feature = smallestOrMatchingFeature(query);
   if (!feature) return [];
 
   let features: Array<RegionFeature> = [feature];
@@ -352,23 +359,9 @@ export function features(loc: Location): Array<RegionFeature> {
   return features;
 }
 
-// Returns the ISO 3166-1 alpha-2 codes for all features containing `loc` (zero or more)
-export function iso1A2Codes(loc: Location): Array<string> {
-  return features(loc)
-    .map(function(feature) {
-      return feature.properties.iso1A2 || '';
-    })
-    .filter(Boolean);
-}
-
 // Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
 export function isIn(query: Location | string | number, bounds: string | number): boolean {
-  let queryFeature: RegionFeature | null;
-  if (typeof query === 'object') {
-    queryFeature = smallestFeature(<Location>query);
-  } else {
-    queryFeature = featureForID(query);
-  }
+  let queryFeature = smallestOrMatchingFeature(query);
   let boundsFeature = featureForID(bounds);
 
   if (!queryFeature || !boundsFeature) return false;
@@ -385,33 +378,18 @@ export function isInEuropeanUnion(query: Location | string | number): boolean {
 
 // Returns the side traffic drives on in the feature matching `query` as a string (`right` or `left`)
 export function driveSide(query: Location | string | number): string | null {
-  let feature: RegionFeature | null;
-  if (typeof query === 'object') {
-    feature = smallestFeature(<Location>query);
-  } else {
-    feature = featureForID(query);
-  }
+  let feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.driveSide) || null;
 }
 
 // Returns the road speed unit for the feature matching `query` as a string (`mph` or `km/h`)
 export function roadSpeedUnit(query: Location | string | number): string | null {
-  let feature: RegionFeature | null;
-  if (typeof query === 'object') {
-    feature = smallestFeature(<Location>query);
-  } else {
-    feature = featureForID(query);
-  }
+  let feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.roadSpeedUnit) || null;
 }
 
 // Returns the full international calling codes for phone numbers in the feature matching `query`, if any
 export function callingCodes(query: Location | string | number): Array<string> {
-  let feature: RegionFeature | null;
-  if (typeof query === 'object') {
-    feature = smallestFeature(<Location>query);
-  } else {
-    feature = featureForID(query);
-  }
+  let feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.callingCodes) || [];
 }

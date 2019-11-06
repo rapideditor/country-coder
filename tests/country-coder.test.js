@@ -429,49 +429,186 @@ describe('country-coder', () => {
     });
   });
 
-  describe('iso1A2Codes', () => {
-    it('codes location in officially-assigned country: New York, United States as US', () => {
-      expect(coder.iso1A2Codes([-74, 40.6])).toStrictEqual(['US']);
-    });
+  describe('featuresContaining', () => {
+    describe('by location', () => {
+      it('codes location in officially-assigned country: New York, United States as US', () => {
+        let features = coder.featuresContaining([-74, 40.6]);
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('US');
+        expect(features[1].properties.m49).toBe('021');
+        expect(features[2].properties.m49).toBe('003');
+        expect(features[3].properties.m49).toBe('019');
+      });
 
-    it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
-      expect(coder.iso1A2Codes([6.1, 46.2])).toStrictEqual(['CH']);
-    });
+      it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
+        let features = coder.featuresContaining([6.1, 46.2]);
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('CH');
+        expect(features[1].properties.m49).toBe('155');
+        expect(features[2].properties.m49).toBe('150');
+      });
 
-    it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark as DK, EU', () => {
-      expect(coder.iso1A2Codes([12.59, 55.68])).toStrictEqual(['DK', 'EU']);
-    });
+      it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark as DK, EU', () => {
+        let features = coder.featuresContaining([12.59, 55.68]);
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('DK');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('154');
+        expect(features[3].properties.m49).toBe('150');
+      });
 
-    it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany as DE, EU', () => {
-      expect(coder.iso1A2Codes([13.4, 52.5])).toStrictEqual(['DE', 'EU']);
-    });
+      it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany as DE, EU', () => {
+        let features = coder.featuresContaining([13.4, 52.5]);
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('DE');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('155');
+        expect(features[3].properties.m49).toBe('150');
+      });
 
-    it('codes location in officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Isle of Man, United Kingdom as IM, GB', () => {
-      expect(coder.iso1A2Codes([-4.5, 54.2])).toStrictEqual(['IM', 'GB']);
-    });
+      it('codes location in officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Isle of Man, United Kingdom as IM, GB', () => {
+        let features = coder.featuresContaining([-4.5, 54.2]);
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('IM');
+        expect(features[1].properties.m49).toBe('154');
+        expect(features[2].properties.m49).toBe('150');
+        expect(features[3].properties.iso1A2).toBe('GB');
+      });
 
-    it('codes location in exceptionally-reserved subfeature of officially-assigned country, in EU, in Eurozone: Paris, Metropolitan France as FX, FR, EU', () => {
-      expect(coder.iso1A2Codes([2.35, 48.85])).toStrictEqual(['FX', 'EU', 'FR']);
-    });
+      it('codes location in exceptionally-reserved subfeature of officially-assigned country, in EU, in Eurozone: Paris, Metropolitan France as FX, FR, EU', () => {
+        let features = coder.featuresContaining([2.35, 48.85]);
+        expect(features.length).toBe(5);
+        expect(features[0].properties.iso1A2).toBe('FX');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('155');
+        expect(features[3].properties.m49).toBe('150');
+        expect(features[4].properties.iso1A2).toBe('FR');
+      });
 
-    it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK as TA, SH, GB', () => {
-      expect(coder.iso1A2Codes([-12.3, -37.1])).toStrictEqual(['TA', 'SH', 'GB']);
-    });
+      it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK as TA, SH, GB', () => {
+        let features = coder.featuresContaining([-12.3, -37.1]);
+        expect(features.length).toBe(6);
+        expect(features[0].properties.iso1A2).toBe('TA');
+        expect(features[1].properties.iso1A2).toBe('SH');
+        expect(features[2].properties.m49).toBe('011');
+        expect(features[3].properties.m49).toBe('202');
+        expect(features[4].properties.m49).toBe('002');
+        expect(features[5].properties.iso1A2).toBe('GB');
+      });
 
-    it('codes location in user-assigned, de facto country: Kosovo as XK', () => {
-      expect(coder.iso1A2Codes([21, 42.6])).toStrictEqual(['XK']);
-    });
+      it('codes location in user-assigned, de facto country: Kosovo as XK', () => {
+        let features = coder.featuresContaining([21, 42.6]);
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('XK');
+        expect(features[1].properties.m49).toBe('039');
+        expect(features[2].properties.m49).toBe('150');
+      });
 
-    it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
-      expect(coder.iso1A2Codes([71.13, 39.96])).toStrictEqual(['UZ']);
-    });
+      it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
+        let features = coder.featuresContaining([71.13, 39.96]);
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('UZ');
+        expect(features[1].properties.m49).toBe('143');
+        expect(features[2].properties.m49).toBe('142');
+      });
 
-    it('codes South Pole as AQ', () => {
-      expect(coder.iso1A2Codes([0, -90])).toStrictEqual(['AQ']);
-    });
+      it('codes South Pole as AQ', () => {
+        let features = coder.featuresContaining([0, -90]);
+        expect(features.length).toBe(1);
+        expect(features[0].properties.iso1A2).toBe('AQ');
+      });
 
-    it('does not code North Pole', () => {
-      expect(coder.iso1A2Codes([0, 90])).toStrictEqual([]);
+      it('does not code North Pole', () => {
+        expect(coder.featuresContaining([0, 90])).toStrictEqual([]);
+      });
+    });
+    describe('by code', () => {
+      it('codes USA', () => {
+        let features = coder.featuresContaining('USA');
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('US');
+        expect(features[1].properties.m49).toBe('021');
+        expect(features[2].properties.m49).toBe('003');
+        expect(features[3].properties.m49).toBe('019');
+      });
+
+      it('codes CH', () => {
+        let features = coder.featuresContaining('CH');
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('CH');
+        expect(features[1].properties.m49).toBe('155');
+        expect(features[2].properties.m49).toBe('150');
+      });
+
+      it('codes DK', () => {
+        let features = coder.featuresContaining('DK');
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('DK');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('154');
+        expect(features[3].properties.m49).toBe('150');
+      });
+
+      it('codes DE', () => {
+        let features = coder.featuresContaining('DE');
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('DE');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('155');
+        expect(features[3].properties.m49).toBe('150');
+      });
+
+      it('codes IM', () => {
+        let features = coder.featuresContaining('IM');
+        expect(features.length).toBe(4);
+        expect(features[0].properties.iso1A2).toBe('IM');
+        expect(features[1].properties.m49).toBe('154');
+        expect(features[2].properties.m49).toBe('150');
+        expect(features[3].properties.iso1A2).toBe('GB');
+      });
+
+      it('codes FX', () => {
+        let features = coder.featuresContaining('FX');
+        expect(features.length).toBe(5);
+        expect(features[0].properties.iso1A2).toBe('FX');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('155');
+        expect(features[3].properties.m49).toBe('150');
+        expect(features[4].properties.iso1A2).toBe('FR');
+      });
+
+      it('codes TA', () => {
+        let features = coder.featuresContaining('TA');
+        expect(features.length).toBe(6);
+        expect(features[0].properties.iso1A2).toBe('TA');
+        expect(features[1].properties.iso1A2).toBe('SH');
+        expect(features[2].properties.m49).toBe('011');
+        expect(features[3].properties.m49).toBe('202');
+        expect(features[4].properties.m49).toBe('002');
+        expect(features[5].properties.iso1A2).toBe('GB');
+      });
+
+      it('codes XK', () => {
+        let features = coder.featuresContaining('XK');
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('XK');
+        expect(features[1].properties.m49).toBe('039');
+        expect(features[2].properties.m49).toBe('150');
+      });
+
+      it('codes UZ', () => {
+        let features = coder.featuresContaining('UZ');
+        expect(features.length).toBe(3);
+        expect(features[0].properties.iso1A2).toBe('UZ');
+        expect(features[1].properties.m49).toBe('143');
+        expect(features[2].properties.m49).toBe('142');
+      });
+
+      it('codes AQ', () => {
+        let features = coder.featuresContaining('AQ');
+        expect(features.length).toBe(1);
+        expect(features[0].properties.iso1A2).toBe('AQ');
+      });
     });
   });
 
