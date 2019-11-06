@@ -53,9 +53,11 @@ Client-side coding has a number of benefits over server-side solutions:
 This library is available in both ES5/CommonJS and ES6 module formats.
 
 ```js
-const CountryCoder = require('country-coder').CountryCoder;   // CommonJS
+const countryCoder = require('country-coder');          // CommonJS import all
+const iso1A2Code = require('country-coder').iso1A2Code; // CommonJS import named
 // or
-import { CountryCoder } from 'country-coder';     // ES6
+import * as countryCoder from 'country-coder';          // ES6 import all
+import { iso1A2Code } from 'country-coder';             // ES6 import named
 ```
 
 
@@ -64,22 +66,19 @@ import { CountryCoder } from 'country-coder';     // ES6
 Simply pass in a `[longitude, latitude]` to `iso1A2Code` to get the country code.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A2Code([-4.5, 54.2]);	 // returns 'GB'
+iso1A2Code([-4.5, 54.2]);	 // returns 'GB'
 ```
 
 To include non-country regions, pass in `region` for the `level` option.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
 ```
 
 The same method can convert from other identifiers.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A2Code('Q145');  // returns 'GB'
+iso1A2Code('Q145');  // returns 'GB'
 ```
 
 Read the [full API reference](#api-reference) to see everything `country-coder` can do.
@@ -93,7 +92,6 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 ## API Reference
 
 ##### Methods
-* [new CountryCoder](#constructor)() _constructor_
 * [feature](#feature)(query: Location | string | number, opts?: CodingOptions): RegionFeature?
 * [iso1A2Code](#iso1A2Code)(query: Location | string | number, opts?: CodingOptions): string?
 * [iso1A3Code](#iso1A3Code)(query: Location | string | number, opts?: CodingOptions): string?
@@ -125,38 +123,27 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 
 ## Methods
 
-<a name="constructor" href="#constructor">#</a> <b>new CountryCoder</b>()
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L63 "Source")
-
-Constructs a new CountryCoder.
-
-```js
-const coder = new CountryCoder();
-```
-
-
 <a name="feature" href="#feature">#</a> <b>feature</b>(query: Location | string | number, opts?: CodingOptions): RegionFeature?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L172 "Source")
 
 Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.feature([-4.5, 54.2]);  // returns United Kingdom feature
-coder.feature([-4.5, 54.2], { level: 'region' });  // returns Isle of Man feature
-coder.feature([0, 90]);       // returns null
-coder.feature('GB');          // returns United Kingdom feature
-coder.feature('GBR');         // returns United Kingdom feature
-coder.feature('826');         // returns United Kingdom feature
-coder.feature(826);           // returns United Kingdom feature
-coder.feature('Q145');        // returns United Kingdom feature
-coder.feature('🇬🇧');          // returns United Kingdom feature
-coder.feature('UK');          // returns United Kingdom feature
-coder.feature('IM');          // returns Isle of Man feature
+feature([-4.5, 54.2]);  // returns United Kingdom feature
+feature([-4.5, 54.2], { level: 'region' });  // returns Isle of Man feature
+feature([0, 90]);       // returns null
+feature('GB');          // returns United Kingdom feature
+feature('GBR');         // returns United Kingdom feature
+feature('826');         // returns United Kingdom feature
+feature(826);           // returns United Kingdom feature
+feature('Q145');        // returns United Kingdom feature
+feature('🇬🇧');          // returns United Kingdom feature
+feature('UK');          // returns United Kingdom feature
+feature('IM');          // returns Isle of Man feature
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.feature(pointGeoJSON);           // returns United Kingdom feature
-coder.feature(pointGeoJSON.geometry);  // returns United Kingdom feature
+feature(pointGeoJSON);           // returns United Kingdom feature
+feature(pointGeoJSON.geometry);  // returns United Kingdom feature
 ```
 
 
@@ -166,21 +153,20 @@ coder.feature(pointGeoJSON.geometry);  // returns United Kingdom feature
 Returns the ISO 3166-1 alpha-2 code for the given location or identifier and options, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A2Code([-4.5, 54.2]);  // returns 'GB'
-coder.iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
-coder.iso1A2Code([0, 90]);       // returns null
-coder.iso1A2Code('GBR');         // returns 'GB'
-coder.iso1A2Code('826');         // returns 'GB'
-coder.iso1A2Code(826);           // returns 'GB'
-coder.iso1A2Code('Q145');        // returns 'GB'
-coder.iso1A2Code('🇬🇧');          // returns 'GB'
-coder.iso1A2Code('UK');          // returns 'GB'
-coder.iso1A2Code('IMN');         // returns 'IM'
+iso1A2Code([-4.5, 54.2]);  // returns 'GB'
+iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+iso1A2Code([0, 90]);       // returns null
+iso1A2Code('GBR');         // returns 'GB'
+iso1A2Code('826');         // returns 'GB'
+iso1A2Code(826);           // returns 'GB'
+iso1A2Code('Q145');        // returns 'GB'
+iso1A2Code('🇬🇧');          // returns 'GB'
+iso1A2Code('UK');          // returns 'GB'
+iso1A2Code('IMN');         // returns 'IM'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.iso1A2Code(pointGeoJSON);           // returns 'GB'
-coder.iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
+iso1A2Code(pointGeoJSON);           // returns 'GB'
+iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 ```
 
 
@@ -190,21 +176,20 @@ coder.iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A3Code([-4.5, 54.2]);  // returns 'GBR'
-coder.iso1A3Code([-4.5, 54.2], { level: 'region' });  // returns 'IMN'
-coder.iso1A3Code([0, 90]);       // returns null
-coder.iso1A3Code('GB');          // returns 'GBR'
-coder.iso1A3Code('826');         // returns 'GBR'
-coder.iso1A3Code(826);           // returns 'GBR'
-coder.iso1A3Code('Q145');        // returns 'GBR'
-coder.iso1A3Code('🇬🇧');          // returns 'GBR'
-coder.iso1A3Code('UK');          // returns 'GBR'
-coder.iso1A3Code('IM');          // returns 'IMN'
+iso1A3Code([-4.5, 54.2]);  // returns 'GBR'
+iso1A3Code([-4.5, 54.2], { level: 'region' });  // returns 'IMN'
+iso1A3Code([0, 90]);       // returns null
+iso1A3Code('GB');          // returns 'GBR'
+iso1A3Code('826');         // returns 'GBR'
+iso1A3Code(826);           // returns 'GBR'
+iso1A3Code('Q145');        // returns 'GBR'
+iso1A3Code('🇬🇧');          // returns 'GBR'
+iso1A3Code('UK');          // returns 'GBR'
+iso1A3Code('IM');          // returns 'IMN'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.iso1A3Code(pointGeoJSON);           // returns 'GBR'
-coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
+iso1A3Code(pointGeoJSON);           // returns 'GBR'
+iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 ```
 
 
@@ -214,21 +199,20 @@ coder.iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found. For more comprehensive coverage, see [m49Code](#m49Code).
 
 ```js
-const coder = new CountryCoder();
-coder.iso1N3Code([-4.5, 54.2]);  // returns '826'
-coder.iso1N3Code([-4.5, 54.2], { level: 'region' });  // returns '833'
-coder.iso1N3Code([0, 90]);       // returns null
-coder.iso1N3Code('GB');          // returns '826'
-coder.iso1N3Code('GBR');         // returns '826'
-coder.iso1N3Code('Q145');        // returns '826'
-coder.iso1N3Code('🇬🇧');          // returns '826'
-coder.iso1N3Code('UK');          // returns '826'
-coder.iso1N3Code('IM');          // returns '833'
-coder.iso1N3Code('Q15');         // returns null (Africa)
+iso1N3Code([-4.5, 54.2]);  // returns '826'
+iso1N3Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+iso1N3Code([0, 90]);       // returns null
+iso1N3Code('GB');          // returns '826'
+iso1N3Code('GBR');         // returns '826'
+iso1N3Code('Q145');        // returns '826'
+iso1N3Code('🇬🇧');          // returns '826'
+iso1N3Code('UK');          // returns '826'
+iso1N3Code('IM');          // returns '833'
+iso1N3Code('Q15');         // returns null (Africa)
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.iso1N3Code(pointGeoJSON);           // returns '826'
-coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
+iso1N3Code(pointGeoJSON);           // returns '826'
+iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
@@ -238,21 +222,20 @@ coder.iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 Returns the United Nations M49 code for the given location or identifier and options, if found. These codes are a superset of ISO 3166-1 numeric-3 codes, adding a subdivision (Sark) and transnational regions (e.g. Asia, Central America, Polynesia).
 
 ```js
-const coder = new CountryCoder();
-coder.m49Code([-4.5, 54.2]);  // returns '826'
-coder.m49Code([-4.5, 54.2], { level: 'region' });  // returns '833'
-coder.m49Code([0, 90]);       // returns null
-coder.m49Code('GB');          // returns '826'
-coder.m49Code('GBR');         // returns '826'
-coder.m49Code('Q145');        // returns '826'
-coder.m49Code('🇬🇧');          // returns '826'
-coder.m49Code('UK');          // returns '826'
-coder.m49Code('IM');          // returns '833'
-coder.m49Code('Q15');         // returns '002' (Africa)
+m49Code([-4.5, 54.2]);  // returns '826'
+m49Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+m49Code([0, 90]);       // returns null
+m49Code('GB');          // returns '826'
+m49Code('GBR');         // returns '826'
+m49Code('Q145');        // returns '826'
+m49Code('🇬🇧');          // returns '826'
+m49Code('UK');          // returns '826'
+m49Code('IM');          // returns '833'
+m49Code('Q15');         // returns '002' (Africa)
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.m49Code(pointGeoJSON);           // returns '826'
-coder.m49Code(pointGeoJSON.geometry);  // returns '826'
+m49Code(pointGeoJSON);           // returns '826'
+m49Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
@@ -262,21 +245,20 @@ coder.m49Code(pointGeoJSON.geometry);  // returns '826'
 Returns the Wikidata QID for the given location or identifier and options, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.wikidataQID([-4.5, 54.2]);  // returns 'Q145'
-coder.wikidataQID([-4.5, 54.2], { level: 'region' });  // returns 'Q9676'
-coder.wikidataQID([0, 90]);       // returns null
-coder.wikidataQID('GB');          // returns 'Q145'
-coder.wikidataQID('GBR');         // returns 'Q145'
-coder.wikidataQID('826');         // returns 'Q145'
-coder.wikidataQID(826);           // returns 'Q145'
-coder.wikidataQID('🇬🇧');          // returns 'Q145'
-coder.wikidataQID('UK');          // returns 'Q145'
-coder.wikidataQID('IM');          // returns 'Q9676'
+wikidataQID([-4.5, 54.2]);  // returns 'Q145'
+wikidataQID([-4.5, 54.2], { level: 'region' });  // returns 'Q9676'
+wikidataQID([0, 90]);       // returns null
+wikidataQID('GB');          // returns 'Q145'
+wikidataQID('GBR');         // returns 'Q145'
+wikidataQID('826');         // returns 'Q145'
+wikidataQID(826);           // returns 'Q145'
+wikidataQID('🇬🇧');          // returns 'Q145'
+wikidataQID('UK');          // returns 'Q145'
+wikidataQID('IM');          // returns 'Q9676'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.wikidataQID(pointGeoJSON);           // returns 'Q145'
-coder.wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
+wikidataQID(pointGeoJSON);           // returns 'Q145'
+wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 ```
 
 
@@ -286,21 +268,20 @@ coder.wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 Returns the emoji flag sequence for the given location or identifier and options, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.emojiFlag([-4.5, 54.2]);  // returns '🇬🇧'
-coder.emojiFlag([-4.5, 54.2], { level: 'region' });  // returns '🇮🇲'
-coder.emojiFlag([0, 90]);       // returns null
-coder.emojiFlag('GB');          // returns '🇬🇧'
-coder.emojiFlag('GBR');         // returns '🇬🇧'
-coder.emojiFlag('826');         // returns '🇬🇧'
-coder.emojiFlag(826);           // returns '🇬🇧'
-coder.emojiFlag('Q145');        // returns '🇬🇧'
-coder.emojiFlag('UK');          // returns '🇬🇧'
-coder.emojiFlag('IM');          // returns '🇮🇲'
+emojiFlag([-4.5, 54.2]);  // returns '🇬🇧'
+emojiFlag([-4.5, 54.2], { level: 'region' });  // returns '🇮🇲'
+emojiFlag([0, 90]);       // returns null
+emojiFlag('GB');          // returns '🇬🇧'
+emojiFlag('GBR');         // returns '🇬🇧'
+emojiFlag('826');         // returns '🇬🇧'
+emojiFlag(826);           // returns '🇬🇧'
+emojiFlag('Q145');        // returns '🇬🇧'
+emojiFlag('UK');          // returns '🇬🇧'
+emojiFlag('IM');          // returns '🇮🇲'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.emojiFlag(pointGeoJSON);           // returns '🇬🇧'
-coder.emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
+emojiFlag(pointGeoJSON);           // returns '🇬🇧'
+emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
@@ -310,15 +291,14 @@ coder.emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 Returns all the the features containing the given location.
 
 ```js
-const coder = new CountryCoder();
-coder.features([-4.5, 54.2]);  // returns [{Isle of Man feature}, {United Kingdom feature}]
-coder.features([0, 51.5]);     // returns [{United Kingdom feature}, {European Union feature}]
-coder.features([6.1, 46.2]);   // returns [{Switzerland feature}]
-coder.features([0, 90]);       // returns []
+features([-4.5, 54.2]);  // returns [{Isle of Man feature}, {United Kingdom feature}]
+features([0, 51.5]);     // returns [{United Kingdom feature}, {European Union feature}]
+features([6.1, 46.2]);   // returns [{Switzerland feature}]
+features([0, 90]);       // returns []
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [6.1, 46.2] } };
-coder.features(pointGeoJSON);            // returns [{Switzerland feature}]
-coder.features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
+features(pointGeoJSON);            // returns [{Switzerland feature}]
+features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
 ```
 
 
@@ -328,15 +308,14 @@ coder.features(pointGeoJSON.geometry);   // returns [{Switzerland feature}]
 Returns the ISO 3166-1 alpha-2 codes for all the the features containing the given location that have ISO codes.
 
 ```js
-const coder = new CountryCoder();
-coder.iso1A2Codes([-4.5, 54.2]);   // returns ['IM', 'GB']
-coder.iso1A2Codes([0, 51.5]);      // returns ['GB', 'EU']
-coder.iso1A2Codes([6.1, 46.2]);    // returns ['CH']
-coder.iso1A2Codes([0, 90]);        // returns []
+iso1A2Codes([-4.5, 54.2]);   // returns ['IM', 'GB']
+iso1A2Codes([0, 51.5]);      // returns ['GB', 'EU']
+iso1A2Codes([6.1, 46.2]);    // returns ['CH']
+iso1A2Codes([0, 90]);        // returns []
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
-coder.iso1A2Codes(pointGeoJSON);           // returns ['IM', 'GB']
-coder.iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
+iso1A2Codes(pointGeoJSON);           // returns ['IM', 'GB']
+iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
 ```
 
 
@@ -346,24 +325,23 @@ coder.iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB']
 Returns `true` if the feature matching `query` is, or is within, the feature matching `bounds`. For convenience, English names can be used for transnational regions.
 
 ```js
-const coder = new CountryCoder();
-coder.isIn([0, 51.5], 'GB');    // returns true
-coder.isIn([-4.5, 54.2], 'IM'); // returns true
-coder.isIn([-4.5, 54.2], 'GB'); // returns true
-coder.isIn([-4.5, 54.2], 'CH'); // returns false
-coder.isIn([6.1, 46.2], 'GB');  // returns false
-coder.isIn('IM', 'GB');         // returns true
-coder.isIn('GB', 'IM');         // returns false
-coder.isIn('GB', '150');        // returns true
-coder.isIn('GBR', 150);         // returns true
-coder.isIn('826', 'Q46');       // returns true
-coder.isIn('🇮🇲', '🇬🇧');         // returns true
-coder.isIn('UK', 'Europe');     // returns true
-coder.isIn('GB', 'Africa');     // returns false
+isIn([0, 51.5], 'GB');    // returns true
+isIn([-4.5, 54.2], 'IM'); // returns true
+isIn([-4.5, 54.2], 'GB'); // returns true
+isIn([-4.5, 54.2], 'CH'); // returns false
+isIn([6.1, 46.2], 'GB');  // returns false
+isIn('IM', 'GB');         // returns true
+isIn('GB', 'IM');         // returns false
+isIn('GB', '150');        // returns true
+isIn('GBR', 150);         // returns true
+isIn('826', 'Q46');       // returns true
+isIn('🇮🇲', '🇬🇧');         // returns true
+isIn('UK', 'Europe');     // returns true
+isIn('GB', 'Africa');     // returns false
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.isIn(pointGeoJSON, 'GB');           // returns true
-coder.isIn(pointGeoJSON.geometry, 'GB');  // returns true
+isIn(pointGeoJSON, 'GB');           // returns true
+isIn(pointGeoJSON.geometry, 'GB');  // returns true
 ```
 
 
@@ -373,25 +351,24 @@ coder.isIn(pointGeoJSON.geometry, 'GB');  // returns true
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union. This is a convenience method for `isIn(query, 'EU')`.
 
 ```js
-const coder = new CountryCoder();
-coder.isInEuropeanUnion([0, 51.5]);    // returns true (Britain)
-coder.isInEuropeanUnion([-4.5, 54.2]); // returns false (Isle of Man)
-coder.isInEuropeanUnion([6.1, 46.2]);  // returns false (Switzerland)
-coder.isInEuropeanUnion([0, 90]);      // returns false (North Pole)
-coder.isInEuropeanUnion('EU');         // returns true
-coder.isInEuropeanUnion('GB');         // returns true
-coder.isInEuropeanUnion('GBR');        // returns true
-coder.isInEuropeanUnion('826');        // returns true
-coder.isInEuropeanUnion(826);          // returns true
-coder.isInEuropeanUnion('Q145');       // returns true
-coder.isInEuropeanUnion('🇬🇧');         // returns true
-coder.isInEuropeanUnion('UK');         // returns true
-coder.isInEuropeanUnion('IM');         // returns false
-coder.isInEuropeanUnion('CH');         // returns false
+isInEuropeanUnion([0, 51.5]);    // returns true (Britain)
+isInEuropeanUnion([-4.5, 54.2]); // returns false (Isle of Man)
+isInEuropeanUnion([6.1, 46.2]);  // returns false (Switzerland)
+isInEuropeanUnion([0, 90]);      // returns false (North Pole)
+isInEuropeanUnion('EU');         // returns true
+isInEuropeanUnion('GB');         // returns true
+isInEuropeanUnion('GBR');        // returns true
+isInEuropeanUnion('826');        // returns true
+isInEuropeanUnion(826);          // returns true
+isInEuropeanUnion('Q145');       // returns true
+isInEuropeanUnion('🇬🇧');         // returns true
+isInEuropeanUnion('UK');         // returns true
+isInEuropeanUnion('IM');         // returns false
+isInEuropeanUnion('CH');         // returns false
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
-coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
+isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
+isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
 ```
 
 
@@ -401,23 +378,22 @@ coder.isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
 Returns the side of the road on which traffic drives for the given location or identifier, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.driveSide([0, 51.5]);    // returns 'left' (Britain)
-coder.driveSide([6.1, 46.2]);  // returns 'right' (Switzerland)
-coder.driveSide([0, 90]);      // returns null (North Pole)
-coder.driveSide('EU');         // returns null
-coder.driveSide('GB');         // returns 'left'
-coder.driveSide('GBR');        // returns 'left'
-coder.driveSide('826');        // returns 'left'
-coder.driveSide(826);          // returns 'left'
-coder.driveSide('Q145');       // returns 'left'
-coder.driveSide('🇬🇧');         // returns 'left'
-coder.driveSide('UK');         // returns 'left'
-coder.driveSide('CH');         // returns 'right'
+driveSide([0, 51.5]);    // returns 'left' (Britain)
+driveSide([6.1, 46.2]);  // returns 'right' (Switzerland)
+driveSide([0, 90]);      // returns null (North Pole)
+driveSide('EU');         // returns null
+driveSide('GB');         // returns 'left'
+driveSide('GBR');        // returns 'left'
+driveSide('826');        // returns 'left'
+driveSide(826);          // returns 'left'
+driveSide('Q145');       // returns 'left'
+driveSide('🇬🇧');         // returns 'left'
+driveSide('UK');         // returns 'left'
+driveSide('CH');         // returns 'right'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.driveSide(pointGeoJSON);           // returns 'left' (Britain)
-coder.driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
+driveSide(pointGeoJSON);           // returns 'left' (Britain)
+driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
 ```
 
 
@@ -427,23 +403,22 @@ coder.driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
 Returns the unit of speed used on traffic signs for the given location or identifier, if found.
 
 ```js
-const coder = new CountryCoder();
-coder.roadSpeedUnit([0, 51.5]);    // returns 'mph' (Britain)
-coder.roadSpeedUnit([6.1, 46.2]);  // returns 'km/h' (Switzerland)
-coder.roadSpeedUnit([0, 90]);      // returns null (North Pole)
-coder.roadSpeedUnit('EU');         // returns null
-coder.roadSpeedUnit('GB');         // returns 'mph'
-coder.roadSpeedUnit('GBR');        // returns 'mph'
-coder.roadSpeedUnit('826');        // returns 'mph'
-coder.roadSpeedUnit(826);          // returns 'mph'
-coder.roadSpeedUnit('Q145');       // returns 'mph'
-coder.roadSpeedUnit('🇬🇧');         // returns 'mph'
-coder.roadSpeedUnit('UK');         // returns 'mph'
-coder.roadSpeedUnit('CH');         // returns 'km/h'
+roadSpeedUnit([0, 51.5]);    // returns 'mph' (Britain)
+roadSpeedUnit([6.1, 46.2]);  // returns 'km/h' (Switzerland)
+roadSpeedUnit([0, 90]);      // returns null (North Pole)
+roadSpeedUnit('EU');         // returns null
+roadSpeedUnit('GB');         // returns 'mph'
+roadSpeedUnit('GBR');        // returns 'mph'
+roadSpeedUnit('826');        // returns 'mph'
+roadSpeedUnit(826);          // returns 'mph'
+roadSpeedUnit('Q145');       // returns 'mph'
+roadSpeedUnit('🇬🇧');         // returns 'mph'
+roadSpeedUnit('UK');         // returns 'mph'
+roadSpeedUnit('CH');         // returns 'km/h'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.roadSpeedUnit(pointGeoJSON);           // returns 'mph' (Britain)
-coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
+roadSpeedUnit(pointGeoJSON);           // returns 'mph' (Britain)
+roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 ```
 
 
@@ -453,23 +428,22 @@ coder.roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 Returns the full international calling code prefix of phone numbers for the given location or identifier, if any. All prefixes have a country code, with some also including an area code separated by a space character. These are commonly formatted with a preceding plus sign (e.g. `+1 242`).
 
 ```js
-const coder = new CountryCoder();
-coder.callingCodes([0, 51.5]);    // returns ['44'] (Britain)
-coder.callingCodes([0, 90]);      // returns [] (North Pole)
-coder.callingCodes('EU');         // returns []
-coder.callingCodes('GB');         // returns ['44']
-coder.callingCodes('GBR');        // returns ['44']
-coder.callingCodes('826');        // returns ['44']
-coder.callingCodes(826);          // returns ['44']
-coder.callingCodes('Q145');       // returns ['44']
-coder.callingCodes('🇬🇧');         // returns ['44']
-coder.callingCodes('UK');         // returns ['44']
-coder.callingCodes('BS');         // returns ['1 242']
-coder.callingCodes('JA');         // returns ['1 876', '1 658']
+callingCodes([0, 51.5]);    // returns ['44'] (Britain)
+callingCodes([0, 90]);      // returns [] (North Pole)
+callingCodes('EU');         // returns []
+callingCodes('GB');         // returns ['44']
+callingCodes('GBR');        // returns ['44']
+callingCodes('826');        // returns ['44']
+callingCodes(826);          // returns ['44']
+callingCodes('Q145');       // returns ['44']
+callingCodes('🇬🇧');         // returns ['44']
+callingCodes('UK');         // returns ['44']
+callingCodes('BS');         // returns ['1 242']
+callingCodes('JA');         // returns ['1 876', '1 658']
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-coder.callingCodes(pointGeoJSON);           // returns ['44'] (Britain)
-coder.callingCodes(pointGeoJSON.geometry);  // returns ['44'] (Britain)
+callingCodes(pointGeoJSON);           // returns ['44'] (Britain)
+callingCodes(pointGeoJSON.geometry);  // returns ['44'] (Britain)
 ```
 
 

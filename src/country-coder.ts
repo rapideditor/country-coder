@@ -1,5 +1,5 @@
 import whichPolygon from 'which-polygon';
-import borders from './data/borders.json';
+import rawBorders from './data/borders.json';
 
 type RegionFeatureProperties = {
   // Unique identifier specific to country-coder
@@ -70,16 +70,24 @@ type CodingOptions = {
   level: string;
 };
 
-loadDerivedData(borders.features);
+// The base GeoJSON feature collection
+export let borders: RegionFeatureCollection = <RegionFeatureCollection>rawBorders;
+
+// The whichPolygon getter for looking up a feature by point
+let featureQuery: any = {};
+// The cache for looking up a feature by identifier
+let featuresByCode: any = {};
+
+loadDerivedDataAndCaches(borders);
 // Some data is implicit, load before using
-function loadDerivedData(features) {
-  let featuresByID = {};
-  for (let i in features) {
-    let feature = features[i];
+function loadDerivedDataAndCaches(borders) {
+  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag'];
+  let geometryFeatures: Array<RegionFeature> = [];
+  for (let i in borders.features) {
+    let feature = borders.features[i];
 
     // generate a unique ID for each feature
     feature.properties.id = feature.properties.iso1A2 || feature.properties.m49;
-    featuresByID[feature.properties.id] = feature;
 
     loadGroups(feature);
     loadM49(feature);
@@ -87,13 +95,25 @@ function loadDerivedData(features) {
     loadRoadSpeedUnit(feature);
     loadDriveSide(feature);
     loadFlag(feature);
+
+    // cache only after loading derived IDs
+    cacheFeatureByIDs(feature);
+
+    if (feature.geometry) geometryFeatures.push(feature);
   }
 
   // must load `members` only after fully loading `featuresByID`
-  for (let i in features) {
-    let feature = features[i];
+  for (let i in borders.features) {
+    let feature = borders.features[i];
     loadMembersForGroupsOf(feature);
   }
+
+  // whichPolygon doesn't support null geometry even though GeoJSON does
+  let geometryOnlyCollection: RegionFeatureCollection = {
+    type: 'RegionFeatureCollection',
+    features: geometryFeatures
+  };
+  featureQuery = whichPolygon(geometryOnlyCollection);
 
   function loadGroups(feature: RegionFeature) {
     let props = feature.properties;
@@ -166,7 +186,7 @@ function loadDerivedData(features) {
     let standardizedGroupIDs: Array<string> = [];
     for (let j in feature.properties.groups) {
       let groupID = feature.properties.groups[j];
-      let groupFeature = featuresByID[groupID];
+      let groupFeature = featuresByCode[groupID];
       standardizedGroupIDs.push(groupFeature.properties.id);
 
       if (groupFeature.properties.members) {
@@ -178,246 +198,220 @@ function loadDerivedData(features) {
     // ensure that all relationships are coded by `id`
     feature.properties.groups = standardizedGroupIDs;
   }
+
+  // Caches features by their identifying strings for rapid lookup
+  function cacheFeatureByIDs(feature: RegionFeature) {
+    for (let k in identifierProps) {
+      let prop = identifierProps[k];
+      let id = prop && feature.properties[prop];
+      if (id) {
+        featuresByCode[id] = feature;
+      }
+    }
+    if (feature.properties.aliases) {
+      for (let j in feature.properties.aliases) {
+        let alias = feature.properties.aliases[j].toUpperCase().replace(/[-_ ]/g, '');
+        featuresByCode[alias] = feature;
+      }
+    }
+  }
 }
 
-export default class CountryCoder {
-  // The base GeoJSON feature collection
-  public borders: RegionFeatureCollection = <RegionFeatureCollection>borders;
+// Returns the [longitude, latitude] for the location argument
+function locArray(loc: Location): Vec2 {
+  if (Array.isArray(loc)) {
+    return <Vec2>loc;
+  } else if ((<PointGeometry>loc).coordinates) {
+    return (<PointGeometry>loc).coordinates;
+  }
+  return (<PointFeature>loc).geometry.coordinates;
+}
 
-  // The whichPolygon getter for looking up a feature by point
-  private featureQuery: any = {};
-  // The cache for looking up a feature by identifier
-  private featuresByCode: any = {};
+// Returns the smallest feature of any kind containing `loc`, if any
+function smallestFeature(loc: Location): RegionFeature | null {
+  let query = locArray(loc);
+  let featureProperties: RegionFeatureProperties = featureQuery(query);
+  if (!featureProperties) return null;
+  return featuresByCode[featureProperties.id];
+}
 
-  // Constructs a new CountryCoder
-  constructor() {
-    let featuresByCode = this.featuresByCode;
-    let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag'];
+// Returns the country feature containing `loc`, if any
+function countryFeature(loc: Location): RegionFeature | null {
+  let feature = smallestFeature(loc);
+  if (!feature) return null;
+  // a feature without `country` but with geometry is itself a country
+  let countryCode = feature.properties.country || feature.properties.iso1A2;
+  return featuresByCode[<string>countryCode];
+}
 
-    // Caches features by their identifying strings for rapid lookup
-    function cacheFeatureByIDs(feature: RegionFeature) {
-      for (let k in identifierProps) {
-        let prop = identifierProps[k];
-        let id = prop && feature.properties[prop];
-        if (id) {
-          featuresByCode[id] = feature;
-        }
-      }
-      if (feature.properties.aliases) {
-        for (let j in feature.properties.aliases) {
-          let alias = feature.properties.aliases[j].toUpperCase().replace(/[-_ ]/g, '');
-          featuresByCode[alias] = feature;
-        }
-      }
+// Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
+function smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
+  let feature = features(loc).find(function(feature) {
+    let isoStatus = feature.properties.isoStatus;
+    return isoStatus === 'official' || isoStatus === 'usrAssn';
+  });
+  return feature || null;
+}
+
+// Returns the feature containing `loc` for the `opts`, if any
+function featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
+  if (opts && opts.level === 'region') {
+    // e.g. Puerto Rico
+    return smallestNonExceptedIsoFeature(loc);
+  }
+  // e.g. United States
+  return countryFeature(loc);
+}
+
+// Returns the feature with an identifying property matching `id`, if any
+function featureForID(id: string | number): RegionFeature | null {
+  let stringID: string;
+  if (typeof id === 'number') {
+    stringID = id.toString();
+    if (stringID.length === 1) {
+      stringID = '00' + stringID;
+    } else if (stringID.length === 2) {
+      stringID = '0' + stringID;
     }
+  } else {
+    stringID = id.toUpperCase().replace(/[-_ ]/g, '');
+  }
+  return featuresByCode[stringID] || null;
+}
 
-    let geometryFeatures: Array<RegionFeature> = [];
-    for (let i in this.borders.features) {
-      let feature = this.borders.features[i];
+// Returns the feature matching the given arguments, if any
+export function feature(
+  query: Location | string | number,
+  opts?: CodingOptions
+): RegionFeature | null {
+  if (typeof query === 'object') {
+    return featureForLoc(<Location>query, opts);
+  }
+  return featureForID(query);
+}
 
-      cacheFeatureByIDs(feature);
+// Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
+export function iso1A2Code(query: Location | string | number, opts?: CodingOptions): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.iso1A2 || null;
+}
 
-      if (feature.geometry) geometryFeatures.push(feature);
+// Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
+export function iso1A3Code(query: Location | string | number, opts?: CodingOptions): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.iso1A3 || null;
+}
+
+// Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
+export function iso1N3Code(query: Location | string | number, opts?: CodingOptions): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.iso1N3 || null;
+}
+
+// Returns the UN M49 code for the feature matching the arguments, if any
+export function m49Code(query: Location | string | number, opts?: CodingOptions): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.m49 || null;
+}
+
+// Returns the Wikidata QID code for the feature matching the arguments, if any
+export function wikidataQID(
+  query: Location | string | number,
+  opts?: CodingOptions
+): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.wikidata || null;
+}
+
+// Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
+export function emojiFlag(query: Location | string | number, opts?: CodingOptions): string | null {
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.emojiFlag || null;
+}
+
+// Returns all the features containing `loc` (zero or more)
+export function features(loc: Location): Array<RegionFeature> {
+  let feature = smallestFeature(loc);
+  if (!feature) return [];
+
+  let features: Array<RegionFeature> = [feature];
+
+  let properties = feature.properties;
+  if (properties.groups) {
+    for (let i in properties.groups) {
+      let groupID = properties.groups[i];
+      features.push(featuresByCode[groupID]);
     }
-
-    // whichPolygon doesn't support null geometry even though GeoJSON does
-    let geometryOnlyCollection: RegionFeatureCollection = {
-      type: 'RegionFeatureCollection',
-      features: geometryFeatures
-    };
-    this.featureQuery = whichPolygon(geometryOnlyCollection);
   }
+  return features;
+}
 
-  // Returns the [longitude, latitude] for the location argument
-  private basicLoc(loc: Location): Vec2 {
-    if (Array.isArray(loc)) {
-      return <Vec2>loc;
-    } else if ((<PointGeometry>loc).coordinates) {
-      return (<PointGeometry>loc).coordinates;
-    }
-    return (<PointFeature>loc).geometry.coordinates;
+// Returns the ISO 3166-1 alpha-2 codes for all features containing `loc` (zero or more)
+export function iso1A2Codes(loc: Location): Array<string> {
+  return features(loc)
+    .map(function(feature) {
+      return feature.properties.iso1A2 || '';
+    })
+    .filter(Boolean);
+}
+
+// Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
+export function isIn(query: Location | string | number, bounds: string | number): boolean {
+  let queryFeature: RegionFeature | null;
+  if (typeof query === 'object') {
+    queryFeature = smallestFeature(<Location>query);
+  } else {
+    queryFeature = featureForID(query);
   }
+  let boundsFeature = featureForID(bounds);
 
-  // Returns the smallest feature of any kind containing `loc`, if any
-  private smallestFeature(loc: Location): RegionFeature | null {
-    let basicLoc = this.basicLoc(loc);
-    let featureProperties: RegionFeatureProperties = this.featureQuery(basicLoc);
-    if (!featureProperties) return null;
-    return this.featuresByCode[featureProperties.id];
+  if (!queryFeature || !boundsFeature) return false;
+
+  if (queryFeature.properties.id === boundsFeature.properties.id) return true;
+  if (!queryFeature.properties.groups) return false;
+  return queryFeature.properties.groups.indexOf(boundsFeature.properties.id) !== -1;
+}
+
+// Returns true if the feature matching `query` is within EU jurisdiction
+export function isInEuropeanUnion(query: Location | string | number): boolean {
+  return isIn(query, 'EU');
+}
+
+// Returns the side traffic drives on in the feature matching `query` as a string (`right` or `left`)
+export function driveSide(query: Location | string | number): string | null {
+  let feature: RegionFeature | null;
+  if (typeof query === 'object') {
+    feature = smallestFeature(<Location>query);
+  } else {
+    feature = featureForID(query);
   }
+  return (feature && feature.properties.driveSide) || null;
+}
 
-  // Returns the country feature containing `loc`, if any
-  private countryFeature(loc: Location): RegionFeature | null {
-    let feature = this.smallestFeature(loc);
-    if (!feature) return null;
-    // a feature without `country` but with geometry is itself a country
-    let countryCode = feature.properties.country || feature.properties.iso1A2;
-    return this.featuresByCode[<string>countryCode];
+// Returns the road speed unit for the feature matching `query` as a string (`mph` or `km/h`)
+export function roadSpeedUnit(query: Location | string | number): string | null {
+  let feature: RegionFeature | null;
+  if (typeof query === 'object') {
+    feature = smallestFeature(<Location>query);
+  } else {
+    feature = featureForID(query);
   }
+  return (feature && feature.properties.roadSpeedUnit) || null;
+}
 
-  // Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
-  private smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
-    let feature = this.features(loc).find(function(feature) {
-      let isoStatus = feature.properties.isoStatus;
-      return isoStatus === 'official' || isoStatus === 'usrAssn';
-    });
-    return feature || null;
+// Returns the full international calling codes for phone numbers in the feature matching `query`, if any
+export function callingCodes(query: Location | string | number): Array<string> {
+  let feature: RegionFeature | null;
+  if (typeof query === 'object') {
+    feature = smallestFeature(<Location>query);
+  } else {
+    feature = featureForID(query);
   }
-
-  // Returns the feature containing `loc` for the `opts`, if any
-  private featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
-    if (opts && opts.level === 'region') {
-      // e.g. Puerto Rico
-      return this.smallestNonExceptedIsoFeature(loc);
-    }
-    // e.g. United States
-    return this.countryFeature(loc);
-  }
-
-  // Returns the feature with an identifying property matching `id`, if any
-  private featureForID(id: string | number): RegionFeature | null {
-    let stringID: string;
-    if (typeof id === 'number') {
-      stringID = id.toString();
-      if (stringID.length === 1) {
-        stringID = '00' + stringID;
-      } else if (stringID.length === 2) {
-        stringID = '0' + stringID;
-      }
-    } else {
-      stringID = id.toUpperCase().replace(/[-_ ]/g, '');
-    }
-    return this.featuresByCode[stringID] || null;
-  }
-
-  // Returns the feature matching the given arguments, if any
-  feature(query: Location | string | number, opts?: CodingOptions): RegionFeature | null {
-    if (typeof query === 'object') {
-      return this.featureForLoc(<Location>query, opts);
-    }
-    return this.featureForID(query);
-  }
-
-  // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
-  iso1A2Code(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.iso1A2 || null;
-  }
-
-  // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
-  iso1A3Code(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.iso1A3 || null;
-  }
-
-  // Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
-  iso1N3Code(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.iso1N3 || null;
-  }
-
-  // Returns the UN M49 code for the feature matching the arguments, if any
-  m49Code(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.m49 || null;
-  }
-
-  // Returns the Wikidata QID code for the feature matching the arguments, if any
-  wikidataQID(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.wikidata || null;
-  }
-
-  // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
-  emojiFlag(query: Location | string | number, opts?: CodingOptions): string | null {
-    let feature = this.feature(query, opts);
-    if (!feature) return null;
-    return feature.properties.emojiFlag || null;
-  }
-
-  // Returns all the features containing `loc` (zero or more)
-  features(loc: Location): Array<RegionFeature> {
-    let feature = this.smallestFeature(loc);
-    if (!feature) return [];
-
-    let features: Array<RegionFeature> = [feature];
-
-    let properties = feature.properties;
-    if (properties.groups) {
-      for (let i in properties.groups) {
-        let groupID = properties.groups[i];
-        features.push(this.featuresByCode[groupID]);
-      }
-    }
-    return features;
-  }
-
-  // Returns the ISO 3166-1 alpha-2 codes for all features containing `loc` (zero or more)
-  iso1A2Codes(loc: Location): Array<string> {
-    return this.features(loc)
-      .map(function(feature) {
-        return feature.properties.iso1A2 || '';
-      })
-      .filter(Boolean);
-  }
-
-  // Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
-  isIn(query: Location | string | number, bounds: string | number): boolean {
-    let queryFeature: RegionFeature | null;
-    if (typeof query === 'object') {
-      queryFeature = this.smallestFeature(<Location>query);
-    } else {
-      queryFeature = this.featureForID(query);
-    }
-    let boundsFeature = this.featureForID(bounds);
-
-    if (!queryFeature || !boundsFeature) return false;
-
-    if (queryFeature.properties.id === boundsFeature.properties.id) return true;
-    if (!queryFeature.properties.groups) return false;
-    return queryFeature.properties.groups.indexOf(boundsFeature.properties.id) !== -1;
-  }
-
-  // Returns true if the feature matching `query` is within EU jurisdiction
-  isInEuropeanUnion(query: Location | string | number): boolean {
-    return this.isIn(query, 'EU');
-  }
-
-  // Returns the side traffic drives on in the feature matching `query` as a string (`right` or `left`)
-  driveSide(query: Location | string | number): string | null {
-    let feature: RegionFeature | null;
-    if (typeof query === 'object') {
-      feature = this.smallestFeature(<Location>query);
-    } else {
-      feature = this.featureForID(query);
-    }
-    return (feature && feature.properties.driveSide) || null;
-  }
-
-  // Returns the road speed unit for the feature matching `query` as a string (`mph` or `km/h`)
-  roadSpeedUnit(query: Location | string | number): string | null {
-    let feature: RegionFeature | null;
-    if (typeof query === 'object') {
-      feature = this.smallestFeature(<Location>query);
-    } else {
-      feature = this.featureForID(query);
-    }
-    return (feature && feature.properties.roadSpeedUnit) || null;
-  }
-
-  // Returns the full international calling codes for phone numbers in the feature matching `query`, if any
-  callingCodes(query: Location | string | number): Array<string> {
-    let feature: RegionFeature | null;
-    if (typeof query === 'object') {
-      feature = this.smallestFeature(<Location>query);
-    } else {
-      feature = this.featureForID(query);
-    }
-    return (feature && feature.properties.callingCodes) || [];
-  }
+  return (feature && feature.properties.callingCodes) || [];
 }
