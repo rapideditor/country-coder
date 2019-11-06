@@ -69,10 +69,10 @@ Simply pass in a `[longitude, latitude]` to `iso1A2Code` to get the country code
 iso1A2Code([-4.5, 54.2]);	 // returns 'GB'
 ```
 
-To include non-country regions, pass in `region` for the `level` option.
+To include non-country territories, pass in `territory` for the `level` option.
 
 ```js
-iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+iso1A2Code([-4.5, 54.2], { level: 'territory' });  // returns 'IM'
 ```
 
 The same method can convert from other identifiers.
@@ -131,7 +131,7 @@ Returns the GeoJSON feature from `borders` for the given location or identifier 
 
 ```js
 feature([-4.5, 54.2]);  // returns United Kingdom feature
-feature([-4.5, 54.2], { level: 'region' });  // returns {Isle of Man}
+feature([-4.5, 54.2], { level: 'territory' });  // returns {Isle of Man}
 feature([0, 90]);       // returns null
 feature('GB');          // returns {United Kingdom}
 feature('GBR');         // returns {United Kingdom}
@@ -155,7 +155,7 @@ Returns the ISO 3166-1 alpha-2 code for the given location or identifier and opt
 
 ```js
 iso1A2Code([-4.5, 54.2]);  // returns 'GB'
-iso1A2Code([-4.5, 54.2], { level: 'region' });  // returns 'IM'
+iso1A2Code([-4.5, 54.2], { level: 'territory' });  // returns 'IM'
 iso1A2Code([0, 90]);       // returns null
 iso1A2Code('GBR');         // returns 'GB'
 iso1A2Code('826');         // returns 'GB'
@@ -178,7 +178,7 @@ Returns the ISO 3166-1 alpha-3 code for the given location or identifier and opt
 
 ```js
 iso1A3Code([-4.5, 54.2]);  // returns 'GBR'
-iso1A3Code([-4.5, 54.2], { level: 'region' });  // returns 'IMN'
+iso1A3Code([-4.5, 54.2], { level: 'territory' });  // returns 'IMN'
 iso1A3Code([0, 90]);       // returns null
 iso1A3Code('GB');          // returns 'GBR'
 iso1A3Code('826');         // returns 'GBR'
@@ -201,7 +201,7 @@ Returns the ISO 3166-1 numeric-3 code for the given location or identifier and o
 
 ```js
 iso1N3Code([-4.5, 54.2]);  // returns '826'
-iso1N3Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+iso1N3Code([-4.5, 54.2], { level: 'territory' });  // returns '833'
 iso1N3Code([0, 90]);       // returns null
 iso1N3Code('GB');          // returns '826'
 iso1N3Code('GBR');         // returns '826'
@@ -224,7 +224,7 @@ Returns the United Nations M49 code for the given location or identifier and opt
 
 ```js
 m49Code([-4.5, 54.2]);  // returns '826'
-m49Code([-4.5, 54.2], { level: 'region' });  // returns '833'
+m49Code([-4.5, 54.2], { level: 'territory' });  // returns '833'
 m49Code([0, 90]);       // returns null
 m49Code('GB');          // returns '826'
 m49Code('GBR');         // returns '826'
@@ -247,7 +247,7 @@ Returns the Wikidata QID for the given location or identifier and options, if fo
 
 ```js
 wikidataQID([-4.5, 54.2]);  // returns 'Q145'
-wikidataQID([-4.5, 54.2], { level: 'region' });  // returns 'Q9676'
+wikidataQID([-4.5, 54.2], { level: 'territory' });  // returns 'Q9676'
 wikidataQID([0, 90]);       // returns null
 wikidataQID('GB');          // returns 'Q145'
 wikidataQID('GBR');         // returns 'Q145'
@@ -270,7 +270,7 @@ Returns the emoji flag sequence for the given location or identifier and options
 
 ```js
 emojiFlag([-4.5, 54.2]);  // returns '🇬🇧'
-emojiFlag([-4.5, 54.2], { level: 'region' });  // returns '🇮🇲'
+emojiFlag([-4.5, 54.2], { level: 'territory' });  // returns '🇮🇲'
 emojiFlag([0, 90]);       // returns null
 emojiFlag('GB');          // returns '🇬🇧'
 emojiFlag('GBR');         // returns '🇬🇧'
@@ -512,7 +512,7 @@ An object containing options used for geocoding.
 
 - `level`: `string`, for overlapping features, the division level of the one to get
     - `country` (default): the "sovereign state" feature
-    - `region`: the lowest-level feature with an official or user-assigned ISO code
+    - `territory`: the lowest-level feature with an official or user-assigned ISO code
 
 
 <a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>

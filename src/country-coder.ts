@@ -34,6 +34,17 @@ type RegionFeatureProperties = {
   // the inverse of `groups`
   members: Array<string> | undefined;
 
+  // The rough geographic type of this feature.
+  // Levels do not necessarily nest cleanly within each other.
+  // - `union`: European Union
+  // - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
+  // - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
+  // - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+  // - `country`: Ethiopia, Brazil, United States, etc.
+  // - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
+  // - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
+  level: string;
+
   // The status of this feature's ISO 3166-1 code(s), if any
   // - `official`: officially-assigned
   // - `excRes`: exceptionally-reserved
@@ -64,9 +75,9 @@ type PointGeometry = { type: string; coordinates: Vec2 };
 type PointFeature = { type: string; geometry: PointGeometry; properties: any };
 type Location = Vec2 | PointGeometry | PointFeature;
 type CodingOptions = {
-  // For overlapping features, the division level of the one to get
-  // - `country` (default): the "sovereign state" feature
-  // - `region`: the lowest-level feature with an official or user-assigned ISO code
+  // For overlapping features, the division level of the one to get. If no feature
+  // exists at the given level, the feature at the next higher level is returned.
+  // See the `level` property of `RegionFeatureProperties` for possible values.
   level: string;
 };
 
@@ -78,8 +89,19 @@ let whichPolygonGetter: any = {};
 // The cache for looking up a feature by identifier
 let featuresByCode: any = {};
 
+// Geographic levels, roughly from most to least granular
+let levels = [
+  'subterritory',
+  'territory',
+  'country',
+  'intermediateRegion',
+  'subregion',
+  'region',
+  'union'
+];
+
 loadDerivedDataAndCaches(borders);
-// Some data is implicit, load before using
+// Load implicit feature data and the getter index caches
 function loadDerivedDataAndCaches(borders) {
   let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag'];
   let geometryFeatures: Array<RegionFeature> = [];
@@ -89,9 +111,10 @@ function loadDerivedDataAndCaches(borders) {
     // generate a unique ID for each feature
     feature.properties.id = feature.properties.iso1A2 || feature.properties.m49;
 
-    loadGroups(feature);
     loadM49(feature);
     loadIsoStatus(feature);
+    loadLevel(feature);
+    loadGroups(feature);
     loadRoadSpeedUnit(feature);
     loadDriveSide(feature);
     loadFlag(feature);
@@ -105,6 +128,15 @@ function loadDerivedDataAndCaches(borders) {
   // must load `members` only after fully loading `featuresByID`
   for (let i in borders.features) {
     let feature = borders.features[i];
+    if (feature.properties.groups) {
+      // order groups by their `level`
+      feature.properties.groups.sort(function(groupID1, groupID2) {
+        return (
+          levels.indexOf(featuresByCode[groupID1].properties.level) -
+          levels.indexOf(featuresByCode[groupID2].properties.level)
+        );
+      });
+    }
     loadMembersForGroupsOf(feature);
   }
 
@@ -140,6 +172,19 @@ function loadDerivedDataAndCaches(borders) {
     if (!props.isoStatus && props.iso1A2) {
       // Features with an ISO code but no explicit status are officially-assigned
       props.isoStatus = 'official';
+    }
+  }
+
+  function loadLevel(feature: RegionFeature) {
+    let props = feature.properties;
+    if (props.level) return;
+    if (!props.country) {
+      // a feature without an explicit `level` or `country` is itself a country
+      props.level = 'country';
+    } else if (props.isoStatus === 'official') {
+      props.level = 'territory';
+    } else {
+      props.level = 'subterritory';
     }
   }
 
@@ -244,22 +289,27 @@ function countryFeature(loc: Location): RegionFeature | null {
   return featuresByCode[<string>countryCode];
 }
 
-// Returns the smallest feature containing `loc` to have an officially-assigned or user-assigned code, if any
-function smallestNonExceptedIsoFeature(loc: Location): RegionFeature | null {
-  let feature = featuresContaining(loc).find(function(feature) {
-    let isoStatus = feature.properties.isoStatus;
-    return isoStatus === 'official' || isoStatus === 'usrAssn';
-  });
-  return feature || null;
-}
-
 // Returns the feature containing `loc` for the `opts`, if any
 function featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
-  if (opts && opts.level === 'region') {
-    // e.g. Puerto Rico
-    return smallestNonExceptedIsoFeature(loc);
+  if (opts && opts.level && opts.level !== 'country') {
+    let features = featuresContaining(loc);
+    let targetLevel = opts.level;
+    let targetLevelIndex = levels.indexOf(targetLevel);
+    if (targetLevelIndex === -1) return null;
+
+    for (let i in features) {
+      let feature = features[i];
+      if (
+        feature.properties.level === targetLevel ||
+        // if no feature exists at the target level, return the first feature at the next level up
+        levels.indexOf(feature.properties.level) > targetLevelIndex
+      ) {
+        return feature;
+      }
+    }
+    return null;
   }
-  // e.g. United States
+  // take fast path for country-level coding
   return countryFeature(loc);
 }
 

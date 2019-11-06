@@ -51,6 +51,7 @@ let featureProperties = [
   'aliases',
   'country',
   'groups',
+  'level',
   'isoStatus',
   'driveSide',
   'roadSpeedUnit',
