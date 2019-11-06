@@ -389,6 +389,34 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
   return features;
 }
 
+// Returns a new feature with the properties of the feature matching `id`
+// and the combined geometry of all its component features
+export function aggregateFeature(id: string | number): RegionFeature | null {
+  let features = featuresIn(id, false);
+  if (features.length === 0) return null;
+
+  let aggregateCoordinates = [];
+  for (let i in features) {
+    let feature = features[i];
+    if (
+      feature.geometry &&
+      feature.geometry.type === 'MultiPolygon' &&
+      feature.geometry.coordinates
+    ) {
+      aggregateCoordinates = aggregateCoordinates.concat(feature.geometry.coordinates);
+    }
+  }
+
+  return {
+    type: 'Feature',
+    properties: features[0].properties,
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: aggregateCoordinates
+    }
+  };
+}
+
 // Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
 export function isIn(query: Location | string | number, bounds: string | number): boolean {
   let queryFeature = smallestOrMatchingFeature(query);

@@ -101,6 +101,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
 * [featuresContaining](#featuresContaining)(query: Location | string | number): [RegionFeature]
 * [featuresIn](#featuresIn)(id: string | number): [RegionFeature]
+* [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
 * [driveSide](#driveSide)(query: Location | string | number): string?
@@ -126,7 +127,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 <a name="feature" href="#feature">#</a> <b>feature</b>(query: Location | string | number, opts?: CodingOptions): RegionFeature?
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L172 "Source")
 
-Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found.
+Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found. Note that the `geometry` of the feature may not contain its full bounds (see [aggregateFeature](#aggregateFeature)).
 
 ```js
 feature([-4.5, 54.2]);  // returns United Kingdom feature
@@ -325,6 +326,21 @@ featuresIn(156);           // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('Q148');        // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('🇨🇳');          // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
+```
+
+
+<a name="aggregateFeature" href="#aggregateFeature">#</a> <b>aggregateFeature</b>(id: string | number): [RegionFeature]
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L215 "Source")
+
+Returns a new feature with the `properties` of the feature matching `id` and the combined `geometry` of it and all its component features. This step is not necessary when only accessing a feature's properties.
+
+```js
+aggregateFeature('CN');          // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('CHN');         // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('156');         // returns China, Hong Kong, and Macau as one feature
+aggregateFeature(156);           // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('Q148');        // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('🇨🇳');          // returns China, Hong Kong, and Macau as one feature
 ```
 
 

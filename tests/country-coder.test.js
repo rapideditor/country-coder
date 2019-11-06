@@ -692,6 +692,17 @@ describe('country-coder', () => {
     });
   });
 
+  describe('aggregateFeature', () => {
+    it('returns aggregate for feature with geometry: SH', () => {
+      expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
+    });
+    it('returns aggregate for feature without geometry: EU', () => {
+      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(49);
+    });
+    it('returns null for invalid ID: ABC', () => {
+      expect(coder.aggregateFeature('ABC')).toBeNull();
+    });
+  });
   describe('isIn', () => {
     describe('by location', () => {
       it('returns true: US location in US', () => {
