@@ -148,6 +148,9 @@ describe('country-coder', () => {
       it('returns country feature for country level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'country' }).properties.iso1A2).toBe('GB');
       });
+      it('returns country feature by default', () => {
+        expect(coder.feature([-12.3, -37.1]).properties.iso1A2).toBe('GB');
+      });
       it('returns intermediateRegion feature for intermediateRegion level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'intermediateRegion' }).properties.m49).toBe(
           '011'
@@ -173,6 +176,12 @@ describe('country-coder', () => {
       });
       it('returns null for invalid level option', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'planet' })).toBeNull();
+      });
+      it('returns Antarctica for South Pole, country level', () => {
+        expect(coder.feature([0, -90], { level: 'country' }).properties.iso1A2).toBe('AQ');
+      });
+      it('returns null for North Pole', () => {
+        expect(coder.feature([0, 90])).toBeNull();
       });
     });
   });
