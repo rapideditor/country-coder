@@ -41,7 +41,7 @@ Client-side coding has a number of benefits over server-side solutions:
 - 🚫 🚢 *Maritime Borders*: only points on land are supported; borders over water are highly generalized
 - 🚫 🖋 *Complex Borders*: land borders are of varying detail and may be imprecise at granular scales
 - 🚫 🧩 *Country Subdivisions*: provinces and similar features under [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) cannot be coded
-- 🚫 📇 *Naming*: feature names are omitted; get them via another package or the [Wikidata API](https://www.wikidata.org/wiki/Special:ApiSandbox#action=wbgetentities&format=json&ids=Q258&sites=&props=labels)
+- 🚫 📇 *Multilingual Naming*: only basic English names are included; get display names via another package or the [Wikidata API](https://www.wikidata.org/wiki/Special:ApiSandbox#action=wbgetentities&format=json&ids=Q258&sites=&props=labels)
 - 🚫 📐 *Spatial Operations*: a feature's calculated area, bounding box, etc. will likely be inaccurate
 - 🚫 🗺 *Mapmaking*: the border data is not intended for rendering
 
@@ -141,6 +141,7 @@ feature('Q145');        // returns {United Kingdom}
 feature('🇬🇧');          // returns {United Kingdom}
 feature('UK');          // returns {United Kingdom}
 feature('IM');          // returns {Isle of Man}
+feature('United Kingdom'); // returns {United Kingdom}
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 feature(pointGeoJSON);           // returns {United Kingdom}
@@ -164,6 +165,7 @@ iso1A2Code('Q145');        // returns 'GB'
 iso1A2Code('🇬🇧');          // returns 'GB'
 iso1A2Code('UK');          // returns 'GB'
 iso1A2Code('IMN');         // returns 'IM'
+iso1A2Code('United Kingdom'); // returns 'GB'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 iso1A2Code(pointGeoJSON);           // returns 'GB'
@@ -187,6 +189,7 @@ iso1A3Code('Q145');        // returns 'GBR'
 iso1A3Code('🇬🇧');          // returns 'GBR'
 iso1A3Code('UK');          // returns 'GBR'
 iso1A3Code('IM');          // returns 'IMN'
+iso1A3Code('United Kingdom'); // returns 'GBR'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 iso1A3Code(pointGeoJSON);           // returns 'GBR'
@@ -210,6 +213,7 @@ iso1N3Code('🇬🇧');          // returns '826'
 iso1N3Code('UK');          // returns '826'
 iso1N3Code('IM');          // returns '833'
 iso1N3Code('Q15');         // returns null (Africa)
+iso1A3Code('United Kingdom'); // returns '826'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 iso1N3Code(pointGeoJSON);           // returns '826'
@@ -233,6 +237,7 @@ m49Code('🇬🇧');          // returns '826'
 m49Code('UK');          // returns '826'
 m49Code('IM');          // returns '833'
 m49Code('Q15');         // returns '002' (Africa)
+m49Code('United Kingdom'); // returns '826'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 m49Code(pointGeoJSON);           // returns '826'
@@ -256,6 +261,7 @@ wikidataQID(826);           // returns 'Q145'
 wikidataQID('🇬🇧');          // returns 'Q145'
 wikidataQID('UK');          // returns 'Q145'
 wikidataQID('IM');          // returns 'Q9676'
+wikidataQID('United Kingdom'); // returns 'Q145'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 wikidataQID(pointGeoJSON);           // returns 'Q145'
@@ -279,6 +285,7 @@ emojiFlag(826);           // returns '🇬🇧'
 emojiFlag('Q145');        // returns '🇬🇧'
 emojiFlag('UK');          // returns '🇬🇧'
 emojiFlag('IM');          // returns '🇮🇲'
+emojiFlag('United Kingdom'); // returns '🇬🇧'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 emojiFlag(pointGeoJSON);           // returns '🇬🇧'
@@ -325,6 +332,7 @@ featuresIn('156');         // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn(156);           // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('Q148');        // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('🇨🇳');          // returns [{China}, {Hong Kong}, {Macau}]
+featuresIn('China');       // returns [{China}, {Hong Kong}, {Macau}]
 featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
 ```
 
@@ -341,13 +349,14 @@ aggregateFeature('156');         // returns China, Hong Kong, and Macau as one f
 aggregateFeature(156);           // returns China, Hong Kong, and Macau as one feature
 aggregateFeature('Q148');        // returns China, Hong Kong, and Macau as one feature
 aggregateFeature('🇨🇳');          // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('China');       // returns China, Hong Kong, and Macau as one feature
 ```
 
 
 <a name="isIn" href="#isIn">#</a> <b>isIn</b>(query: Location | string | number, bounds: string | number): boolean
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L243 "Source")
 
-Returns `true` if the feature matching `query` is, or is within, the feature matching `bounds`. For convenience, English names can be used for transnational regions.
+Returns `true` if the feature matching `query` is, or is within, the feature matching `bounds`.
 
 ```js
 isIn([0, 51.5], 'GB');    // returns true
@@ -361,8 +370,8 @@ isIn('GB', '150');        // returns true
 isIn('GBR', 150);         // returns true
 isIn('826', 'Q46');       // returns true
 isIn('🇮🇲', '🇬🇧');         // returns true
-isIn('UK', 'Europe');     // returns true
-isIn('GB', 'Africa');     // returns false
+isIn('United Kingdom', 'Europe');     // returns true
+isIn('United Kingdom', 'Africa');     // returns false
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
 isIn(pointGeoJSON, 'GB');           // returns true
@@ -388,8 +397,10 @@ isInEuropeanUnion(826);          // returns true
 isInEuropeanUnion('Q145');       // returns true
 isInEuropeanUnion('🇬🇧');         // returns true
 isInEuropeanUnion('UK');         // returns true
+isInEuropeanUnion('United Kingdom'); // returns true
 isInEuropeanUnion('IM');         // returns false
 isInEuropeanUnion('CH');         // returns false
+
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
 isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
@@ -414,6 +425,7 @@ driveSide(826);          // returns 'left'
 driveSide('Q145');       // returns 'left'
 driveSide('🇬🇧');         // returns 'left'
 driveSide('UK');         // returns 'left'
+driveSide('United Kingdom'); // returns 'left'
 driveSide('CH');         // returns 'right'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
@@ -439,6 +451,7 @@ roadSpeedUnit(826);          // returns 'mph'
 roadSpeedUnit('Q145');       // returns 'mph'
 roadSpeedUnit('🇬🇧');         // returns 'mph'
 roadSpeedUnit('UK');         // returns 'mph'
+roadSpeedUnit('United Kingdom'); // returns 'mph'
 roadSpeedUnit('CH');         // returns 'km/h'
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
@@ -463,6 +476,7 @@ callingCodes(826);          // returns ['44']
 callingCodes('Q145');       // returns ['44']
 callingCodes('🇬🇧');         // returns ['44']
 callingCodes('UK');         // returns ['44']
+callingCodes('United Kingdom'); // returns ['44']
 callingCodes('BS');         // returns ['1 242']
 callingCodes('JA');         // returns ['1 876', '1 658']
 

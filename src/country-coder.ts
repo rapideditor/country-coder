@@ -20,6 +20,9 @@ type RegionFeatureProperties = {
   // Wikidata QID
   wikidata: string | undefined;
 
+  // The common English name
+  nameEn: string;
+
   // Additional identifiers which can be used to look up this feature;
   // these cannot collide with the identifiers for any other feature
   aliases: Array<string> | undefined;
@@ -89,6 +92,8 @@ let whichPolygonGetter: any = {};
 // The cache for looking up a feature by identifier
 let featuresByCode: any = {};
 
+let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,()&[\]/]/g;
+
 // Geographic levels, roughly from most to least granular
 let levels = [
   'subterritory',
@@ -101,9 +106,9 @@ let levels = [
 ];
 
 loadDerivedDataAndCaches(borders);
-// Load implicit feature data and the getter index caches
+// Loads implicit feature data and the getter index caches
 function loadDerivedDataAndCaches(borders) {
-  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag'];
+  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'nameEn'];
   let geometryFeatures: Array<RegionFeature> = [];
   for (let i in borders.features) {
     let feature = borders.features[i];
@@ -250,12 +255,13 @@ function loadDerivedDataAndCaches(borders) {
       let prop = identifierProps[k];
       let id = prop && feature.properties[prop];
       if (id) {
+        id = id.replace(idFilterRegex, '').toUpperCase();
         featuresByCode[id] = feature;
       }
     }
     if (feature.properties.aliases) {
       for (let j in feature.properties.aliases) {
-        let alias = feature.properties.aliases[j].toUpperCase().replace(/[-_ ]/g, '');
+        let alias = feature.properties.aliases[j].replace(idFilterRegex, '').toUpperCase();
         featuresByCode[alias] = feature;
       }
     }
@@ -324,7 +330,7 @@ function featureForID(id: string | number): RegionFeature | null {
       stringID = '0' + stringID;
     }
   } else {
-    stringID = id.toUpperCase().replace(/[-_ ]/g, '');
+    stringID = id.replace(idFilterRegex, '').toUpperCase();
   }
   return featuresByCode[stringID] || null;
 }

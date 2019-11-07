@@ -48,6 +48,7 @@ let featureProperties = [
   'iso1N3',
   'm49',
   'wikidata',
+  'nameEn',
   'aliases',
   'country',
   'groups',

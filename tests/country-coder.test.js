@@ -16,10 +16,6 @@ describe('country-coder', () => {
       expect(coder.feature('fv    239uasˇÁ¨·´€Óı¨ıÎ∆πˆç´œª -aÔ˚øØTˇ°\\asdf \nK')).toBeNull();
     });
 
-    it('does not find feature for full English country name: The United State of America', () => {
-      expect(coder.feature('The United State of America')).toBeNull();
-    });
-
     describe('by ISO 3166-1 alpha-2', () => {
       it('finds feature by uppercase code: US', () => {
         expect(coder.feature('US').properties.iso1N3).toBe('840');
@@ -41,6 +37,10 @@ describe('country-coder', () => {
     describe('by ISO 3166-1 alpha-3', () => {
       it('finds feature by uppercase code: USA', () => {
         expect(coder.feature('USA').properties.iso1A2).toBe('US');
+      });
+
+      it('finds Andorra by uppercase code: AND', () => {
+        expect(coder.feature('AND').properties.iso1A2).toBe('AD');
       });
 
       it('finds feature by lowercase code: usa', () => {
@@ -107,6 +107,27 @@ describe('country-coder', () => {
 
       it('does not find feature for non-feature QID: Q123456', () => {
         expect(coder.feature('Q123456')).toBeNull();
+      });
+    });
+
+    describe('by English name', () => {
+      it('finds feature for exact name: Bhutan', () => {
+        expect(coder.feature('Bhutan').properties.iso1A2).toBe('BT');
+      });
+      it('finds feature for exact name containing "And": Andorra', () => {
+        expect(coder.feature('Andorra').properties.iso1A2).toBe('AD');
+      });
+      it('finds feature for lowercase name containing "and": andorra', () => {
+        expect(coder.feature('andorra').properties.iso1A2).toBe('AD');
+      });
+      it('finds feature for name containing "the": Northern Europe', () => {
+        expect(coder.feature('Northern Europe').properties.m49).toBe('154');
+      });
+      it('finds feature for name with extra "The": The United States of America', () => {
+        expect(coder.feature('The United States of America').properties.iso1A2).toBe('US');
+      });
+      it('finds feature for name without "The": Gambia', () => {
+        expect(coder.feature('Gambia').properties.iso1A2).toBe('GM');
       });
     });
 
