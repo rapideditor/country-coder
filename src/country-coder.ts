@@ -20,6 +20,9 @@ type RegionFeatureProperties = {
   // Wikidata QID
   wikidata: string | undefined;
 
+  // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
+  emojiFlag: string | undefined;
+
   // The common English name
   nameEn: string;
 
@@ -53,9 +56,6 @@ type RegionFeatureProperties = {
   // - `excRes`: exceptionally-reserved
   // - `usrAssn`: user-assigned
   isoStatus: string | undefined;
-
-  // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
-  emojiFlag: string | undefined;
 
   // The side of the road that traffic drives on within this feature
   // - `right`

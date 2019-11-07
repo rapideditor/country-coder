@@ -524,9 +524,14 @@ A geographic location in one of the supported formats.
 
 An object containing options used for geocoding.
 
-- `level`: `string`, for overlapping features, the division level of the one to get
-    - `country` (default): the "sovereign state" feature
-    - `territory`: the lowest-level feature with an official or user-assigned ISO code
+- `level`: `string`, for overlapping features, the preferred geographic classification of the one to code.  If no feature exists at the specified level, the feature at the next-highest level is coded, if any. The possible values map directly to the `level` property of [RegionFeatureProperties](#RegionFeatureProperties) objects.
+    - `union`: European Union
+    - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
+    - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
+    - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+    - `country`: Ethiopia, Brazil, United States, etc.
+    - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
+    - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
 
 
 <a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>
@@ -545,10 +550,19 @@ An object containing the attributes of a RegionFeature object.
 - `m49`: `string`, UN M49 code
 - `wikidata`: `string`, Wikidata QID
 - `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
+- `nameEn`: `string`, common name in English
 - `aliases`: `[string]`, additional identifiers which can be used to look up this feature
 - `country`: `string`, for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
 - `groups`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within
 - `members`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature entirely contains, the inverse of `groups`
+- `level`: `string`, the rough geographic classification of this feature
+    - `union`: European Union
+    - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
+    - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
+    - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+    - `country`: Ethiopia, Brazil, United States, etc.
+    - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
+    - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
 - `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s), if any
     - `official`: officially-assigned
     - `excRes`: exceptionally-reserved
