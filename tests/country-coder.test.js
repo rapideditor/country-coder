@@ -137,8 +137,42 @@ describe('country-coder', () => {
     });
 
     describe('by location', () => {
-      it('returns null for location with invalid level option', () => {
-        expect(coder.feature([-74, 40.6], { level: 'planet' })).toBeNull();
+      it('returns subterritory feature for subterritory level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'subterritory' }).properties.iso1A2).toBe(
+          'TA'
+        );
+      });
+      it('returns territory feature for territory level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'territory' }).properties.iso1A2).toBe('SH');
+      });
+      it('returns country feature for country level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'country' }).properties.iso1A2).toBe('GB');
+      });
+      it('returns intermediateRegion feature for intermediateRegion level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'intermediateRegion' }).properties.m49).toBe(
+          '011'
+        );
+      });
+      it('returns subregion feature for subregion level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'subregion' }).properties.m49).toBe('202');
+      });
+      it('returns region feature for region level', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'region' }).properties.m49).toBe('002');
+      });
+      it('returns country feature for subterritory level where no subterritory or territory exists', () => {
+        expect(coder.feature([-74, 40.6], { level: 'subterritory' }).properties.iso1A2).toBe('US');
+      });
+      it('returns country feature for territory level where no territory exists', () => {
+        expect(coder.feature([-74, 40.6], { level: 'territory' }).properties.iso1A2).toBe('US');
+      });
+      it('returns union feature for union level', () => {
+        expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
+      });
+      it('returns null for union level where no union exists', () => {
+        expect(coder.feature([-74, 40.6], { level: 'union' })).toBeNull();
+      });
+      it('returns null for invalid level option', () => {
+        expect(coder.feature([-12.3, -37.1], { level: 'planet' })).toBeNull();
       });
     });
   });
