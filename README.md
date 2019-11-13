@@ -99,8 +99,8 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [m49Code](#m49Code)(query: Location | string | number, opts?: CodingOptions): string?
 * [wikidataQID](#wikidataQID)(query: Location | string | number, opts?: CodingOptions): string?
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
-* [featuresContaining](#featuresContaining)(query: Location | string | number): [RegionFeature]
-* [featuresIn](#featuresIn)(id: string | number): [RegionFeature]
+* [featuresContaining](#featuresContaining)(query: Location | string | number, strict: boolean): [RegionFeature]
+* [featuresIn](#featuresIn)(id: string | number, strict: boolean): [RegionFeature]
 * [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
@@ -293,7 +293,7 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
-<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number): [RegionFeature]
+<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number, strict: boolean): [RegionFeature]
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L403 "Source")
 
 Returns all the the features of any type that contain or match the given location or identifier, if any. If `strict` is `true` then only features that are strictly containing are returned.
@@ -320,7 +320,7 @@ featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
 ```
 
 
-<a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number): [RegionFeature]
+<a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number, strict: boolean): [RegionFeature]
 [<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L428 "Source")
 
 Returns all the the features that match or are contained within the given identifier, if any. If `strict` is `true` then only features that are strictly contained are returned.
