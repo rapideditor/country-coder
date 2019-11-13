@@ -525,6 +525,7 @@ A geographic location in one of the supported formats.
 An object containing options used for geocoding.
 
 - `level`: `string`, for overlapping features, the preferred geographic classification of the one to code.  If no feature exists at the specified level, the feature at the next-highest level is coded, if any. The possible values map directly to the `level` property of [RegionFeatureProperties](#RegionFeatureProperties) objects.
+    - `world`
     - `union`: European Union
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
@@ -556,6 +557,7 @@ An object containing the attributes of a RegionFeature object.
 - `groups`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within
 - `members`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature entirely contains, the inverse of `groups`
 - `level`: `string`, the rough geographic classification of this feature
+    - `world`
     - `union`: European Union
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.

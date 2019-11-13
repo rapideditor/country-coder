@@ -34,7 +34,7 @@ type RegionFeatureProperties = {
   country: string | undefined;
 
   // The ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, including its country
-  groups: Array<string> | undefined;
+  groups: Array<string>;
 
   // The ISO 3166-1 alpha-2 or M49 codes of other features this feature contains;
   // the inverse of `groups`
@@ -49,6 +49,7 @@ type RegionFeatureProperties = {
   // - `country`: Ethiopia, Brazil, United States, etc.
   // - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
   // - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
+  // - `world`
   level: string;
 
   // The status of this feature's ISO 3166-1 code(s), if any
@@ -102,7 +103,8 @@ let levels = [
   'intermediateRegion',
   'subregion',
   'region',
-  'union'
+  'union',
+  'world'
 ];
 
 loadDerivedDataAndCaches(borders);
@@ -133,15 +135,13 @@ function loadDerivedDataAndCaches(borders) {
   // must load `members` only after fully loading `featuresByID`
   for (let i in borders.features) {
     let feature = borders.features[i];
-    if (feature.properties.groups) {
-      // order groups by their `level`
-      feature.properties.groups.sort(function(groupID1, groupID2) {
-        return (
-          levels.indexOf(featuresByCode[groupID1].properties.level) -
-          levels.indexOf(featuresByCode[groupID2].properties.level)
-        );
-      });
-    }
+    // order groups by their `level`
+    feature.properties.groups.sort(function(groupID1, groupID2) {
+      return (
+        levels.indexOf(featuresByCode[groupID1].properties.level) -
+        levels.indexOf(featuresByCode[groupID2].properties.level)
+      );
+    });
     loadMembersForGroupsOf(feature);
   }
 
@@ -154,13 +154,16 @@ function loadDerivedDataAndCaches(borders) {
 
   function loadGroups(feature: RegionFeature) {
     let props = feature.properties;
+    if (!props.groups) {
+      props.groups = [];
+    }
     if (props.country) {
       // Add `country` to `groups`
-      if (props.groups) {
-        props.groups.push(props.country);
-      } else {
-        props.groups = [props.country];
-      }
+      props.groups.push(props.country);
+    }
+    if (props.m49 !== '001') {
+      // all features are in the world feature except the world itself
+      props.groups.push('001');
     }
   }
 
@@ -230,8 +233,6 @@ function loadDerivedDataAndCaches(borders) {
 
   // Populate `members` as the inverse relationship of `groups`
   function loadMembersForGroupsOf(feature: RegionFeature) {
-    if (!feature.properties.groups) return;
-
     let featureID = feature.properties.id;
     let standardizedGroupIDs: Array<string> = [];
     for (let j in feature.properties.groups) {
@@ -414,11 +415,9 @@ export function featuresContaining(
   }
 
   let properties = feature.properties;
-  if (properties.groups) {
-    for (let i in properties.groups) {
-      let groupID = properties.groups[i];
-      features.push(featuresByCode[groupID]);
-    }
+  for (let i in properties.groups) {
+    let groupID = properties.groups[i];
+    features.push(featuresByCode[groupID]);
   }
   return features;
 }
@@ -481,7 +480,6 @@ export function isIn(query: Location | string | number, bounds: string | number)
   if (!queryFeature || !boundsFeature) return false;
 
   if (queryFeature.properties.id === boundsFeature.properties.id) return true;
-  if (!queryFeature.properties.groups) return false;
   return queryFeature.properties.groups.indexOf(boundsFeature.properties.id) !== -1;
 }
 

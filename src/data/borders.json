@@ -1,5 +1,6 @@
 {"type":"FeatureCollection","features":[
 {"type":"Feature","properties":{"m49":"680","wikidata":"Q3405693","nameEn":"Sark","country":"GB","groups":["GG","830","154","150"],"level":"subterritory","driveSide":"left","roadSpeedUnit":"mph","callingCodes":["44 01481"]},"geometry":{"type":"MultiPolygon","coordinates":[[[[-2.36485,49.48223],[-2.09454,49.46288],[-2.65349,49.15373],[-2.36485,49.48223]]]]}},
+{"type":"Feature","properties":{"m49":"001","wikidata":"Q2","nameEn":"World","aliases":["Earth","Planet"],"level":"world"},"geometry":null},
 {"type":"Feature","properties":{"m49":"142","wikidata":"Q48","nameEn":"Asia","level":"region"},"geometry":null},
 {"type":"Feature","properties":{"m49":"143","wikidata":"Q27275","nameEn":"Central Asia","groups":["142"],"level":"subregion"},"geometry":null},
 {"type":"Feature","properties":{"m49":"145","wikidata":"Q27293","nameEn":"Western Asia","groups":["142"],"level":"subregion"},"geometry":null},
