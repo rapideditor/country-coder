@@ -472,10 +472,6 @@ describe('country-coder', () => {
       expect(coder.wikidataQID([21, 42.6], { level: 'country' })).toBe('Q1246');
     });
 
-    it('does not find QID for EA', () => {
-      expect(coder.wikidataQID('EA')).toBeNull();
-    });
-
     it('does not code North Pole', () => {
       expect(coder.wikidataQID([0, 90], { level: 'country' })).toBeNull();
     });

@@ -18,7 +18,7 @@ type RegionFeatureProperties = {
   m49: string | undefined;
 
   // Wikidata QID
-  wikidata: string | undefined;
+  wikidata: string;
 
   // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   emojiFlag: string | undefined;
@@ -389,7 +389,7 @@ export function wikidataQID(
 ): string | null {
   let match = feature(query, opts);
   if (!match) return null;
-  return match.properties.wikidata || null;
+  return match.properties.wikidata;
 }
 
 // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
