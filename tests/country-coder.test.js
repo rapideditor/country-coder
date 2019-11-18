@@ -279,6 +279,10 @@ describe('country-coder', () => {
       it('finds Philippines by indeterminately-reserved code 2: RP', () => {
         expect(coder.iso1A2Code('RP')).toBe('PH');
       });
+
+      it('finds United Kingdom by old name: Great Britain', () => {
+        expect(coder.iso1A2Code('Great Britain')).toBe('GB');
+      });
     });
     describe('by M49', () => {
       it('does not find for feature with geography but no ISO code', () => {
