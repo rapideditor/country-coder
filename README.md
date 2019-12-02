@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/%40ideditor%2Fcountry-coder.svg)](https://badge.fury.io/js/%40ideditor%2Fcountry-coder)
+
 # country-coder
 
 📍 ➡️ 🇩🇰 Convert longitude-latitude pairs to [ISO 3166-1 codes](https://en.wikipedia.org/wiki/ISO_3166-1) quickly and locally
@@ -48,16 +50,16 @@ Client-side coding has a number of benefits over server-side solutions:
 
 ## Installing
 
-`npm install country-coder`
+`npm install @ideditor/country-coder`
 
 This library is available in both ES5/CommonJS and ES6 module formats.
 
 ```js
-const countryCoder = require('country-coder');          // CommonJS import all
-const iso1A2Code = require('country-coder').iso1A2Code; // CommonJS import named
+const countryCoder = require('@ideditor/country-coder');          // CommonJS import all
+const iso1A2Code = require('@ideditor/country-coder').iso1A2Code; // CommonJS import named
 // or
-import * as countryCoder from 'country-coder';          // ES6 import all
-import { iso1A2Code } from 'country-coder';             // ES6 import named
+import * as countryCoder from '@ideditor/country-coder';          // ES6 import all
+import { iso1A2Code } from '@ideditor/country-coder';             // ES6 import named
 ```
 
 
