@@ -1,6 +1,6 @@
 {
   "name": "@ideditor/country-coder",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
   "repository": "github:ideditor/country-coder",
   "main": "built/cjs/country-coder.js",
