@@ -302,18 +302,18 @@ Returns all the the features of any type that contain or match the given locatio
 
 ```js
 featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Northern Europe}, {Europe}, {United Kingdom}]
-featuresContaining([0, 51.5]);     // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining([0, 51.5]);     // returns [{United Kingdom}, {Northern Europe}, {Europe}]
 featuresContaining([6.1, 46.2]);   // returns [{Switzerland}, {Western Europe}, {Europe}]
 featuresContaining([0, 90]);       // returns []
-featuresContaining('GB');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining('GBR');         // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining('826');         // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining(826);           // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining('Q145');        // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining('🇬🇧');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
-featuresContaining('UK');          // returns [{United Kingdom}, {Northern Europe}, {Europe}, {European Union}]
+featuresContaining('GB');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining('GBR');         // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining('826');         // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining(826);           // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining('Q145');        // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining('🇬🇧');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
+featuresContaining('UK');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
 featuresContaining('154');         // returns [{Northern Europe}, {Europe}]
-featuresContaining('GB', true);    // returns [{Northern Europe}, {Europe}, {European Union}]
+featuresContaining('GB', true);    // returns [{Northern Europe}, {Europe}]
 featuresContaining('154', true);   // returns [{Europe}]
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, -90] } };
@@ -387,26 +387,27 @@ isIn(pointGeoJSON.geometry, 'GB');  // returns true
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union. This is a convenience method for `isIn(query, 'EU')`.
 
 ```js
-isInEuropeanUnion([0, 51.5]);    // returns true (Britain)
+isInEuropeanUnion([13.4, 52.5]); // returns true (Germany)
+isInEuropeanUnion([0, 51.5]);    // returns false (Britain)
 isInEuropeanUnion([-4.5, 54.2]); // returns false (Isle of Man)
 isInEuropeanUnion([6.1, 46.2]);  // returns false (Switzerland)
 isInEuropeanUnion([0, 90]);      // returns false (North Pole)
 isInEuropeanUnion('EU');         // returns true
-isInEuropeanUnion('GB');         // returns true
-isInEuropeanUnion('GBR');        // returns true
-isInEuropeanUnion('826');        // returns true
-isInEuropeanUnion(826);          // returns true
-isInEuropeanUnion('Q145');       // returns true
-isInEuropeanUnion('🇬🇧');         // returns true
-isInEuropeanUnion('UK');         // returns true
-isInEuropeanUnion('United Kingdom'); // returns true
+isInEuropeanUnion('DE');         // returns true
+isInEuropeanUnion('DEU');        // returns true
+isInEuropeanUnion('276');        // returns true
+isInEuropeanUnion(276);          // returns true
+isInEuropeanUnion('Q183');       // returns true
+isInEuropeanUnion('🇩🇪');         // returns true
+isInEuropeanUnion('Germany');    // returns true
+isInEuropeanUnion('GB');         // returns false
 isInEuropeanUnion('IM');         // returns false
 isInEuropeanUnion('CH');         // returns false
 
 
-let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
-isInEuropeanUnion(pointGeoJSON);           // returns true (Britain)
-isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Britain)
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [13.4, 52.5] } };
+isInEuropeanUnion(pointGeoJSON);           // returns true (Germany)
+isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Germany)
 ```
 
 
