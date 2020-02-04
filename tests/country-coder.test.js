@@ -420,8 +420,8 @@ describe('country-coder', () => {
       expect(coder.iso1A3Code([-74, 40.6], { level: 'country' })).toBe('USA');
     });
 
-    it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
-      expect(coder.iso1A3Code([21, 42.6], { level: 'country' })).toBeNull();
+    it('codes location in user-assigned, de facto country: Kosovo as XKX', () => {
+      expect(coder.iso1A3Code([21, 42.6], { level: 'country' })).toBe('XKX');
     });
 
     it('does not code North Pole', () => {
