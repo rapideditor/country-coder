@@ -3,6 +3,10 @@ let fs = require('fs');
 let bordersPath = './src/data/borders.json';
 let borders = require(bordersPath);
 
+let rewind = require('@mapbox/geojson-rewind');
+// ensure exterior rings are counter-clockwise and interior rings are clockwise
+rewind(borders);
+
 let allowedKeys = ['type', 'features'];
 for (let key in borders) {
   if (allowedKeys.indexOf(key) === -1) {
