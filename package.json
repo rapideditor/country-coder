@@ -20,6 +20,7 @@
   "devDependencies": {
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
+    "@mapbox/geojson-rewind": "^0.4.0",
     "@types/node": "^12.6.0",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
@@ -30,7 +31,6 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
-    "@mapbox/geojson-rewind": "^0.4.0",
     "which-polygon": "^2.2.0"
   },
   "scripts": {
