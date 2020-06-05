@@ -22,7 +22,7 @@
     "@babel/preset-env": "^7.5.4",
     "@mapbox/geojson-rewind": "^0.5.0",
     "@types/node": "^14.0.11",
-    "babel-jest": "^24.8.0",
+    "babel-jest": "^26.0.1",
     "jest": "^26.0.1",
     "jest-extended": "^0.11.2",
     "npm-run-all": "^4.0.0",
