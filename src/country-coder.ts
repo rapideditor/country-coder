@@ -136,7 +136,7 @@ function loadDerivedDataAndCaches(borders) {
   for (let i in borders.features) {
     let feature = borders.features[i];
     // order groups by their `level`
-    feature.properties.groups.sort(function(groupID1, groupID2) {
+    feature.properties.groups.sort(function (groupID1, groupID2) {
       return (
         levels.indexOf(featuresByCode[groupID1].properties.level) -
         levels.indexOf(featuresByCode[groupID2].properties.level)
@@ -225,7 +225,7 @@ function loadDerivedDataAndCaches(borders) {
   // Calculates the emoji flag sequence from the alpha-2 code (if any) and caches it
   function loadFlag(feature: RegionFeature) {
     if (!feature.properties.iso1A2) return;
-    let flag = feature.properties.iso1A2.replace(/./g, function(char: string) {
+    let flag = feature.properties.iso1A2.replace(/./g, function (char: string) {
       return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
     });
     feature.properties.emojiFlag = flag;

@@ -21,7 +21,7 @@ let outstring = JSON.stringify(borders);
 outstring = outstring.substring(0, outstring.length - 1);
 outstring += ',"features":[\n';
 
-features.sort(function(feature1, feature2) {
+features.sort(function (feature1, feature2) {
   if (feature1.properties.iso1A2 && !feature2.properties.iso1A2) return 1;
   if (!feature1.properties.iso1A2 && feature2.properties.iso1A2) return -1;
   if (feature1.properties.m49 && !feature2.properties.m49) return 1;
@@ -41,7 +41,7 @@ function roundCoordinatePrecision(feature) {
       let part = polygon[k];
       for (let l in part) {
         let point = part[l];
-        part[l] = point.map(function(coordinate) {
+        part[l] = point.map(function (coordinate) {
           return Math.round(coordinate * 100000) / 100000;
         });
       }
