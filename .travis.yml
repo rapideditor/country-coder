@@ -4,4 +4,4 @@ node_js:
   - "12"
   - "14"
 before_script:
-  - npm run all
+  - npm-run-all -s clean build pretty
