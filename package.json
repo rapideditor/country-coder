@@ -26,7 +26,7 @@
     "jest": "^24.8.0",
     "jest-extended": "^0.11.2",
     "npm-run-all": "^4.0.0",
-    "prettier": "^1.18.2",
+    "prettier": "^2.0.5",
     "shx": "^0.3.0",
     "typescript": "^3.5.2"
   },
