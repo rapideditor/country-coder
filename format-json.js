@@ -22,11 +22,14 @@ outstring = outstring.substring(0, outstring.length - 1);
 outstring += ',"features":[\n';
 
 features.sort(function(feature1, feature2) {
-  return feature1.properties.iso1A2 ||
-    feature1.properties.m49 > feature2.properties.iso1A2 ||
-    feature2.properties.m49
-    ? 1
-    : -1;
+  if (feature1.properties.iso1A2 && !feature2.properties.iso1A2) return 1;
+  if (!feature1.properties.iso1A2 && feature2.properties.iso1A2) return -1;
+  if (feature1.properties.m49 && !feature2.properties.m49) return 1;
+  if (!feature1.properties.m49 && feature2.properties.m49) return -1;
+  if (feature1.properties.m49) {
+    return feature1.properties.m49.localeCompare(feature2.properties.m49, 'en');
+  }
+  return feature1.properties.iso1A2.localeCompare(feature2.properties.iso1A2, 'en');
 });
 
 function roundCoordinatePrecision(feature) {
