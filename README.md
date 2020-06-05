@@ -1,4 +1,5 @@
 [![npm version](https://badge.fury.io/js/%40ideditor%2Fcountry-coder.svg)](https://badge.fury.io/js/%40ideditor%2Fcountry-coder)
+[![Build Status](https://travis-ci.org/ideditor/country-coder.svg?branch=master)](https://travis-ci.org/ideditor/country-coder)
 
 # country-coder
 
