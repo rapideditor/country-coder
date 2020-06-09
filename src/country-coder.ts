@@ -147,7 +147,7 @@ function loadDerivedDataAndCaches(borders) {
 
   // whichPolygon doesn't support null geometry even though GeoJSON does
   let geometryOnlyCollection: RegionFeatureCollection = {
-    type: 'RegionFeatureCollection',
+    type: 'FeatureCollection',
     features: geometryFeatures
   };
   whichPolygonGetter = whichPolygon(geometryOnlyCollection);
