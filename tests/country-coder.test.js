@@ -204,7 +204,9 @@ describe('country-coder', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'region' }).properties.m49).toBe('002');
       });
       it('returns country feature for subterritory level where no subterritory or territory exists', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe('CA');
+        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe(
+          'CA'
+        );
       });
       it('returns country feature for territory level where no territory exists', () => {
         expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
