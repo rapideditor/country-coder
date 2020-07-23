@@ -29,7 +29,13 @@ features.sort(function (feature1, feature2) {
   if (feature1.properties.m49) {
     return feature1.properties.m49.localeCompare(feature2.properties.m49, 'en');
   }
-  return feature1.properties.iso1A2.localeCompare(feature2.properties.iso1A2, 'en');
+  if (feature1.properties.iso1A2) {
+    return feature1.properties.iso1A2.localeCompare(feature2.properties.iso1A2, 'en');
+  }
+  return (
+    parseInt(feature1.properties.wikidata.slice(1)) -
+    parseInt(feature2.properties.wikidata.slice(1))
+  );
 });
 
 function roundCoordinatePrecision(feature) {

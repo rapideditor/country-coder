@@ -214,9 +214,7 @@ function loadDerivedDataAndCaches(borders) {
     let props = feature.properties;
     if (
       props.driveSide === undefined &&
-      props.iso1A2 &&
-      // no common side in the EU
-      props.iso1A2 !== 'EU'
+      (props.level === 'country' || props.level === 'territory' || props.level === 'subterritory')
     ) {
       // only `left` regions are listed explicitly, else assume `right`
       props.driveSide = 'right';

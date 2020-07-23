@@ -204,10 +204,10 @@ describe('country-coder', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'region' }).properties.m49).toBe('002');
       });
       it('returns country feature for subterritory level where no subterritory or territory exists', () => {
-        expect(coder.feature([-74, 40.6], { level: 'subterritory' }).properties.iso1A2).toBe('US');
+        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe('CA');
       });
       it('returns country feature for territory level where no territory exists', () => {
-        expect(coder.feature([-74, 40.6], { level: 'territory' }).properties.iso1A2).toBe('US');
+        expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
       });
       it('returns union feature for union level', () => {
         expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
@@ -309,7 +309,11 @@ describe('country-coder', () => {
       });
     });
     describe('by location, country level', () => {
-      it('codes location in officially-assigned country: New York, United States as US', () => {
+      it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
+        expect(coder.iso1A2Code([-79.4, 43.7], { level: 'country' })).toBe('CA');
+      });
+
+      it('codes location in non-ISO territory of officially-assigned country: New York, United States as US', () => {
         expect(coder.iso1A2Code([-74, 40.6], { level: 'country' })).toBe('US');
       });
 
@@ -358,10 +362,9 @@ describe('country-coder', () => {
       });
     });
     describe('by location, territory level', () => {
-      it('codes location in officially-assigned country: New York, United States as US', () => {
-        expect(coder.iso1A2Code([-74, 40.6], { level: 'territory' })).toBe('US');
+      it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
+        expect(coder.iso1A2Code([-79.4, 43.7], { level: 'territory' })).toBe('CA');
       });
-
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
         expect(coder.iso1A2Code([6.1, 46.2], { level: 'territory' })).toBe('CH');
       });
@@ -520,22 +523,24 @@ describe('country-coder', () => {
     describe('by location', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         let features = coder.featuresContaining([-74, 40.6]);
-        expect(features.length).toBe(5);
-        expect(features[0].properties.iso1A2).toBe('US');
-        expect(features[1].properties.m49).toBe('021');
-        expect(features[2].properties.m49).toBe('003');
-        expect(features[3].properties.m49).toBe('019');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features.length).toBe(6);
+        expect(features[0].properties.nameEn).toBe('Contiguous United States');
+        expect(features[1].properties.iso1A2).toBe('US');
+        expect(features[2].properties.m49).toBe('021');
+        expect(features[3].properties.m49).toBe('003');
+        expect(features[4].properties.m49).toBe('019');
+        expect(features[5].properties.m49).toBe('001');
       });
 
       it('codes location in officially-assigned country: New York, United States as US, strict', () => {
         let features = coder.featuresContaining([-74, 40.6], true);
-        expect(features.length).toBe(5);
-        expect(features[0].properties.iso1A2).toBe('US');
-        expect(features[1].properties.m49).toBe('021');
-        expect(features[2].properties.m49).toBe('003');
-        expect(features[3].properties.m49).toBe('019');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features.length).toBe(6);
+        expect(features[0].properties.nameEn).toBe('Contiguous United States');
+        expect(features[1].properties.iso1A2).toBe('US');
+        expect(features[2].properties.m49).toBe('021');
+        expect(features[3].properties.m49).toBe('003');
+        expect(features[4].properties.m49).toBe('019');
+        expect(features[5].properties.m49).toBe('001');
       });
 
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
@@ -871,11 +876,35 @@ describe('country-coder', () => {
       it('returns true: GU in "Q153732" (Mariana Islands)', () => {
         expect(coder.isIn('GU', 'Q153732')).toBe(true);
       });
+      it('returns true: "GU" in US', () => {
+        expect(coder.isIn('GU', 'US')).toBe(true);
+      });
       it('returns true: "Q153732" in US', () => {
         expect(coder.isIn('Q153732', 'US')).toBe(true);
       });
+      it('returns true: "Alaska" in "US"', () => {
+        expect(coder.isIn('Alaska', 'US')).toBe(true);
+      });
+      it('returns true: "Hawaii" in "US"', () => {
+        expect(coder.isIn('Hawaii', 'US')).toBe(true);
+      });
+      it('returns true: "CONUS" in "US"', () => {
+        expect(coder.isIn('CONUS', 'US')).toBe(true);
+      });
+      it('returns false: "US" in "CONUS"', () => {
+        expect(coder.isIn('US', 'CONUS')).toBe(false);
+      });
       it('returns false: "Q153732" in "019" (Mariana Islands in Americas)', () => {
         expect(coder.isIn('Q153732', '019')).toBe(false);
+      });
+      it('returns false: "Hawaii" in "019"', () => {
+        expect(coder.isIn('Hawaii', '019')).toBe(false);
+      });
+      it('returns true: "Alaska" in "019"', () => {
+        expect(coder.isIn('Alaska', '019')).toBe(true);
+      });
+      it('returns true: "CONUS" in "019"', () => {
+        expect(coder.isIn('CONUS', '019')).toBe(true);
       });
       it('returns true: "US" in "019" (United States in Americas)', () => {
         expect(coder.isIn('US', '019')).toBe(true);
@@ -1014,11 +1043,22 @@ describe('country-coder', () => {
     });
 
     it('finds feature using right by code', () => {
+      expect(coder.driveSide('DE')).toBe('right');
+      expect(coder.driveSide('CA')).toBe('right');
       expect(coder.driveSide('IO')).toBe('right');
+      expect(coder.driveSide('PR')).toBe('right');
+      expect(coder.driveSide('Hawaii')).toBe('right');
+      expect(coder.driveSide('CONUS')).toBe('right');
+      expect(coder.driveSide('US')).toBe('right');
     });
 
     it('finds feature using left by code', () => {
       expect(coder.driveSide('VI')).toBe('left');
+      expect(coder.driveSide('GB')).toBe('left');
+      expect(coder.driveSide('IN')).toBe('left');
+      expect(coder.driveSide('AU')).toBe('left');
+      expect(coder.driveSide('JP')).toBe('left');
+      expect(coder.driveSide('ZA')).toBe('left');
     });
 
     it('finds null for EU', () => {
