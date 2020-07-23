@@ -116,7 +116,8 @@ function loadDerivedDataAndCaches(borders) {
     let feature = borders.features[i];
 
     // generate a unique ID for each feature
-    feature.properties.id = feature.properties.iso1A2 || feature.properties.m49;
+    feature.properties.id =
+      feature.properties.iso1A2 || feature.properties.m49 || feature.properties.wikidata;
 
     loadM49(feature);
     loadIsoStatus(feature);

@@ -7,6 +7,18 @@ describe('country-coder', () => {
     });
   });
 
+  describe('id', () => {
+    it('assigns unique id to every feature', () => {
+      var ids = {};
+      for (var i in coder.borders.features) {
+        var id = coder.borders.features[i].properties.id;
+        expect(id).not.toBeNull();
+        expect(ids[id]).toBeUndefined();
+        ids[id] = true;
+      }
+    });
+  });
+
   describe('feature', () => {
     it('does not find feature for empty string', () => {
       expect(coder.feature('')).toBeNull();
@@ -107,6 +119,10 @@ describe('country-coder', () => {
 
       it('finds feature by lowercase QID: q30', () => {
         expect(coder.feature('q30').properties.iso1A2).toBe('US');
+      });
+
+      it('finds feature with no ISO or M49 codes by QID: Q153732', () => {
+        expect(coder.feature('Q153732').properties.nameEn).toBe('Mariana Islands');
       });
 
       it('does not find feature for non-feature QID: Q123456', () => {
@@ -848,6 +864,21 @@ describe('country-coder', () => {
       });
       it('returns false: TA in EU', () => {
         expect(coder.isIn('TA', 'EU')).toBe(false);
+      });
+      it('returns true: MP in "Q153732"', () => {
+        expect(coder.isIn('MP', 'Q153732')).toBe(true);
+      });
+      it('returns true: GU in "Q153732" (Mariana Islands)', () => {
+        expect(coder.isIn('GU', 'Q153732')).toBe(true);
+      });
+      it('returns true: "Q153732" in US', () => {
+        expect(coder.isIn('Q153732', 'US')).toBe(true);
+      });
+      it('returns false: "Q153732" in "019" (Mariana Islands in Americas)', () => {
+        expect(coder.isIn('Q153732', '019')).toBe(false);
+      });
+      it('returns true: "US" in "019" (United States in Americas)', () => {
+        expect(coder.isIn('US', '019')).toBe(true);
       });
       it('returns true: "021" in "019" (Northern America in Americas)', () => {
         expect(coder.isIn('021', '019')).toBe(true);
