@@ -875,6 +875,15 @@ describe('country-coder', () => {
       it('returns true: MP in "Q153732"', () => {
         expect(coder.isIn('MP', 'Q153732')).toBe(true);
       });
+      it('returns true: "Navassa Island" in "UM"', () => {
+        expect(coder.isIn('Navassa Island', 'UM')).toBe(true);
+      });
+      it('returns true: "Navassa Island" in "029" (Caribbean)', () => {
+        expect(coder.isIn('Navassa Island', '029')).toBe(true);
+      });
+      it('returns false: "UM" in "029"', () => {
+        expect(coder.isIn('UM', '029')).toBe(false);
+      });
       it('returns true: GU in "Q153732" (Mariana Islands)', () => {
         expect(coder.isIn('GU', 'Q153732')).toBe(true);
       });
