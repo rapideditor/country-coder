@@ -149,6 +149,9 @@ describe('country-coder', () => {
       it('finds feature for name without "The": Gambia', () => {
         expect(coder.feature('Gambia').properties.iso1A2).toBe('GM');
       });
+      it('finds feature not in country for name: Bir Tawil', () => {
+        expect(coder.feature('Bir Tawil').properties.wikidata).toBe('Q620634');
+      });
     });
 
     describe('by alias', () => {
@@ -211,6 +214,9 @@ describe('country-coder', () => {
       it('returns country feature for territory level where no territory exists', () => {
         expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
       });
+      it('returns null for territory level where no territory exists, strict', () => {
+        expect(coder.feature([-79.4, 43.7], { level: 'territory', strict: true })).toBeNull();
+      });
       it('returns union feature for union level', () => {
         expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
       });
@@ -222,6 +228,22 @@ describe('country-coder', () => {
       });
       it('returns null for North Pole', () => {
         expect(coder.feature([0, 90])).toBeNull();
+      });
+      it('returns territory feature for territory level in Bir Tawil', () => {
+        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
+          'Q620634'
+        );
+        expect(
+          coder.feature([33.75, 21.87], { level: 'territory', strict: true }).properties.wikidata
+        ).toBe('Q620634');
+      });
+      it('returns Northern Africa feature for country level in Bir Tawil', () => {
+        expect(coder.feature([33.75, 21.87]).properties.m49).toBe('015');
+        expect(coder.feature([33.75, 21.87], { level: 'country' }).properties.m49).toBe('015');
+      });
+      it('returns null for country level in Bir Tawil, strict', () => {
+        expect(coder.feature([33.75, 21.87], { strict: true })).toBeNull();
+        expect(coder.feature([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
       });
     });
   });
@@ -362,6 +384,11 @@ describe('country-coder', () => {
       it('does not code North Pole', () => {
         expect(coder.iso1A2Code([0, 90], { level: 'country' })).toBeNull();
       });
+
+      it('does not code location in Bir Tawil', () => {
+        expect(coder.iso1A2Code([33.75, 21.87])).toBeNull();
+        expect(coder.iso1A2Code([33.75, 21.87], { level: 'country' })).toBeNull();
+      });
     });
     describe('by location, territory level', () => {
       it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
@@ -410,6 +437,10 @@ describe('country-coder', () => {
       it('does not code North Pole', () => {
         expect(coder.iso1A2Code([0, 90], { level: 'territory' })).toBeNull();
       });
+
+      it('does not code location in Bir Tawil', () => {
+        expect(coder.iso1A2Code([33.75, 21.87], { level: 'territory' })).toBeNull();
+      });
     });
     describe('by GeoJSON point feature, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
@@ -448,6 +479,10 @@ describe('country-coder', () => {
     it('does not code North Pole', () => {
       expect(coder.iso1A3Code([0, 90], { level: 'country' })).toBeNull();
     });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1A3Code([33.75, 21.87], { level: 'country' })).toBeNull();
+    });
   });
 
   // this doesn't need extensive tests since it's just a fetcher using `feature`
@@ -467,6 +502,10 @@ describe('country-coder', () => {
     it('does not code North Pole', () => {
       expect(coder.iso1N3Code([0, 90], { level: 'country' })).toBeNull();
     });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1N3Code([33.75, 21.87], { level: 'country' })).toBeNull();
+    });
   });
 
   describe('m49Code', () => {
@@ -485,6 +524,16 @@ describe('country-coder', () => {
     it('does not code North Pole', () => {
       expect(coder.m49Code([0, 90], { level: 'country' })).toBeNull();
     });
+
+    it('does not code Bir Tawil', () => {
+      expect(coder.m49Code('Bir Tawil')).toBeNull();
+    });
+    it('codes location in Bir Tawil as 015', () => {
+      expect(coder.m49Code([33.75, 21.87], { level: 'country' })).toBe('015');
+    });
+    it('does not code location in Bir Tawil, strict', () => {
+      expect(coder.m49Code([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
+    });
   });
 
   // this doesn't need extensive tests since it's just a fetcher using `feature`
@@ -499,6 +548,10 @@ describe('country-coder', () => {
 
     it('does not code North Pole', () => {
       expect(coder.wikidataQID([0, 90], { level: 'country' })).toBeNull();
+    });
+
+    it('codes Bir Tawil', () => {
+      expect(coder.wikidataQID('Bir Tawil')).toBe('Q620634');
     });
   });
 
@@ -931,6 +984,15 @@ describe('country-coder', () => {
       });
       it('returns true: 🇵🇷 in 🇺🇸', () => {
         expect(coder.isIn('🇵🇷', '🇺🇸')).toBe(true);
+      });
+      it('returns true: "Bir Tawil" in "015"', () => {
+        expect(coder.isIn('Bir Tawil', '015')).toBe(true);
+      });
+      it('returns false: "Bir Tawil" in "Sudan"', () => {
+        expect(coder.isIn('Bir Tawil', 'Sudan')).toBe(false);
+      });
+      it('returns false: "Bir Tawil" in "Egypt"', () => {
+        expect(coder.isIn('Bir Tawil', 'Egypt')).toBe(false);
       });
       it('returns true: "Subsaharan africa" in "AFRICA"', () => {
         expect(coder.isIn('Subsaharan africa', 'AFRICA')).toBe(true);

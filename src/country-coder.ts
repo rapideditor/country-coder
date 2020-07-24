@@ -83,6 +83,10 @@ type CodingOptions = {
   // exists at the given level, the feature at the next higher level is returned.
   // See the `level` property of `RegionFeatureProperties` for possible values.
   level: string;
+  // If true, only a feature at the specified level will be returned. If false
+  // or undefined, the next-highest level feature will be returned if none is
+  // preset at the requested level.
+  strict: boolean;
 };
 
 // The base GeoJSON feature collection
@@ -292,31 +296,38 @@ function countryFeature(loc: Location): RegionFeature | null {
   if (!feature) return null;
   // a feature without `country` but with geometry is itself a country
   let countryCode = feature.properties.country || feature.properties.iso1A2;
-  return featuresByCode[<string>countryCode];
+  return featuresByCode[<string>countryCode] || null;
 }
 
 // Returns the feature containing `loc` for the `opts`, if any
 function featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
-  if (opts && opts.level && opts.level !== 'country') {
-    let features = featuresContaining(loc);
-    let targetLevel = opts.level;
-    let targetLevelIndex = levels.indexOf(targetLevel);
-    if (targetLevelIndex === -1) return null;
-
-    for (let i in features) {
-      let feature = features[i];
-      if (
-        feature.properties.level === targetLevel ||
-        // if no feature exists at the target level, return the first feature at the next level up
-        levels.indexOf(feature.properties.level) > targetLevelIndex
-      ) {
-        return feature;
-      }
-    }
-    return null;
+  if (!opts) {
+    opts = {
+      level: 'country',
+      strict: false
+    };
   }
-  // take fast path for country-level coding
-  return countryFeature(loc);
+  let targetLevel = opts.level;
+  if (targetLevel === 'country') {
+    // attempt fast path for country-level coding
+    let fastFeature = countryFeature(loc);
+    if (fastFeature) return fastFeature;
+  }
+  let features = featuresContaining(loc);
+  let targetLevelIndex = levels.indexOf(targetLevel);
+  if (targetLevelIndex === -1) return null;
+
+  for (let i in features) {
+    let feature = features[i];
+    if (
+      feature.properties.level === targetLevel ||
+      // if no feature exists at the target level, return the first feature at the next level up
+      (!opts.strict && levels.indexOf(feature.properties.level) > targetLevelIndex)
+    ) {
+      return feature;
+    }
+  }
+  return null;
 }
 
 // Returns the feature with an identifying property matching `id`, if any

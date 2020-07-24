@@ -537,6 +537,7 @@ An object containing options used for geocoding.
     - `country`: Ethiopia, Brazil, United States, etc.
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
     - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
+- `strict`: `boolean`
 
 
 <a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>
