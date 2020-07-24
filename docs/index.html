@@ -96,7 +96,7 @@ map.on('load', function() {
       var props = hit.properties || {};
       return {
         'name': props.nameEn,
-        'code': (props.iso1A2 || props.iso1N3 || props.M49).toString(),
+        'code': props.iso1A2 || props.iso1N3 || props.m49,
         'qid': props.wikidata
       };
     });
@@ -105,7 +105,7 @@ map.on('load', function() {
     var inner = '';
     matches.forEach(function(m) {
       inner += '<div class="resource">'
-        + m.name + ' (' + m.code + ') '
+        + m.name + (m.code ? ' (' + m.code.toString() + ') ' : ' ')
         + '<a class="label" target="_blank" href="https://www.wikidata.org/wiki/' + m.qid + '">' + m.qid + '</a>'
         + '</div>';
     });
