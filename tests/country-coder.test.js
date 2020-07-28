@@ -937,6 +937,15 @@ describe('country-coder', () => {
       it('returns false: "UM" in "029"', () => {
         expect(coder.isIn('UM', '029')).toBe(false);
       });
+      it('returns true: "Midway Atoll" in "UM"', () => {
+        expect(coder.isIn('Midway Atoll', 'UM')).toBe(true);
+      });
+      it('returns true: "Midway Atoll" in "US"', () => {
+        expect(coder.isIn('Midway Atoll', 'US')).toBe(true);
+      });
+      it('returns false: "Midway Atoll" in "Hawaii"', () => {
+        expect(coder.isIn('Midway Atoll', 'Hawaii')).toBe(false);
+      });
       it('returns true: GU in "Q153732" (Mariana Islands)', () => {
         expect(coder.isIn('GU', 'Q153732')).toBe(true);
       });
