@@ -194,7 +194,7 @@ function loadDerivedDataAndCaches(borders) {
     if (!props.country) {
       // a feature without an explicit `level` or `country` is itself a country
       props.level = 'country';
-    } else if (props.isoStatus === 'official') {
+    } else if (!props.iso1A2 || props.isoStatus === 'official') {
       props.level = 'territory';
     } else {
       props.level = 'subterritory';

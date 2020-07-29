@@ -5,17 +5,27 @@ describe('country-coder', () => {
     it('exports borders as a feature collection', () => {
       expect(coder.borders).toHaveProperty('features');
     });
-  });
 
-  describe('id', () => {
-    it('assigns unique id to every feature', () => {
-      var ids = {};
-      for (var i in coder.borders.features) {
-        var id = coder.borders.features[i].properties.id;
-        expect(id).not.toBeNull();
-        expect(ids[id]).toBeUndefined();
-        ids[id] = true;
-      }
+    describe('id', () => {
+      it('assigns unique id to every feature', () => {
+        var ids = {};
+        for (var i in coder.borders.features) {
+          var id = coder.borders.features[i].properties.id;
+          expect(id).not.toBeNull();
+          expect(ids[id]).toBeUndefined();
+          ids[id] = true;
+        }
+      });
+    });
+
+    it('level', () => {
+      expect(coder.feature('CA').properties.level).toBe('country');
+      expect(coder.feature('IM').properties.level).toBe('territory');
+      expect(coder.feature('GB-SCT').properties.level).toBe('territory');
+      expect(coder.feature('EU').properties.level).toBe('union');
+      expect(coder.feature('XK').properties.level).toBe('country');
+      expect(coder.feature('AC').properties.level).toBe('subterritory');
+      expect(coder.feature('Bir Tawil').properties.level).not.toBe('country');
     });
   });
 
