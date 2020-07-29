@@ -205,9 +205,7 @@ function loadDerivedDataAndCaches(borders) {
     let props = feature.properties;
     if (
       props.roadSpeedUnit === undefined &&
-      props.iso1A2 &&
-      // no common unit in the EU
-      props.iso1A2 !== 'EU'
+      (props.level === 'country' || props.level === 'territory' || props.level === 'subterritory')
     ) {
       // only `mph` regions are listed explicitly, else assume `km/h`
       props.roadSpeedUnit = 'km/h';
