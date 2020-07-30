@@ -165,28 +165,39 @@ describe('country-coder', () => {
     });
 
     describe('by alias', () => {
-      it('finds Greece by European Commission code: EL', () => {
+      it('finds by European Commission codes', () => {
         expect(coder.feature('EL').properties.iso1N3).toBe('300');
-      });
-
-      it('finds Greece by European Commission code, lowercase: el', () => {
         expect(coder.feature('el').properties.iso1N3).toBe('300');
-      });
-
-      it('finds United Kingdom by European Commission code: UK', () => {
         expect(coder.feature('UK').properties.iso1N3).toBe('826');
       });
 
-      it('finds Myanmar by transitionally-reserved code: BU', () => {
+      it('finds by transitionally-reserved codes', () => {
         expect(coder.feature('BU').properties.iso1N3).toBe('104');
       });
 
-      it('finds Philippines by indeterminately-reserved code 1: PI', () => {
+      it('finds by indeterminately-reserved codes', () => {
         expect(coder.feature('PI').properties.iso1N3).toBe('608');
+        expect(coder.feature('RP').properties.iso1N3).toBe('608');
       });
 
-      it('finds Philippines by indeterminately-reserved code 2: RP', () => {
-        expect(coder.feature('RP').properties.iso1N3).toBe('608');
+      it('finds by ISO 3166-2 codes', () => {
+        expect(coder.feature('UM-71').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('UM71').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('UM 71').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('US-AK').properties.nameEn).toBe('Alaska');
+      });
+
+      it('finds by deleted codes', () => {
+        expect(coder.feature('MI').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('MID').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('488').properties.nameEn).toBe('Midway Atoll');
+      });
+
+      it('finds by common abbreviations', () => {
+        expect(coder.feature('CONUS').properties.nameEn).toBe('Contiguous United States');
+        expect(coder.feature('SBA').properties.wikidata).toBe('Q37362');
+        expect(coder.feature('BOTS').properties.wikidata).toBe('Q46395');
+        expect(coder.feature('UKOTS').properties.wikidata).toBe('Q46395');
       });
     });
 
