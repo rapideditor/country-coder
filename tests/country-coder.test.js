@@ -1139,6 +1139,8 @@ describe('country-coder', () => {
       expect(coder.driveSide('CA')).toBe('right');
       expect(coder.driveSide('IO')).toBe('right');
       expect(coder.driveSide('PR')).toBe('right');
+      expect(coder.driveSide('GI')).toBe('right');
+      expect(coder.driveSide('Midway Atoll')).toBe('right');
       expect(coder.driveSide('Hawaii')).toBe('right');
       expect(coder.driveSide('CONUS')).toBe('right');
       expect(coder.driveSide('US')).toBe('right');
@@ -1147,8 +1149,12 @@ describe('country-coder', () => {
     it('finds feature using left by code', () => {
       expect(coder.driveSide('VI')).toBe('left');
       expect(coder.driveSide('GB')).toBe('left');
+      expect(coder.driveSide('GB-SCT')).toBe('left');
+      expect(coder.driveSide('IM')).toBe('left');
+      expect(coder.driveSide('IE')).toBe('left');
       expect(coder.driveSide('IN')).toBe('left');
       expect(coder.driveSide('AU')).toBe('left');
+      expect(coder.driveSide('HMD')).toBe('left');
       expect(coder.driveSide('JP')).toBe('left');
       expect(coder.driveSide('ZA')).toBe('left');
     });
@@ -1177,10 +1183,21 @@ describe('country-coder', () => {
 
     it('finds feature using km/h by code', () => {
       expect(coder.roadSpeedUnit('IO')).toBe('km/h');
+      expect(coder.roadSpeedUnit('IE')).toBe('km/h');
+      expect(coder.roadSpeedUnit('AU')).toBe('km/h');
+      expect(coder.roadSpeedUnit('TK')).toBe('km/h');
+      expect(coder.roadSpeedUnit('GI')).toBe('km/h');
     });
 
     it('finds feature using mph by code', () => {
+      expect(coder.roadSpeedUnit('US')).toBe('mph');
+      expect(coder.roadSpeedUnit('US-AK')).toBe('mph');
+      expect(coder.roadSpeedUnit('Midway Atoll')).toBe('mph');
       expect(coder.roadSpeedUnit('VI')).toBe('mph');
+      expect(coder.roadSpeedUnit('VG')).toBe('mph');
+      expect(coder.roadSpeedUnit('UK')).toBe('mph');
+      expect(coder.roadSpeedUnit('IM')).toBe('mph');
+      expect(coder.roadSpeedUnit('GB-ENG')).toBe('mph');
     });
 
     it('finds null for EU', () => {
@@ -1199,6 +1216,8 @@ describe('country-coder', () => {
   describe('callingCodes', () => {
     it('finds one prefix for feature with one', () => {
       expect(coder.callingCodes([2.35, 48.85])).toStrictEqual(['33']);
+      expect(coder.callingCodes('ES')).toStrictEqual(['34']);
+      expect(coder.callingCodes('ES-CE')).toStrictEqual(['34']);
     });
 
     it('finds multiple prefixes for feature with multiple', () => {
