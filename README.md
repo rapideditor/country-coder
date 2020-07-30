@@ -42,8 +42,9 @@ Client-side coding has a number of benefits over server-side solutions:
 
 - 🚫 🛂 *Disputed Borders*: only one country is coded per point, roughly the "de facto controlling country"
 - 🚫 🚢 *Maritime Borders*: only points on land are supported; borders over water are highly generalized
+- 🚫 🇦🇶 *Antarctic Borders*: [territorial claims in Antarctica](https://en.wikipedia.org/wiki/Territorial_claims_in_Antarctica) aren't widely recognized and are excluded
 - 🚫 🖋 *Complex Borders*: land borders are of varying detail and may be imprecise at granular scales
-- 🚫 🧩 *Country Subdivisions*: provinces and similar features under [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) cannot be coded
+- 🚫 🧩 *Country Subdivisions*: most provinces and similar features under [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) cannot be coded
 - 🚫 📇 *Multilingual Naming*: only basic English names are included; get display names via another package or the [Wikidata API](https://www.wikidata.org/wiki/Special:ApiSandbox#action=wbgetentities&format=json&ids=Q258&sites=&props=labels)
 - 🚫 📐 *Spatial Operations*: a feature's calculated area, bounding box, etc. will likely be inaccurate
 - 🚫 🗺 *Mapmaking*: the border data is not intended for rendering
@@ -535,6 +536,7 @@ An object containing options used for geocoding.
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
     - `country`: Ethiopia, Brazil, United States, etc.
+    - `subcountryGroup`: British Overseas Territories
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
     - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
 - `strict`: `boolean`
@@ -568,6 +570,7 @@ An object containing the attributes of a RegionFeature object.
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
     - `country`: Ethiopia, Brazil, United States, etc.
+    - `subcountryGroup`: British Overseas Territories
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
     - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
 - `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s), if any

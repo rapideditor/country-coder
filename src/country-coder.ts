@@ -47,6 +47,7 @@ type RegionFeatureProperties = {
   // - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
   // - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
   // - `country`: Ethiopia, Brazil, United States, etc.
+  // - `subcountryGroup`
   // - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
   // - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
   // - `world`
@@ -103,6 +104,7 @@ let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,()&[\]/]/g;
 let levels = [
   'subterritory',
   'territory',
+  'subcountryGroup',
   'country',
   'intermediateRegion',
   'subregion',
