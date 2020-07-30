@@ -100,6 +100,10 @@ let featuresByCode: any = {};
 
 let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,()&[\]/]/g;
 
+function canonicalID(id: string): string {
+  return id.replace(idFilterRegex, '').toUpperCase();
+}
+
 // Geographic levels, roughly from most to least granular
 let levels = [
   'subterritory',
@@ -255,19 +259,20 @@ function loadDerivedDataAndCaches(borders) {
 
   // Caches features by their identifying strings for rapid lookup
   function cacheFeatureByIDs(feature: RegionFeature) {
+    let ids: Array<string> = [];
     for (let k in identifierProps) {
       let prop = identifierProps[k];
-      let id = prop && feature.properties[prop];
-      if (id) {
-        id = id.replace(idFilterRegex, '').toUpperCase();
-        featuresByCode[id] = feature;
-      }
+      let id = feature.properties[prop];
+      if (id) ids.push(id);
     }
     if (feature.properties.aliases) {
       for (let j in feature.properties.aliases) {
-        let alias = feature.properties.aliases[j].replace(idFilterRegex, '').toUpperCase();
-        featuresByCode[alias] = feature;
+        ids.push(feature.properties.aliases[j]);
       }
+    }
+    for (let i in ids) {
+      let id = canonicalID(ids[i]);
+      featuresByCode[id] = feature;
     }
   }
 }
@@ -341,7 +346,7 @@ function featureForID(id: string | number): RegionFeature | null {
       stringID = '0' + stringID;
     }
   } else {
-    stringID = id.replace(idFilterRegex, '').toUpperCase();
+    stringID = canonicalID(id);
   }
   return featuresByCode[stringID] || null;
 }
