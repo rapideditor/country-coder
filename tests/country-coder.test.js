@@ -852,17 +852,19 @@ describe('country-coder', () => {
 
     it('codes 🇸🇭 (Saint Helena)', () => {
       let features = coder.featuresIn('🇸🇭');
-      expect(features.length).toBe(3);
+      expect(features.length).toBe(4);
       expect(features[0].properties.iso1A2).toBe('SH');
-      expect(features[1].properties.iso1A2).toBe('AC');
-      expect(features[2].properties.iso1A2).toBe('TA');
+      expect(features[1].properties.wikidata).toBe('Q34497');
+      expect(features[2].properties.iso1A2).toBe('AC');
+      expect(features[3].properties.iso1A2).toBe('TA');
     });
 
     it('codes 🇸🇭 (Saint Helena), strict', () => {
       let features = coder.featuresIn('🇸🇭', true);
-      expect(features.length).toBe(2);
-      expect(features[0].properties.iso1A2).toBe('AC');
-      expect(features[1].properties.iso1A2).toBe('TA');
+      expect(features.length).toBe(3);
+      expect(features[0].properties.wikidata).toBe('Q34497');
+      expect(features[1].properties.iso1A2).toBe('AC');
+      expect(features[2].properties.iso1A2).toBe('TA');
     });
 
     it('codes AQ', () => {
