@@ -202,20 +202,54 @@ describe('country-coder', () => {
     });
 
     describe('by location', () => {
+      it('returns country feature by default', () => {
+        expect(coder.feature([12.59, 55.68]).properties.iso1A2).toBe('DK');
+        expect(coder.feature([-74, 40.6]).properties.iso1A2).toBe('US');
+        expect(coder.feature([-12.3, -37.1]).properties.iso1A2).toBe('GB');
+        expect(coder.feature([153, -27.4]).properties.iso1A2).toBe('AU');
+      });
+      it('returns country feature for country level', () => {
+        expect(coder.feature([12.59, 55.68], { level: 'country' }).properties.iso1A2).toBe('DK');
+        expect(coder.feature([-74, 40.6], { level: 'country' }).properties.iso1A2).toBe('US');
+        expect(coder.feature([-12.3, -37.1], { level: 'country' }).properties.iso1A2).toBe('GB');
+        expect(coder.feature([153, -27.4], { level: 'country' }).properties.iso1A2).toBe('AU');
+      });
+      it('returns next-higher-level feature for country level where no country exists (Bir Tawil)', () => {
+        expect(coder.feature([33.75, 21.87]).properties.m49).toBe('015');
+        expect(coder.feature([33.75, 21.87], { level: 'country' }).properties.m49).toBe('015');
+      });
+      it('returns null for country level where no country exists, strict', () => {
+        expect(coder.feature([33.75, 21.87], { strict: true })).toBeNull();
+        expect(coder.feature([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
+      });
+
       it('returns subterritory feature for subterritory level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'subterritory' }).properties.iso1A2).toBe(
           'TA'
         );
       });
+      it('returns country feature for subterritory level where no subterritory or territory exists', () => {
+        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe(
+          'CA'
+        );
+      });
+
       it('returns territory feature for territory level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'territory' }).properties.iso1A2).toBe('SH');
+        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
+          'Q620634'
+        );
+        expect(
+          coder.feature([33.75, 21.87], { level: 'territory', strict: true }).properties.wikidata
+        ).toBe('Q620634');
       });
-      it('returns country feature for country level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'country' }).properties.iso1A2).toBe('GB');
+      it('returns country feature for territory level where no territory exists', () => {
+        expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
       });
-      it('returns country feature by default', () => {
-        expect(coder.feature([-12.3, -37.1]).properties.iso1A2).toBe('GB');
+      it('returns null for territory level where no territory exists, strict', () => {
+        expect(coder.feature([-79.4, 43.7], { level: 'territory', strict: true })).toBeNull();
       });
+
       it('returns intermediateRegion feature for intermediateRegion level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'intermediateRegion' }).properties.m49).toBe(
           '011'
@@ -227,44 +261,21 @@ describe('country-coder', () => {
       it('returns region feature for region level', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'region' }).properties.m49).toBe('002');
       });
-      it('returns country feature for subterritory level where no subterritory or territory exists', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe(
-          'CA'
-        );
-      });
-      it('returns country feature for territory level where no territory exists', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
-      });
-      it('returns null for territory level where no territory exists, strict', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'territory', strict: true })).toBeNull();
-      });
       it('returns union feature for union level', () => {
         expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
       });
+
       it('returns null for invalid level option', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'planet' })).toBeNull();
       });
       it('returns Antarctica for South Pole, country level', () => {
+        expect(coder.feature([0, -90]).properties.iso1A2).toBe('AQ');
         expect(coder.feature([0, -90], { level: 'country' }).properties.iso1A2).toBe('AQ');
       });
       it('returns null for North Pole', () => {
         expect(coder.feature([0, 90])).toBeNull();
-      });
-      it('returns territory feature for territory level in Bir Tawil', () => {
-        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
-          'Q620634'
-        );
-        expect(
-          coder.feature([33.75, 21.87], { level: 'territory', strict: true }).properties.wikidata
-        ).toBe('Q620634');
-      });
-      it('returns Northern Africa feature for country level in Bir Tawil', () => {
-        expect(coder.feature([33.75, 21.87]).properties.m49).toBe('015');
-        expect(coder.feature([33.75, 21.87], { level: 'country' }).properties.m49).toBe('015');
-      });
-      it('returns null for country level in Bir Tawil, strict', () => {
-        expect(coder.feature([33.75, 21.87], { strict: true })).toBeNull();
-        expect(coder.feature([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
+        expect(coder.feature([0, 90], { level: 'country' })).toBeNull();
+        expect(coder.feature([0, 90], { level: 'subterritory' })).toBeNull();
       });
     });
   });
