@@ -98,7 +98,7 @@ let whichPolygonGetter: any = {};
 // The cache for looking up a feature by identifier
 let featuresByCode: any = {};
 
-let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,()&[\]/]/g;
+let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,'()&[\]/]/g;
 
 function canonicalID(id: string): string {
   return id.replace(idFilterRegex, '').toUpperCase();

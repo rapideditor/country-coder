@@ -831,17 +831,19 @@ describe('country-coder', () => {
   describe('featuresIn', () => {
     it('codes CN', () => {
       let features = coder.featuresIn('CN');
-      expect(features.length).toBe(3);
+      expect(features.length).toBe(4);
       expect(features[0].properties.iso1A2).toBe('CN');
-      expect(features[1].properties.iso1A2).toBe('HK');
-      expect(features[2].properties.iso1A2).toBe('MO');
+      expect(features[1].properties.wikidata).toBe('Q19188');
+      expect(features[2].properties.iso1A2).toBe('HK');
+      expect(features[3].properties.iso1A2).toBe('MO');
     });
 
     it('codes CN, strict', () => {
       let features = coder.featuresIn('CN', true);
-      expect(features.length).toBe(2);
-      expect(features[0].properties.iso1A2).toBe('HK');
-      expect(features[1].properties.iso1A2).toBe('MO');
+      expect(features.length).toBe(3);
+      expect(features[0].properties.wikidata).toBe('Q19188');
+      expect(features[1].properties.iso1A2).toBe('HK');
+      expect(features[2].properties.iso1A2).toBe('MO');
     });
 
     it('codes 830', () => {
