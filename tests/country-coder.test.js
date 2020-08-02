@@ -6,11 +6,31 @@ describe('country-coder', () => {
       expect(coder.borders).toHaveProperty('features');
     });
 
+    describe('properties', () => {
+      it('all identifying values are unique', () => {
+        let ids = {};
+        let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'nameEn'];
+        for (let i in coder.borders.features) {
+          let identifiers = identifierProps
+            .map(function (prop) {
+              return coder.borders.features[i].properties[prop];
+            })
+            .concat(coder.borders.features[i].properties.aliases || [])
+            .filter(Boolean);
+          for (let j in identifiers) {
+            let id = identifiers[j];
+            expect(ids[id]).toBeUndefined();
+            ids[id] = true;
+          }
+        }
+      });
+    });
+
     describe('id', () => {
       it('assigns unique id to every feature', () => {
-        var ids = {};
-        for (var i in coder.borders.features) {
-          var id = coder.borders.features[i].properties.id;
+        let ids = {};
+        for (let i in coder.borders.features) {
+          let id = coder.borders.features[i].properties.id;
           expect(id).not.toBeNull();
           expect(ids[id]).toBeUndefined();
           ids[id] = true;
