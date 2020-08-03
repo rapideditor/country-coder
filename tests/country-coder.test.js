@@ -754,12 +754,13 @@ describe('country-coder', () => {
 
       it('codes location in officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Isle of Man, United Kingdom', () => {
         let features = coder.featuresContaining([-4.5, 54.2]);
-        expect(features.length).toBe(5);
+        expect(features.length).toBe(6);
         expect(features[0].properties.iso1A2).toBe('IM');
-        expect(features[1].properties.iso1A2).toBe('GB');
-        expect(features[2].properties.m49).toBe('154');
-        expect(features[3].properties.m49).toBe('150');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features[1].properties.wikidata).toBe('Q185086');
+        expect(features[2].properties.iso1A2).toBe('GB');
+        expect(features[3].properties.m49).toBe('154');
+        expect(features[4].properties.m49).toBe('150');
+        expect(features[5].properties.m49).toBe('001');
       });
 
       it('codes location in exceptionally-reserved subfeature of officially-assigned country, in EU, in Eurozone: Paris, Metropolitan France', () => {
@@ -864,12 +865,13 @@ describe('country-coder', () => {
 
       it('codes IM', () => {
         let features = coder.featuresContaining('IM');
-        expect(features.length).toBe(5);
+        expect(features.length).toBe(6);
         expect(features[0].properties.iso1A2).toBe('IM');
-        expect(features[1].properties.iso1A2).toBe('GB');
-        expect(features[2].properties.m49).toBe('154');
-        expect(features[3].properties.m49).toBe('150');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features[1].properties.wikidata).toBe('Q185086');
+        expect(features[2].properties.iso1A2).toBe('GB');
+        expect(features[3].properties.m49).toBe('154');
+        expect(features[4].properties.m49).toBe('150');
+        expect(features[5].properties.m49).toBe('001');
       });
 
       it('codes FX', () => {
