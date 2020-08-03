@@ -24,6 +24,15 @@ describe('country-coder', () => {
           }
         }
       });
+
+      it('each feature has either member features or geometry but not both', () => {
+        for (let i in coder.borders.features) {
+          let feature = coder.borders.features[i];
+          let hasMembers = feature.properties.members && feature.properties.members.length;
+          expect(hasMembers || feature.geometry || null).not.toBeNull();
+          expect((hasMembers && feature.geometry) || null).toBeNull();
+        }
+      });
     });
 
     describe('id', () => {
