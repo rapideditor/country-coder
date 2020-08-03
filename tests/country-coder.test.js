@@ -306,8 +306,13 @@ describe('country-coder', () => {
         expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
       });
 
-      it('returns null for invalid level option', () => {
+      it('returns null for invalid level options', () => {
         expect(coder.feature([-12.3, -37.1], { level: 'planet' })).toBeNull();
+        expect(coder.feature([-12.3, -37.1], { maxLevel: 'mars' })).toBeNull();
+        expect(coder.feature([-12.3, -37.1], { maxLevel: 'subterritory' })).toBeNull();
+        expect(
+          coder.feature([-12.3, -37.1], { level: 'country', maxLevel: 'subterritory' })
+        ).toBeNull();
       });
       it('returns Antarctica for South Pole, country level', () => {
         expect(coder.feature([0, -90]).properties.iso1A2).toBe('AQ');
@@ -552,7 +557,7 @@ describe('country-coder', () => {
       expect(coder.iso1A3Code([21, 42.6], { level: 'country' })).toBe('XKX');
     });
 
-    it('does not code North Pole', () => {
+    it('does not code location of North Pole', () => {
       expect(coder.iso1A3Code([0, 90])).toBeNull();
       expect(coder.iso1A3Code([0, 90], { level: 'country' })).toBeNull();
     });
@@ -560,6 +565,14 @@ describe('country-coder', () => {
     it('does not code location in Bir Tawil', () => {
       expect(coder.iso1A3Code([33.75, 21.87])).toBeNull();
       expect(coder.iso1A3Code([33.75, 21.87], { level: 'country' })).toBeNull();
+    });
+
+    it('does not code feature without alpha-3 code by identifier', () => {
+      expect(coder.iso1A3Code('Bir Tawil')).toBeNull();
+      expect(coder.iso1A3Code('Sark')).toBeNull();
+      expect(coder.iso1A3Code('830')).toBeNull();
+      expect(coder.iso1A3Code('Northern America')).toBeNull();
+      expect(coder.iso1A3Code('Oceania')).toBeNull();
     });
   });
 
@@ -953,13 +966,14 @@ describe('country-coder', () => {
   });
 
   describe('aggregateFeature', () => {
-    it('returns aggregate for feature with geometry: SH', () => {
-      expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
+    it('returns aggregate for feature with geometry', () => {
+      expect(coder.aggregateFeature('TA').geometry.coordinates.length).toBe(1);
     });
-    it('returns aggregate for feature without geometry: EU', () => {
+    it('returns aggregate for feature without geometry', () => {
+      expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
       expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(46);
     });
-    it('returns null for invalid ID: ABC', () => {
+    it('returns null for invalid ID', () => {
       expect(coder.aggregateFeature('ABC')).toBeNull();
     });
   });

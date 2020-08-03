@@ -317,6 +317,13 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
   let maxLevel = opts.maxLevel || 'world';
   let withProp = opts.withProp;
 
+  let targetLevelIndex = levels.indexOf(targetLevel);
+  if (targetLevelIndex === -1) return null;
+
+  let maxLevelIndex = levels.indexOf(maxLevel);
+  if (maxLevelIndex === -1) return null;
+  if (maxLevelIndex < targetLevelIndex) return null;
+
   if (targetLevel === 'country') {
     // attempt fast path for country-level coding
     let fastFeature = countryFeature(loc);
@@ -326,13 +333,6 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
       }
     }
   }
-
-  let targetLevelIndex = levels.indexOf(targetLevel);
-  if (targetLevelIndex === -1) return null;
-
-  let maxLevelIndex = levels.indexOf(maxLevel);
-  if (maxLevelIndex === -1) return null;
-  if (maxLevelIndex < targetLevelIndex) return null;
 
   let features = featuresContaining(loc);
 
