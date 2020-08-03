@@ -65,25 +65,25 @@ describe('country-coder', () => {
 
         expect(coder.feature('001').properties.level).toBe('world');
       });
-    });
 
-    it('each feature may have only one group per level (except North America)', () => {
-      for (let i in coder.borders.features) {
-        let feature = coder.borders.features[i];
-        let groups = feature.properties.groups;
-        if (groups) {
-          groups = groups.slice().filter(function (group) {
-            // North America and Northern America are overlapping subregions
-            // defined by the UN, but ignore that here
-            return group !== '003';
-          });
-          let levels = groups.map(function (group) {
-            return coder.feature(group).properties.level;
-          });
-          levels.push(feature.properties.level);
-          expect(levels.length).toBe([...new Set(levels)].length);
+      it('each feature may have only one group per level (except North America)', () => {
+        for (let i in coder.borders.features) {
+          let feature = coder.borders.features[i];
+          let groups = feature.properties.groups;
+          if (groups) {
+            groups = groups.slice().filter(function (group) {
+              // North America and Northern America are overlapping subregions
+              // defined by the UN, but ignore that here
+              return group !== '003';
+            });
+            let levels = groups.map(function (group) {
+              return coder.feature(group).properties.level;
+            });
+            levels.push(feature.properties.level);
+            expect(levels.length).toBe([...new Set(levels)].length);
+          }
         }
-      }
+      });
     });
   });
 
