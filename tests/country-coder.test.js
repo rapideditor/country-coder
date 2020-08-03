@@ -238,9 +238,9 @@ describe('country-coder', () => {
         expect(coder.feature([33.75, 21.87]).properties.m49).toBe('015');
         expect(coder.feature([33.75, 21.87], { level: 'country' }).properties.m49).toBe('015');
       });
-      it('returns null for country level where no country exists, strict', () => {
-        expect(coder.feature([33.75, 21.87], { strict: true })).toBeNull();
-        expect(coder.feature([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
+      it('returns null for country level where no country exists', () => {
+        expect(coder.feature([33.75, 21.87], { maxLevel: 'country' })).toBeNull();
+        expect(coder.feature([33.75, 21.87], { level: 'country', maxLevel: 'country' })).toBeNull();
       });
 
       it('returns subterritory feature for subterritory level', () => {
@@ -259,15 +259,17 @@ describe('country-coder', () => {
         expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
           'Q620634'
         );
-        expect(
-          coder.feature([33.75, 21.87], { level: 'territory', strict: true }).properties.wikidata
-        ).toBe('Q620634');
+        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
+          'Q620634'
+        );
       });
       it('returns country feature for territory level where no territory exists', () => {
         expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
       });
-      it('returns null for territory level where no territory exists, strict', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'territory', strict: true })).toBeNull();
+      it('returns null for territory level where no territory exists', () => {
+        expect(
+          coder.feature([-79.4, 43.7], { level: 'territory', maxLevel: 'territory' })
+        ).toBeNull();
       });
 
       it('returns intermediateRegion feature for intermediateRegion level', () => {
@@ -442,6 +444,11 @@ describe('country-coder', () => {
       it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
         expect(coder.iso1A2Code([-79.4, 43.7], { level: 'territory' })).toBe('CA');
       });
+
+      it('codes location in non-ISO territory of officially-assigned country: New York, United States as US', () => {
+        expect(coder.iso1A2Code([-74, 40.6], { level: 'territory' })).toBe('US');
+      });
+
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland as CH', () => {
         expect(coder.iso1A2Code([6.1, 46.2], { level: 'territory' })).toBe('CH');
       });
@@ -517,18 +524,22 @@ describe('country-coder', () => {
   // this doesn't need extensive tests since it's just a fetcher using `feature`
   describe('iso1A3Code', () => {
     it('codes location in officially-assigned country: New York, United States as USA', () => {
+      expect(coder.iso1A3Code([-74, 40.6])).toBe('USA');
       expect(coder.iso1A3Code([-74, 40.6], { level: 'country' })).toBe('USA');
     });
 
     it('codes location in user-assigned, de facto country: Kosovo as XKX', () => {
+      expect(coder.iso1A3Code([21, 42.6])).toBe('XKX');
       expect(coder.iso1A3Code([21, 42.6], { level: 'country' })).toBe('XKX');
     });
 
     it('does not code North Pole', () => {
+      expect(coder.iso1A3Code([0, 90])).toBeNull();
       expect(coder.iso1A3Code([0, 90], { level: 'country' })).toBeNull();
     });
 
     it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1A3Code([33.75, 21.87])).toBeNull();
       expect(coder.iso1A3Code([33.75, 21.87], { level: 'country' })).toBeNull();
     });
   });
@@ -566,21 +577,25 @@ describe('country-coder', () => {
     });
 
     it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
-      expect(coder.m49Code([21, 42.6], { level: 'country' })).toBeNull();
+      expect(coder.m49Code([21, 42.6], { maxLevel: 'country' })).toBeNull();
+      expect(coder.m49Code([21, 42.6], { level: 'country', maxLevel: 'country' })).toBeNull();
     });
 
-    it('does not code North Pole', () => {
+    it('does not code location of North Pole', () => {
       expect(coder.m49Code([0, 90], { level: 'country' })).toBeNull();
     });
 
-    it('does not code Bir Tawil', () => {
+    it('does not code "Bir Tawil"', () => {
       expect(coder.m49Code('Bir Tawil')).toBeNull();
     });
     it('codes location in Bir Tawil as 015', () => {
+      expect(coder.m49Code([33.75, 21.87])).toBe('015');
       expect(coder.m49Code([33.75, 21.87], { level: 'country' })).toBe('015');
     });
-    it('does not code location in Bir Tawil, strict', () => {
-      expect(coder.m49Code([33.75, 21.87], { level: 'country', strict: true })).toBeNull();
+
+    it('does not code location in Bir Tawil, maxLevel=country', () => {
+      expect(coder.m49Code([33.75, 21.87], { maxLevel: 'country' })).toBeNull();
+      expect(coder.m49Code([33.75, 21.87], { level: 'country', maxLevel: 'country' })).toBeNull();
     });
   });
 

@@ -42,6 +42,7 @@ type RegionFeatureProperties = {
 
   // The rough geographic type of this feature.
   // Levels do not necessarily nest cleanly within each other.
+  // - `world`
   // - `union`: European Union
   // - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
   // - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
@@ -50,7 +51,6 @@ type RegionFeatureProperties = {
   // - `subcountryGroup`
   // - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
   // - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
-  // - `world`
   level: string;
 
   // The status of this feature's ISO 3166-1 code(s), if any
@@ -83,11 +83,11 @@ type CodingOptions = {
   // For overlapping features, the division level of the one to get. If no feature
   // exists at the given level, the feature at the next higher level is returned.
   // See the `level` property of `RegionFeatureProperties` for possible values.
-  level: string;
-  // If true, only a feature at the specified level will be returned. If false
-  // or undefined, the next-highest level feature will be returned if none is
-  // preset at the requested level.
-  strict: boolean;
+  level: string | undefined;
+  // Only a feature at the specified level or lower will be returned.
+  maxLevel: string | undefined;
+  // Only a feature with the specified property will be returned.
+  withProp: string | undefined;
 };
 
 // The base GeoJSON feature collection
@@ -304,32 +304,48 @@ function countryFeature(loc: Location): RegionFeature | null {
   return featuresByCode[<string>countryCode] || null;
 }
 
+let defaultOpts = {
+  level: undefined,
+  maxLevel: undefined,
+  withProp: undefined
+};
+
 // Returns the feature containing `loc` for the `opts`, if any
-function featureForLoc(loc: Location, opts?: CodingOptions): RegionFeature | null {
-  if (!opts) {
-    opts = {
-      level: 'country',
-      strict: false
-    };
-  }
-  let targetLevel = opts.level;
+function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null {
+  let targetLevel = opts.level || 'country';
+  let maxLevel = opts.maxLevel || 'world';
+  let withProp = opts.withProp;
+
   if (targetLevel === 'country') {
     // attempt fast path for country-level coding
     let fastFeature = countryFeature(loc);
-    if (fastFeature) return fastFeature;
+    if (fastFeature) {
+      if (!withProp || fastFeature.properties[withProp]) {
+        return fastFeature;
+      }
+    }
   }
-  let features = featuresContaining(loc);
+
   let targetLevelIndex = levels.indexOf(targetLevel);
   if (targetLevelIndex === -1) return null;
 
+  let maxLevelIndex = levels.indexOf(maxLevel);
+  if (maxLevelIndex === -1) return null;
+  if (maxLevelIndex < targetLevelIndex) return null;
+
+  let features = featuresContaining(loc);
+
   for (let i in features) {
     let feature = features[i];
+    let levelIndex = levels.indexOf(feature.properties.level);
     if (
       feature.properties.level === targetLevel ||
       // if no feature exists at the target level, return the first feature at the next level up
-      (!opts.strict && levels.indexOf(feature.properties.level) > targetLevelIndex)
+      (levelIndex > targetLevelIndex && levelIndex <= maxLevelIndex)
     ) {
-      return feature;
+      if (!withProp || feature.properties[withProp]) {
+        return feature;
+      }
     }
   }
   return null;
@@ -361,7 +377,7 @@ function smallestOrMatchingFeature(query: Location | string | number): RegionFea
 // Returns the feature matching the given arguments, if any
 export function feature(
   query: Location | string | number,
-  opts?: CodingOptions
+  opts: CodingOptions = defaultOpts
 ): RegionFeature | null {
   if (typeof query === 'object') {
     return featureForLoc(<Location>query, opts);
@@ -370,28 +386,44 @@ export function feature(
 }
 
 // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
-export function iso1A2Code(query: Location | string | number, opts?: CodingOptions): string | null {
+export function iso1A2Code(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'iso1A2';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1A2 || null;
 }
 
 // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
-export function iso1A3Code(query: Location | string | number, opts?: CodingOptions): string | null {
+export function iso1A3Code(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'iso1A3';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1A3 || null;
 }
 
 // Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
-export function iso1N3Code(query: Location | string | number, opts?: CodingOptions): string | null {
+export function iso1N3Code(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'iso1N3';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1N3 || null;
 }
 
 // Returns the UN M49 code for the feature matching the arguments, if any
-export function m49Code(query: Location | string | number, opts?: CodingOptions): string | null {
+export function m49Code(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'm49';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.m49 || null;
@@ -400,15 +432,20 @@ export function m49Code(query: Location | string | number, opts?: CodingOptions)
 // Returns the Wikidata QID code for the feature matching the arguments, if any
 export function wikidataQID(
   query: Location | string | number,
-  opts?: CodingOptions
+  opts: CodingOptions = defaultOpts
 ): string | null {
+  opts.withProp = 'wikidata';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.wikidata;
 }
 
 // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
-export function emojiFlag(query: Location | string | number, opts?: CodingOptions): string | null {
+export function emojiFlag(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'emojiFlag';
   let match = feature(query, opts);
   if (!match) return null;
   return match.properties.emojiFlag || null;
