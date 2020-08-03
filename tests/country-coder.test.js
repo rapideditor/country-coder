@@ -47,14 +47,43 @@ describe('country-coder', () => {
       });
     });
 
-    it('level', () => {
-      expect(coder.feature('CA').properties.level).toBe('country');
-      expect(coder.feature('IM').properties.level).toBe('territory');
-      expect(coder.feature('GB-SCT').properties.level).toBe('territory');
-      expect(coder.feature('EU').properties.level).toBe('union');
-      expect(coder.feature('XK').properties.level).toBe('country');
-      expect(coder.feature('AC').properties.level).toBe('subterritory');
-      expect(coder.feature('Bir Tawil').properties.level).not.toBe('country');
+    describe('level', () => {
+      it('assigns appropriate level values', () => {
+        expect(coder.feature('AC').properties.level).toBe('subterritory');
+        expect(coder.feature('DG').properties.level).toBe('subterritory');
+        expect(coder.feature('Alderney').properties.level).toBe('subterritory');
+
+        expect(coder.feature('IM').properties.level).toBe('territory');
+        expect(coder.feature('GU').properties.level).toBe('territory');
+        expect(coder.feature('GB-SCT').properties.level).toBe('territory');
+        expect(coder.feature('Bir Tawil').properties.level).toBe('territory');
+
+        expect(coder.feature('CA').properties.level).toBe('country');
+        expect(coder.feature('XK').properties.level).toBe('country');
+
+        expect(coder.feature('EU').properties.level).toBe('union');
+
+        expect(coder.feature('001').properties.level).toBe('world');
+      });
+    });
+
+    it('each feature may have only one group per level (except North America)', () => {
+      for (let i in coder.borders.features) {
+        let feature = coder.borders.features[i];
+        let groups = feature.properties.groups;
+        if (groups) {
+          groups = groups.slice().filter(function (group) {
+            // North America and Northern America are overlapping subregions
+            // defined by the UN, but ignore that here
+            return group !== '003';
+          });
+          let levels = groups.map(function (group) {
+            return coder.feature(group).properties.level;
+          });
+          levels.push(feature.properties.level);
+          expect(levels.length).toBe([...new Set(levels)].length);
+        }
+      }
     });
   });
 
