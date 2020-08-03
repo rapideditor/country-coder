@@ -77,24 +77,34 @@ describe('country-coder', () => {
     });
 
     describe('by ISO 3166-1 alpha-3', () => {
-      it('finds feature by uppercase code: USA', () => {
+      it('finds features by uppercase codes', () => {
+        expect(coder.feature('AND').properties.iso1A2).toBe('AD');
+        expect(coder.feature('ETH').properties.iso1A2).toBe('ET');
+        expect(coder.feature('SGS').properties.iso1A2).toBe('GS');
+        expect(coder.feature('SRB').properties.iso1A2).toBe('RS');
         expect(coder.feature('USA').properties.iso1A2).toBe('US');
       });
 
-      it('finds Andorra by uppercase code: AND', () => {
-        expect(coder.feature('AND').properties.iso1A2).toBe('AD');
-      });
-
-      it('finds feature by lowercase code: usa', () => {
+      it('finds features by lowercase codes', () => {
+        expect(coder.feature('and').properties.iso1A2).toBe('AD');
+        expect(coder.feature('eth').properties.iso1A2).toBe('ET');
+        expect(coder.feature('sgs').properties.iso1A2).toBe('GS');
+        expect(coder.feature('srb').properties.iso1A2).toBe('RS');
         expect(coder.feature('usa').properties.iso1A2).toBe('US');
       });
 
-      it('finds feature by mixed-case code: Usa', () => {
+      it('finds features by mixed-case codes', () => {
+        expect(coder.feature('And').properties.iso1A2).toBe('AD');
+        expect(coder.feature('Eth').properties.iso1A2).toBe('ET');
+        expect(coder.feature('Sgs').properties.iso1A2).toBe('GS');
+        expect(coder.feature('Srb').properties.iso1A2).toBe('RS');
         expect(coder.feature('Usa').properties.iso1A2).toBe('US');
       });
 
-      it('does not find feature for unassigned code in range: ABC', () => {
+      it('does not find features for unassigned codes in range', () => {
         expect(coder.feature('ABC')).toBeNull();
+        expect(coder.feature('Abc')).toBeNull();
+        expect(coder.feature('abc')).toBeNull();
       });
     });
 

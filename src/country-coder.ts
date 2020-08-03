@@ -98,7 +98,8 @@ let whichPolygonGetter: any = {};
 // The cache for looking up a feature by identifier
 let featuresByCode: any = {};
 
-let idFilterRegex = /\bThe\b|\bthe\b|\band\b|\bof\b|[-_ .,'()&[\]/]/g;
+// discard special characters and instances of and/the/of that aren't the only characters
+let idFilterRegex = /(?=(?!^(and|the|of)$))(\b(and|the|of)\b)|[-_ .,'()&[\]/]/gi;
 
 function canonicalID(id: string): string {
   return id.replace(idFilterRegex, '').toUpperCase();
