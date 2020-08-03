@@ -99,7 +99,7 @@ let whichPolygonGetter: any = {};
 let featuresByCode: any = {};
 
 // discard special characters and instances of and/the/of that aren't the only characters
-let idFilterRegex = /(?=(?!^(and|the|of)$))(\b(and|the|of)\b)|[-_ .,'()&[\]/]/gi;
+let idFilterRegex = /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
 
 function canonicalID(id: string): string {
   return id.replace(idFilterRegex, '').toUpperCase();
