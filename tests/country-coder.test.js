@@ -892,19 +892,23 @@ describe('country-coder', () => {
 
     it('codes 830', () => {
       let features = coder.featuresIn(830);
-      expect(features.length).toBe(4);
+      expect(features.length).toBe(6);
       expect(features[0].properties.m49).toBe('830');
-      expect(features[1].properties.m49).toBe('680');
-      expect(features[2].properties.iso1A2).toBe('GG');
-      expect(features[3].properties.iso1A2).toBe('JE');
+      expect(features[1].properties.wikidata).toBe('Q179313');
+      expect(features[2].properties.wikidata).toBe('Q3311985');
+      expect(features[3].properties.m49).toBe('680');
+      expect(features[4].properties.iso1A2).toBe('GG');
+      expect(features[5].properties.iso1A2).toBe('JE');
     });
 
     it('codes 830, strict', () => {
       let features = coder.featuresIn(830, true);
-      expect(features.length).toBe(3);
-      expect(features[0].properties.m49).toBe('680');
-      expect(features[1].properties.iso1A2).toBe('GG');
-      expect(features[2].properties.iso1A2).toBe('JE');
+      expect(features.length).toBe(5);
+      expect(features[0].properties.wikidata).toBe('Q179313');
+      expect(features[1].properties.wikidata).toBe('Q3311985');
+      expect(features[2].properties.m49).toBe('680');
+      expect(features[3].properties.iso1A2).toBe('GG');
+      expect(features[4].properties.iso1A2).toBe('JE');
     });
 
     it('codes 🇸🇭 (Saint Helena)', () => {
