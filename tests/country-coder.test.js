@@ -672,12 +672,13 @@ describe('country-coder', () => {
 
       it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
         let features = coder.featuresContaining([12.59, 55.68]);
-        expect(features.length).toBe(5);
-        expect(features[0].properties.iso1A2).toBe('DK');
-        expect(features[1].properties.m49).toBe('154');
-        expect(features[2].properties.m49).toBe('150');
-        expect(features[3].properties.iso1A2).toBe('EU');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features.length).toBe(6);
+        expect(features[0].properties.wikidata).toBe('Q35');
+        expect(features[1].properties.iso1A2).toBe('DK');
+        expect(features[2].properties.m49).toBe('154');
+        expect(features[3].properties.m49).toBe('150');
+        expect(features[4].properties.iso1A2).toBe('EU');
+        expect(features[5].properties.m49).toBe('001');
       });
 
       it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany', () => {
@@ -784,12 +785,10 @@ describe('country-coder', () => {
 
       it('codes DK', () => {
         let features = coder.featuresContaining('DK');
-        expect(features.length).toBe(5);
+        expect(features.length).toBe(3);
         expect(features[0].properties.iso1A2).toBe('DK');
-        expect(features[1].properties.m49).toBe('154');
-        expect(features[2].properties.m49).toBe('150');
-        expect(features[3].properties.iso1A2).toBe('EU');
-        expect(features[4].properties.m49).toBe('001');
+        expect(features[1].properties.iso1A2).toBe('EU');
+        expect(features[2].properties.m49).toBe('001');
       });
 
       it('codes DE', () => {
