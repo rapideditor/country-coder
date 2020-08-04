@@ -535,6 +535,7 @@ An object containing options used for geocoding.
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+    - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
     - `country`: Ethiopia, Brazil, United States, etc.
     - `subcountryGroup`: British Overseas Territories
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
@@ -569,6 +570,7 @@ An object containing the attributes of a RegionFeature object.
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+    - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
     - `country`: Ethiopia, Brazil, United States, etc.
     - `subcountryGroup`: British Overseas Territories
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.

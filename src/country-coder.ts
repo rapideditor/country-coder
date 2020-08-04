@@ -47,6 +47,7 @@ type RegionFeatureProperties = {
   // - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
   // - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
   // - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+  // - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
   // - `country`: Ethiopia, Brazil, United States, etc.
   // - `subcountryGroup`
   // - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
@@ -111,6 +112,7 @@ let levels = [
   'territory',
   'subcountryGroup',
   'country',
+  'sharedLandform',
   'intermediateRegion',
   'subregion',
   'region',

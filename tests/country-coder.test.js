@@ -1002,7 +1002,7 @@ describe('country-coder', () => {
     });
     it('returns aggregate for feature without geometry', () => {
       expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
-      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(46);
+      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(48);
     });
     it('returns null for invalid ID', () => {
       expect(coder.aggregateFeature('ABC')).toBeNull();
