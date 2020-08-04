@@ -117,6 +117,7 @@ describe('country-coder', () => {
     describe('by ISO 3166-1 alpha-3', () => {
       it('finds features by uppercase codes', () => {
         expect(coder.feature('AND').properties.iso1A2).toBe('AD');
+        expect(coder.feature('BES').properties.iso1A2).toBe('BQ');
         expect(coder.feature('ETH').properties.iso1A2).toBe('ET');
         expect(coder.feature('SGS').properties.iso1A2).toBe('GS');
         expect(coder.feature('SRB').properties.iso1A2).toBe('RS');
@@ -125,6 +126,7 @@ describe('country-coder', () => {
 
       it('finds features by lowercase codes', () => {
         expect(coder.feature('and').properties.iso1A2).toBe('AD');
+        expect(coder.feature('bes').properties.iso1A2).toBe('BQ');
         expect(coder.feature('eth').properties.iso1A2).toBe('ET');
         expect(coder.feature('sgs').properties.iso1A2).toBe('GS');
         expect(coder.feature('srb').properties.iso1A2).toBe('RS');
@@ -133,6 +135,7 @@ describe('country-coder', () => {
 
       it('finds features by mixed-case codes', () => {
         expect(coder.feature('And').properties.iso1A2).toBe('AD');
+        expect(coder.feature('Bes').properties.iso1A2).toBe('BQ');
         expect(coder.feature('Eth').properties.iso1A2).toBe('ET');
         expect(coder.feature('Sgs').properties.iso1A2).toBe('GS');
         expect(coder.feature('Srb').properties.iso1A2).toBe('RS');
