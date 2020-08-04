@@ -1263,29 +1263,33 @@ describe('country-coder', () => {
       expect(coder.driveSide([-4.5, 54.2])).toBe('left');
     });
 
-    it('finds feature using right by code', () => {
+    it('finds feature using right by identifier', () => {
       expect(coder.driveSide('DE')).toBe('right');
       expect(coder.driveSide('CA')).toBe('right');
       expect(coder.driveSide('IO')).toBe('right');
       expect(coder.driveSide('PR')).toBe('right');
       expect(coder.driveSide('GI')).toBe('right');
+      expect(coder.driveSide('ES')).toBe('right');
+      expect(coder.driveSide('FR')).toBe('right');
       expect(coder.driveSide('Midway Atoll')).toBe('right');
       expect(coder.driveSide('Hawaii')).toBe('right');
       expect(coder.driveSide('CONUS')).toBe('right');
-      expect(coder.driveSide('US')).toBe('right');
     });
 
-    it('finds feature using left by code', () => {
+    it('finds feature using left by identifier', () => {
       expect(coder.driveSide('VI')).toBe('left');
-      expect(coder.driveSide('GB')).toBe('left');
       expect(coder.driveSide('GB-SCT')).toBe('left');
       expect(coder.driveSide('IM')).toBe('left');
       expect(coder.driveSide('IE')).toBe('left');
       expect(coder.driveSide('IN')).toBe('left');
       expect(coder.driveSide('AU')).toBe('left');
+      expect(coder.driveSide('NZ')).toBe('left');
+      expect(coder.driveSide('SH')).toBe('left');
+      expect(coder.driveSide('TA')).toBe('left');
       expect(coder.driveSide('HMD')).toBe('left');
       expect(coder.driveSide('JP')).toBe('left');
       expect(coder.driveSide('ZA')).toBe('left');
+      expect(coder.driveSide('Great Britain')).toBe('left');
     });
 
     it('finds null for EU', () => {
@@ -1310,34 +1314,34 @@ describe('country-coder', () => {
       expect(coder.roadSpeedUnit([-74, 40.6])).toBe('mph');
     });
 
-    it('finds feature using km/h by code', () => {
+    it('finds feature using km/h by identifier', () => {
       expect(coder.roadSpeedUnit('IO')).toBe('km/h');
       expect(coder.roadSpeedUnit('IE')).toBe('km/h');
       expect(coder.roadSpeedUnit('AU')).toBe('km/h');
+      expect(coder.roadSpeedUnit('NZ')).toBe('km/h');
+      expect(coder.roadSpeedUnit('ES')).toBe('km/h');
       expect(coder.roadSpeedUnit('TK')).toBe('km/h');
       expect(coder.roadSpeedUnit('GI')).toBe('km/h');
+      expect(coder.roadSpeedUnit('FR')).toBe('km/h');
     });
 
-    it('finds feature using mph by code', () => {
+    it('finds feature using mph by identifier', () => {
       expect(coder.roadSpeedUnit('US')).toBe('mph');
+      expect(coder.roadSpeedUnit('CONUS')).toBe('mph');
       expect(coder.roadSpeedUnit('US-AK')).toBe('mph');
       expect(coder.roadSpeedUnit('Midway Atoll')).toBe('mph');
       expect(coder.roadSpeedUnit('VI')).toBe('mph');
       expect(coder.roadSpeedUnit('VG')).toBe('mph');
-      expect(coder.roadSpeedUnit('UK')).toBe('mph');
       expect(coder.roadSpeedUnit('IM')).toBe('mph');
       expect(coder.roadSpeedUnit('GB-ENG')).toBe('mph');
-    });
-
-    it('finds null for EU', () => {
-      expect(coder.roadSpeedUnit('EU')).toBeNull();
+      expect(coder.roadSpeedUnit('Great Britain')).toBe('mph');
     });
 
     it('finds null for 001', () => {
       expect(coder.roadSpeedUnit('001')).toBeNull();
     });
 
-    it('finds null for North Pole', () => {
+    it('finds null for location of North Pole', () => {
       expect(coder.roadSpeedUnit([0, 90])).toBeNull();
     });
   });
@@ -1345,7 +1349,6 @@ describe('country-coder', () => {
   describe('callingCodes', () => {
     it('finds one prefix for feature with one', () => {
       expect(coder.callingCodes([2.35, 48.85])).toStrictEqual(['33']);
-      expect(coder.callingCodes('ES')).toStrictEqual(['34']);
       expect(coder.callingCodes('ES-CE')).toStrictEqual(['34']);
     });
 
@@ -1354,10 +1357,10 @@ describe('country-coder', () => {
     });
 
     it('finds none for feature without data', () => {
-      expect(coder.callingCodes('EU')).toStrictEqual([]);
+      expect(coder.callingCodes('Bir Tawil')).toStrictEqual([]);
     });
 
-    it('finds none for North Pole', () => {
+    it('finds none for location of North Pole', () => {
       expect(coder.callingCodes([0, 90])).toStrictEqual([]);
     });
   });

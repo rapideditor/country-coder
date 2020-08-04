@@ -136,8 +136,6 @@ function loadDerivedDataAndCaches(borders) {
     loadIsoStatus(feature);
     loadLevel(feature);
     loadGroups(feature);
-    loadRoadSpeedUnit(feature);
-    loadDriveSide(feature);
     loadFlag(feature);
 
     // cache only after loading derived IDs
@@ -157,6 +155,15 @@ function loadDerivedDataAndCaches(borders) {
       );
     });
     loadMembersForGroupsOf(feature);
+  }
+
+  // must load attributes only after fully loading `members`
+  for (let i in borders.features) {
+    let feature = borders.features[i];
+
+    loadRoadSpeedUnit(feature);
+    loadDriveSide(feature);
+    loadCallingCodes(feature);
   }
 
   // whichPolygon doesn't support null geometry even though GeoJSON does
@@ -212,29 +219,59 @@ function loadDerivedDataAndCaches(borders) {
 
   function loadRoadSpeedUnit(feature: RegionFeature) {
     let props = feature.properties;
-    if (
-      props.roadSpeedUnit === undefined &&
-      (props.level === 'country' ||
-        props.level === 'subcountryGroup' ||
-        props.level === 'territory' ||
-        props.level === 'subterritory')
-    ) {
+    if (feature.geometry) {
       // only `mph` regions are listed explicitly, else assume `km/h`
-      props.roadSpeedUnit = 'km/h';
+      if (!props.roadSpeedUnit) props.roadSpeedUnit = 'km/h';
+    } else if (props.members) {
+      let vals = Array.from(
+        new Set(
+          props.members
+            .map(function (id) {
+              let member = featuresByCode[id];
+              if (member.geometry) return member.properties.roadSpeedUnit || 'km/h';
+            })
+            .filter(Boolean)
+        )
+      );
+      // if all members have the same value then that's also the value for this feature
+      if (vals.length === 1) props.roadSpeedUnit = vals[0];
     }
   }
 
   function loadDriveSide(feature: RegionFeature) {
     let props = feature.properties;
-    if (
-      props.driveSide === undefined &&
-      (props.level === 'country' ||
-        props.level === 'subcountryGroup' ||
-        props.level === 'territory' ||
-        props.level === 'subterritory')
-    ) {
+    if (feature.geometry) {
       // only `left` regions are listed explicitly, else assume `right`
-      props.driveSide = 'right';
+      if (!props.driveSide) props.driveSide = 'right';
+    } else if (props.members) {
+      let vals = Array.from(
+        new Set(
+          props.members
+            .map(function (id) {
+              let member = featuresByCode[id];
+              if (member.geometry) return member.properties.driveSide || 'right';
+            })
+            .filter(Boolean)
+        )
+      );
+      // if all members have the same value then that's also the value for this feature
+      if (vals.length === 1) props.driveSide = vals[0];
+    }
+  }
+
+  function loadCallingCodes(feature: RegionFeature) {
+    let props = feature.properties;
+    if (!feature.geometry && props.members) {
+      props.callingCodes = Array.from(
+        new Set(
+          props.members.reduce(function (array, id) {
+            let member = featuresByCode[id];
+            if (member.geometry && member.properties.callingCodes)
+              return array.concat(member.properties.callingCodes);
+            return array;
+          }, [])
+        )
+      );
     }
   }
 

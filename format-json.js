@@ -83,6 +83,17 @@ function processProperties(feature) {
   feature.properties = newProperties;
 }
 
+function validateFeature(feature) {
+  if (!feature.geometry) {
+    var id = feature.properties.iso1A2 || feature.properties.wikidata;
+    if (feature.properties.roadSpeedUnit)
+      console.error(id + ' has no geometry but has roadSpeedUnit');
+    if (feature.properties.driveSide) console.error(id + ' has no geometry but has driveSide');
+    if (feature.properties.callingCodes)
+      console.error(id + ' has no geometry but has callingCodes');
+  }
+}
+
 for (let i in features) {
   let feature = features[i];
 
@@ -91,6 +102,8 @@ for (let i in features) {
 
   // remove any unncessary precision
   roundCoordinatePrecision(feature);
+
+  validateFeature(feature);
 
   outstring += JSON.stringify(feature);
   if (parseFloat(i) !== features.length - 1) {
