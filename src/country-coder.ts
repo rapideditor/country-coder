@@ -212,7 +212,10 @@ function loadDerivedDataAndCaches(borders) {
     let props = feature.properties;
     if (
       props.roadSpeedUnit === undefined &&
-      (props.level === 'country' || props.level === 'subcountryGroup' || props.level === 'territory' || props.level === 'subterritory')
+      (props.level === 'country' ||
+        props.level === 'subcountryGroup' ||
+        props.level === 'territory' ||
+        props.level === 'subterritory')
     ) {
       // only `mph` regions are listed explicitly, else assume `km/h`
       props.roadSpeedUnit = 'km/h';
@@ -223,7 +226,10 @@ function loadDerivedDataAndCaches(borders) {
     let props = feature.properties;
     if (
       props.driveSide === undefined &&
-      (props.level === 'country' || props.level === 'subcountryGroup' || props.level === 'territory' || props.level === 'subterritory')
+      (props.level === 'country' ||
+        props.level === 'subcountryGroup' ||
+        props.level === 'territory' ||
+        props.level === 'subterritory')
     ) {
       // only `left` regions are listed explicitly, else assume `right`
       props.driveSide = 'right';
