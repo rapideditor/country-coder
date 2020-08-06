@@ -532,6 +532,7 @@ An object containing options used for geocoding.
 - `level`: `string`, for overlapping features, the preferred geographic classification of the one to code.  If no feature exists at the specified level, the feature at the next-highest level is coded, if any. The possible values map directly to the `level` property of [RegionFeatureProperties](#RegionFeatureProperties) objects.
     - `world`
     - `union`: European Union
+    - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
@@ -567,6 +568,7 @@ An object containing the attributes of a RegionFeature object.
 - `level`: `string`, the rough geographic classification of this feature
     - `world`
     - `union`: European Union
+    - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
     - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.

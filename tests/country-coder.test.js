@@ -982,7 +982,7 @@ describe('country-coder', () => {
     });
 
     it('codes "Crown Dependencies", strict', () => {
-      let features = coder.featuresIn("Crown Dependencies", true);
+      let features = coder.featuresIn('Crown Dependencies', true);
       expect(features.length).toBe(6);
       expect(features[0].properties.wikidata).toBe('Q179313');
       expect(features[1].properties.wikidata).toBe('Q3311985');
@@ -1037,7 +1037,7 @@ describe('country-coder', () => {
     });
     it('returns aggregate for feature without geometry', () => {
       expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
-      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(48);
+      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(50);
     });
     it('returns null for invalid ID', () => {
       expect(coder.aggregateFeature('ABC')).toBeNull();
@@ -1240,32 +1240,67 @@ describe('country-coder', () => {
         expect(coder.isInEuropeanUnion('EU')).toBe(true);
       });
 
-      it('returns false for officially-assigned country, outside EU: US', () => {
-        expect(coder.isInEuropeanUnion('US')).toBe(false);
-      });
-
-      it('returns false for officially-assigned country, outside but surrounded by EU: CH', () => {
-        expect(coder.isInEuropeanUnion('CH')).toBe(false);
-      });
-
-      it('returns true for officially-assigned country, in EU: DE', () => {
+      it('returns true for countries inside the EU', () => {
+        expect(coder.isInEuropeanUnion('SE')).toBe(true);
         expect(coder.isInEuropeanUnion('DE')).toBe(true);
-      });
-
-      it('returns false for officially-assigned subfeature, oustide EU, of officially-assigned country, in EU: IM', () => {
-        expect(coder.isInEuropeanUnion('IM')).toBe(false);
-      });
-
-      it('returns true for exceptionally-reserved subfeature, in EU: FX', () => {
         expect(coder.isInEuropeanUnion('FX')).toBe(true);
+        expect(coder.isInEuropeanUnion('CY')).toBe(true);
       });
 
-      it('returns false for exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: TA', () => {
-        expect(coder.isInEuropeanUnion('TA')).toBe(false);
+      it('returns true for certain territories of EU countries that are inside the EU', () => {
+        // Outermost regions
+        expect(coder.isInEuropeanUnion('OMR')).toBe(true);
+        expect(coder.isInEuropeanUnion('Q2914565')).toBe(true);
+        expect(coder.isInEuropeanUnion('Azores')).toBe(true);
+        expect(coder.isInEuropeanUnion('Madeira')).toBe(true);
+        expect(coder.isInEuropeanUnion('IC')).toBe(true);
+        expect(coder.isInEuropeanUnion('GF')).toBe(true);
+        expect(coder.isInEuropeanUnion('GP')).toBe(true);
+        expect(coder.isInEuropeanUnion('MQ')).toBe(true);
+        expect(coder.isInEuropeanUnion('YT')).toBe(true);
+        expect(coder.isInEuropeanUnion('RE')).toBe(true);
+        expect(coder.isInEuropeanUnion('MF')).toBe(true);
+        // special cases
+        expect(coder.isInEuropeanUnion('EA')).toBe(true);
+        expect(coder.isInEuropeanUnion('Ceuta')).toBe(true);
+        expect(coder.isInEuropeanUnion('Melilla')).toBe(true);
+        expect(coder.isInEuropeanUnion('AX')).toBe(true);
       });
 
-      it('returns false for user-assigned, de facto country, in Europe, outside EU: XK', () => {
+      it('returns false for certain territories of EU countries outside of the EU', () => {
+        // Overseas countries and territories
+        expect(coder.isInEuropeanUnion('OCT')).toBe(false);
+        expect(coder.isInEuropeanUnion('Greenland')).toBe(false);
+        expect(coder.isInEuropeanUnion('CW')).toBe(false);
+        expect(coder.isInEuropeanUnion('Aruba')).toBe(false);
+        expect(coder.isInEuropeanUnion('SX')).toBe(false);
+        expect(coder.isInEuropeanUnion('BQ')).toBe(false);
+        expect(coder.isInEuropeanUnion('Bonaire')).toBe(false);
+        expect(coder.isInEuropeanUnion('Sint Eustatius')).toBe(false);
+        expect(coder.isInEuropeanUnion('Saba')).toBe(false);
+        expect(coder.isInEuropeanUnion('PF')).toBe(false);
+        expect(coder.isInEuropeanUnion('NC')).toBe(false);
+        expect(coder.isInEuropeanUnion('WF')).toBe(false);
+        expect(coder.isInEuropeanUnion('BL')).toBe(false);
+        expect(coder.isInEuropeanUnion('TF')).toBe(false);
+        // special case
+        expect(coder.isInEuropeanUnion('FO')).toBe(false);
+      });
+
+      it('returns false for countries outside the EU', () => {
+        expect(coder.isInEuropeanUnion('US')).toBe(false);
+        expect(coder.isInEuropeanUnion('RU')).toBe(false);
+        expect(coder.isInEuropeanUnion('NO')).toBe(false);
+        expect(coder.isInEuropeanUnion('CH')).toBe(false);
+        expect(coder.isInEuropeanUnion('CN')).toBe(false);
         expect(coder.isInEuropeanUnion('XK')).toBe(false);
+      });
+
+      it('returns false for territories outside the EU', () => {
+        expect(coder.isInEuropeanUnion('IM')).toBe(false);
+        expect(coder.isInEuropeanUnion('TA')).toBe(false);
+        expect(coder.isInEuropeanUnion('HK')).toBe(false);
+        expect(coder.isInEuropeanUnion('VI')).toBe(false);
       });
 
       it('returns false for M49 super-region code: 150', () => {
@@ -1277,11 +1312,11 @@ describe('country-coder', () => {
       });
 
       it('returns false for unassigned alpha-2 code: AB', () => {
-        expect(coder.isInEuropeanUnion('AB')).toBe(false);
+        expect(coder.isInEuropeanUnion('AB')).toBe(null);
       });
 
       it('returns false for empty string', () => {
-        expect(coder.isInEuropeanUnion('')).toBe(false);
+        expect(coder.isInEuropeanUnion('')).toBe(null);
       });
     });
   });

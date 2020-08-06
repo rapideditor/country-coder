@@ -44,9 +44,13 @@ type RegionFeatureProperties = {
   // Levels do not necessarily nest cleanly within each other.
   // - `world`
   // - `union`: European Union
+  // - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
+
+  // Defined by the UN
   // - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
   // - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
   // - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
+
   // - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
   // - `country`: Ethiopia, Brazil, United States, etc.
   // - `subcountryGroup`
@@ -116,6 +120,7 @@ let levels = [
   'intermediateRegion',
   'subregion',
   'region',
+  'subunion',
   'union',
   'world'
 ];
@@ -623,18 +628,18 @@ export function aggregateFeature(id: string | number): RegionFeature | null {
 }
 
 // Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
-export function isIn(query: Location | string | number, bounds: string | number): boolean {
+export function isIn(query: Location | string | number, bounds: string | number): boolean | null {
   let queryFeature = smallestOrMatchingFeature(query);
   let boundsFeature = featureForID(bounds);
 
-  if (!queryFeature || !boundsFeature) return false;
+  if (!queryFeature || !boundsFeature) return null;
 
   if (queryFeature.properties.id === boundsFeature.properties.id) return true;
   return queryFeature.properties.groups.indexOf(boundsFeature.properties.id) !== -1;
 }
 
 // Returns true if the feature matching `query` is within EU jurisdiction
-export function isInEuropeanUnion(query: Location | string | number): boolean {
+export function isInEuropeanUnion(query: Location | string | number): boolean | null {
   return isIn(query, 'EU');
 }
 
