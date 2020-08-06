@@ -91,6 +91,7 @@ function validateFeature(feature) {
     if (feature.properties.driveSide) console.error(id + ' has no geometry but has driveSide');
     if (feature.properties.callingCodes)
       console.error(id + ' has no geometry but has callingCodes');
+    if (feature.properties.groups) console.error(id + ' has no geometry but has groups');
   }
 }
 

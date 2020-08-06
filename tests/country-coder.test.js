@@ -820,23 +820,38 @@ describe('country-coder', () => {
       });
     });
     describe('by code', () => {
-      it('codes USA', () => {
-        let features = coder.featuresContaining('USA');
+      it('codes US', () => {
+        let features = coder.featuresContaining('US');
+        expect(features.length).toBe(2);
+        expect(features[0].properties.iso1A2).toBe('US');
+        expect(features[1].properties.m49).toBe('001');
+      });
+
+      it('codes US, strict', () => {
+        let features = coder.featuresContaining('US', true);
+        expect(features.length).toBe(1);
+        expect(features[0].properties.m49).toBe('001');
+      });
+
+      it('codes CONUS', () => {
+        let features = coder.featuresContaining('CONUS');
+        expect(features.length).toBe(6);
+        expect(features[0].properties.wikidata).toBe('Q578170'); // CONUS
+        expect(features[1].properties.iso1A2).toBe('US');
+        expect(features[2].properties.m49).toBe('021');
+        expect(features[3].properties.m49).toBe('003');
+        expect(features[4].properties.m49).toBe('019');
+        expect(features[5].properties.m49).toBe('001');
+      });
+
+      it('codes CONUS, strict', () => {
+        let features = coder.featuresContaining('CONUS', true);
         expect(features.length).toBe(5);
         expect(features[0].properties.iso1A2).toBe('US');
         expect(features[1].properties.m49).toBe('021');
         expect(features[2].properties.m49).toBe('003');
         expect(features[3].properties.m49).toBe('019');
         expect(features[4].properties.m49).toBe('001');
-      });
-
-      it('codes USA, strict', () => {
-        let features = coder.featuresContaining('USA', true);
-        expect(features.length).toBe(4);
-        expect(features[0].properties.m49).toBe('021');
-        expect(features[1].properties.m49).toBe('003');
-        expect(features[2].properties.m49).toBe('019');
-        expect(features[3].properties.m49).toBe('001');
       });
 
       it('codes CH', () => {
@@ -850,10 +865,9 @@ describe('country-coder', () => {
 
       it('codes DK', () => {
         let features = coder.featuresContaining('DK');
-        expect(features.length).toBe(3);
+        expect(features.length).toBe(2);
         expect(features[0].properties.iso1A2).toBe('DK');
-        expect(features[1].properties.iso1A2).toBe('EU');
-        expect(features[2].properties.m49).toBe('001');
+        expect(features[1].properties.m49).toBe('001');
       });
 
       it('codes DE', () => {
@@ -967,6 +981,24 @@ describe('country-coder', () => {
       expect(features[4].properties.iso1A2).toBe('JE');
     });
 
+    it('codes "Crown Dependencies", strict', () => {
+      let features = coder.featuresIn("Crown Dependencies", true);
+      expect(features.length).toBe(6);
+      expect(features[0].properties.wikidata).toBe('Q179313');
+      expect(features[1].properties.wikidata).toBe('Q3311985');
+      expect(features[2].properties.m49).toBe('680');
+      expect(features[3].properties.iso1A2).toBe('GG');
+      expect(features[4].properties.iso1A2).toBe('IM');
+      expect(features[5].properties.iso1A2).toBe('JE');
+    });
+
+    it('codes "SBA", strict', () => {
+      let features = coder.featuresIn('SBA', true);
+      expect(features.length).toBe(2);
+      expect(features[0].properties.wikidata).toBe('Q9143535');
+      expect(features[1].properties.wikidata).toBe('Q9206745');
+    });
+
     it('codes 🇸🇭 (Saint Helena)', () => {
       let features = coder.featuresIn('🇸🇭');
       expect(features.length).toBe(4);
@@ -1040,14 +1072,20 @@ describe('country-coder', () => {
       it('returns false: US in CH', () => {
         expect(coder.isIn('US', 'CH')).toBe(false);
       });
-      it('returns true: USA in 19 (Americas)', () => {
-        expect(coder.isIn('USA', 19)).toBe(true);
+      it('returns false: USA in 19 (Americas)', () => {
+        expect(coder.isIn('USA', 19)).toBe(false);
       });
-      it('returns true: US in "021" (Northern America)', () => {
-        expect(coder.isIn('US', '021')).toBe(true);
+      it('returns false: US in "021" (Northern America)', () => {
+        expect(coder.isIn('US', '021')).toBe(false);
       });
       it('returns false: US location in Q15 (Africa)', () => {
         expect(coder.isIn('US', 'Q15')).toBe(false);
+      });
+      it('returns true: CONUS in 19 (Americas)', () => {
+        expect(coder.isIn('CONUS', 19)).toBe(true);
+      });
+      it('returns true: CONUS in "021" (Northern America)', () => {
+        expect(coder.isIn('CONUS', '021')).toBe(true);
       });
       it('returns true: PR in US', () => {
         expect(coder.isIn('PR', 'US')).toBe(true);
@@ -1114,12 +1152,6 @@ describe('country-coder', () => {
       });
       it('returns true: "Alaska" in "019"', () => {
         expect(coder.isIn('Alaska', '019')).toBe(true);
-      });
-      it('returns true: "CONUS" in "019"', () => {
-        expect(coder.isIn('CONUS', '019')).toBe(true);
-      });
-      it('returns true: "US" in "019" (United States in Americas)', () => {
-        expect(coder.isIn('US', '019')).toBe(true);
       });
       it('returns true: "021" in "019" (Northern America in Americas)', () => {
         expect(coder.isIn('021', '019')).toBe(true);

@@ -147,6 +147,27 @@ function loadDerivedDataAndCaches(borders) {
   // must load `members` only after fully loading `featuresByID`
   for (let i in borders.features) {
     let feature = borders.features[i];
+    // ensure all groups are listed by their ID
+    feature.properties.groups = feature.properties.groups.map(function (groupID) {
+      return featuresByCode[groupID].properties.id;
+    });
+
+    loadMembersForGroupsOf(feature);
+  }
+
+  for (let i in borders.features) {
+    let feature = borders.features[i];
+
+    // must load attributes only after loading geometry features into `members`
+    loadRoadSpeedUnit(feature);
+    loadDriveSide(feature);
+    loadCallingCodes(feature);
+
+    loadGroupGroups(feature);
+  }
+
+  for (let i in borders.features) {
+    let feature = borders.features[i];
     // order groups by their `level`
     feature.properties.groups.sort(function (groupID1, groupID2) {
       return (
@@ -154,16 +175,20 @@ function loadDerivedDataAndCaches(borders) {
         levels.indexOf(featuresByCode[groupID2].properties.level)
       );
     });
-    loadMembersForGroupsOf(feature);
-  }
-
-  // must load attributes only after fully loading `members`
-  for (let i in borders.features) {
-    let feature = borders.features[i];
-
-    loadRoadSpeedUnit(feature);
-    loadDriveSide(feature);
-    loadCallingCodes(feature);
+    // order members by their `level` and then by order in borders
+    if (feature.properties.members)
+      feature.properties.members.sort(function (id1, id2) {
+        let diff =
+          levels.indexOf(featuresByCode[id1].properties.level) -
+          levels.indexOf(featuresByCode[id2].properties.level);
+        if (diff === 0) {
+          return (
+            borders.features.indexOf(featuresByCode[id1]) -
+            borders.features.indexOf(featuresByCode[id2])
+          );
+        }
+        return diff;
+      });
   }
 
   // whichPolygon doesn't support null geometry even though GeoJSON does
@@ -214,6 +239,41 @@ function loadDerivedDataAndCaches(borders) {
       props.level = 'territory';
     } else {
       props.level = 'subterritory';
+    }
+  }
+
+  function loadGroupGroups(feature: RegionFeature) {
+    let props = feature.properties;
+    if (feature.geometry || !props.members) return;
+    let featureLevelIndex = levels.indexOf(props.level);
+    let sharedGroups: Array<string> = [];
+    for (let i in props.members) {
+      let memberID = props.members[i];
+      let member = featuresByCode[memberID];
+      let memberGroups = member.properties.groups.filter(function (groupID) {
+        return (
+          groupID !== feature.properties.id &&
+          featureLevelIndex < levels.indexOf(featuresByCode[groupID].properties.level)
+        );
+      });
+      if (i === '0') {
+        sharedGroups = memberGroups;
+      } else {
+        sharedGroups = sharedGroups.filter(function (groupID) {
+          return memberGroups.indexOf(groupID) !== -1;
+        });
+      }
+    }
+    props.groups = props.groups.concat(
+      sharedGroups.filter(function (groupID) {
+        return props.groups.indexOf(groupID) === -1;
+      })
+    );
+    for (let j in sharedGroups) {
+      let groupFeature = featuresByCode[sharedGroups[j]];
+      if (groupFeature.properties.members.indexOf(props.id) === -1) {
+        groupFeature.properties.members.push(props.id);
+      }
     }
   }
 
@@ -286,21 +346,13 @@ function loadDerivedDataAndCaches(borders) {
 
   // Populate `members` as the inverse relationship of `groups`
   function loadMembersForGroupsOf(feature: RegionFeature) {
-    let featureID = feature.properties.id;
-    let standardizedGroupIDs: Array<string> = [];
     for (let j in feature.properties.groups) {
       let groupID = feature.properties.groups[j];
       let groupFeature = featuresByCode[groupID];
-      standardizedGroupIDs.push(groupFeature.properties.id);
 
-      if (groupFeature.properties.members) {
-        groupFeature.properties.members.push(featureID);
-      } else {
-        groupFeature.properties.members = [featureID];
-      }
+      if (!groupFeature.properties.members) groupFeature.properties.members = [];
+      groupFeature.properties.members.push(feature.properties.id);
     }
-    // ensure that all relationships are coded by `id`
-    feature.properties.groups = standardizedGroupIDs;
   }
 
   // Caches features by their identifying strings for rapid lookup
