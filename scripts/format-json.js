@@ -1,7 +1,7 @@
 let fs = require('fs');
 
 let bordersPath = './src/data/borders.json';
-let borders = require(bordersPath);
+let borders = JSON.parse(fs.readFileSync(bordersPath));
 
 let rewind = require('@mapbox/geojson-rewind');
 // ensure exterior rings are counter-clockwise and interior rings are clockwise
