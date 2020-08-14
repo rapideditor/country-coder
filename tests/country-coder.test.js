@@ -684,7 +684,7 @@ describe('country-coder', () => {
   });
 
   // this doesn't need extensive tests since it's just a fetcher using `feature`
-  describe('flag', () => {
+  describe('emojiFlag', () => {
     it('codes location in officially-assigned country: New York, United States as 🇺🇸', () => {
       expect(coder.emojiFlag([-74, 40.6], { level: 'country' })).toBe('🇺🇸');
     });
@@ -699,6 +699,98 @@ describe('country-coder', () => {
 
     it('does not code North Pole', () => {
       expect(coder.emojiFlag([0, 90], { level: 'country' })).toBeNull();
+    });
+  });
+
+  describe('iso1A2Codes', () => {
+    it('codes locations', () => {
+      expect(coder.iso1A2Codes([-2.35, 49.43])).toStrictEqual(['GG', 'GB']);
+      expect(coder.iso1A2Codes([-12.3, -37.1])).toStrictEqual(['TA', 'SH', 'GB']);
+      expect(coder.iso1A2Codes([12.59, 55.68])).toStrictEqual(['DK', 'EU']);
+      expect(coder.iso1A2Codes([2.35, 48.85])).toStrictEqual(['FX', 'FR', 'EU']);
+      expect(coder.iso1A2Codes([-74, 40.6])).toStrictEqual(['US']);
+      expect(coder.iso1A2Codes([21, 42.6])).toStrictEqual(['XK']);
+      expect(coder.iso1A2Codes([0, -90])).toStrictEqual(['AQ']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.iso1A2Codes([0, 90])).toStrictEqual([]);
+    });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1A2Codes([33.75, 21.87])).toStrictEqual([]);
+    });
+  });
+
+  describe('iso1A3Codes', () => {
+    it('codes locations', () => {
+      expect(coder.iso1A3Codes([-2.35, 49.43])).toStrictEqual(['GGY', 'GBR']);
+      expect(coder.iso1A3Codes([-12.3, -37.1])).toStrictEqual(['TAA', 'SHN', 'GBR']);
+      expect(coder.iso1A3Codes([12.59, 55.68])).toStrictEqual(['DNK', 'EUE']);
+      expect(coder.iso1A3Codes([2.35, 48.85])).toStrictEqual(['FXX', 'FRA', 'EUE']);
+      expect(coder.iso1A3Codes([-74, 40.6])).toStrictEqual(['USA']);
+      expect(coder.iso1A3Codes([21, 42.6])).toStrictEqual(['XKX']);
+      expect(coder.iso1A3Codes([0, -90])).toStrictEqual(['ATA']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.iso1A3Codes([0, 90])).toStrictEqual([]);
+    });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1A3Codes([33.75, 21.87])).toStrictEqual([]);
+    });
+  });
+
+  describe('iso1N3Codes', () => {
+    it('codes locations', () => {
+      expect(coder.iso1N3Codes([-2.35, 49.43])).toStrictEqual(['831', '826']);
+      expect(coder.iso1N3Codes([-12.3, -37.1])).toStrictEqual(['654', '826']);
+      expect(coder.iso1N3Codes([12.59, 55.68])).toStrictEqual(['208']);
+      expect(coder.iso1N3Codes([2.35, 48.85])).toStrictEqual(['249', '250']);
+      expect(coder.iso1N3Codes([-74, 40.6])).toStrictEqual(['840']);
+      expect(coder.iso1N3Codes([21, 42.6])).toStrictEqual([]);
+      expect(coder.iso1N3Codes([0, -90])).toStrictEqual(['010']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.iso1N3Codes([0, 90])).toStrictEqual([]);
+    });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.iso1N3Codes([33.75, 21.87])).toStrictEqual([]);
+    });
+  });
+
+  describe('m49Codes', () => {
+    it('codes locations', () => {
+      expect(coder.m49Codes([-2.35, 49.43])).toStrictEqual([
+        '680',
+        '831',
+        '826',
+        '830',
+        '154',
+        '150',
+        '001'
+      ]);
+      expect(coder.m49Codes([-12.3, -37.1])).toStrictEqual([
+        '654',
+        '826',
+        '011',
+        '202',
+        '002',
+        '001'
+      ]);
+      expect(coder.m49Codes([12.59, 55.68])).toStrictEqual(['208', '154', '150', '001']);
+      expect(coder.m49Codes([2.35, 48.85])).toStrictEqual(['249', '250', '155', '150', '001']);
+      expect(coder.m49Codes([-74, 40.6])).toStrictEqual(['840', '021', '003', '019', '001']);
+      expect(coder.m49Codes([21, 42.6])).toStrictEqual(['039', '150', '001']);
+      expect(coder.m49Codes([0, -90])).toStrictEqual(['010', '001']);
+      expect(coder.m49Codes([33.75, 21.87])).toStrictEqual(['015', '002', '001']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.m49Codes([0, 90])).toStrictEqual([]);
     });
   });
 

@@ -554,6 +554,45 @@ export function emojiFlag(
   return match.properties.emojiFlag || null;
 }
 
+function propertiesForQuery(query: Location, property: string): Array<string> {
+  let features = featuresContaining(query, false);
+  return features
+    .map(function (feature) {
+      return feature.properties[property];
+    })
+    .filter(Boolean);
+}
+
+// Returns all the ISO 3166-1 alpha-2 codes of features at the location
+export function iso1A2Codes(query: Location): Array<string> {
+  return propertiesForQuery(query, 'iso1A2');
+}
+
+// Returns all the ISO 3166-1 alpha-3 codes of features at the location
+export function iso1A3Codes(query: Location): Array<string> {
+  return propertiesForQuery(query, 'iso1A3');
+}
+
+// Returns all the ISO 3166-1 numeric-3 codes of features at the location
+export function iso1N3Codes(query: Location): Array<string> {
+  return propertiesForQuery(query, 'iso1N3');
+}
+
+// Returns all the UN M49 codes of features at the location
+export function m49Codes(query: Location): Array<string> {
+  return propertiesForQuery(query, 'm49');
+}
+
+// Returns all the Wikidata QIDs of features at the location
+export function wikidataQIDs(query: Location): Array<string> {
+  return propertiesForQuery(query, 'wikidata');
+}
+
+// Returns all the emoji flag sequences of features at the location
+export function emojiFlags(query: Location): Array<string> {
+  return propertiesForQuery(query, 'emojiFlag');
+}
+
 // Returns the feature matching `query` and all features containing it, if any.
 // If passing `true` for `strict`, an exact match will not be included
 export function featuresContaining(
