@@ -57,6 +57,7 @@ describe('country-coder', () => {
         expect(coder.feature('GU').properties.level).toBe('territory');
         expect(coder.feature('GB-SCT').properties.level).toBe('territory');
         expect(coder.feature('Bir Tawil').properties.level).toBe('territory');
+        expect(coder.feature('East Malaysia').properties.level).toBe('territory');
 
         expect(coder.feature('CA').properties.level).toBe('country');
         expect(coder.feature('XK').properties.level).toBe('country');
