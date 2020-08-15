@@ -794,6 +794,83 @@ describe('country-coder', () => {
     });
   });
 
+  describe('wikidataQIDs', () => {
+    it('codes locations', () => {
+      expect(coder.wikidataQIDs([-2.35, 49.43])).toStrictEqual([
+        'Q3405693',
+        'Q25230',
+        'Q185086',
+        'Q145',
+        'Q42314',
+        'Q27479',
+        'Q46',
+        'Q2'
+      ]);
+      expect(coder.wikidataQIDs([-12.3, -37.1])).toStrictEqual([
+        'Q220982',
+        'Q192184',
+        'Q46395',
+        'Q145',
+        'Q4412',
+        'Q132959',
+        'Q15',
+        'Q2'
+      ]);
+      expect(coder.wikidataQIDs([12.59, 55.68])).toStrictEqual([
+        'Q35',
+        'Q756617',
+        'Q27479',
+        'Q46',
+        'Q458',
+        'Q2'
+      ]);
+      expect(coder.wikidataQIDs([2.35, 48.85])).toStrictEqual([
+        'Q212429',
+        'Q142',
+        'Q27496',
+        'Q46',
+        'Q458',
+        'Q2'
+      ]);
+      expect(coder.wikidataQIDs([-74, 40.6])).toStrictEqual([
+        'Q578170',
+        'Q35657',
+        'Q30',
+        'Q2017699',
+        'Q49',
+        'Q828',
+        'Q2'
+      ]);
+      expect(coder.wikidataQIDs([21, 42.6])).toStrictEqual(['Q1246', 'Q27449', 'Q46', 'Q2']);
+      expect(coder.wikidataQIDs([0, -90])).toStrictEqual(['Q51', 'Q2']);
+      expect(coder.wikidataQIDs([33.75, 21.87])).toStrictEqual(['Q620634', 'Q27381', 'Q15', 'Q2']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.wikidataQIDs([0, 90])).toStrictEqual([]);
+    });
+  });
+
+  describe('emojiFlags', () => {
+    it('codes locations', () => {
+      expect(coder.emojiFlags([-2.35, 49.43])).toStrictEqual(['🇬🇬', '🇬🇧']);
+      expect(coder.emojiFlags([-12.3, -37.1])).toStrictEqual(['🇹🇦', '🇸🇭', '🇬🇧']);
+      expect(coder.emojiFlags([12.59, 55.68])).toStrictEqual(['🇩🇰', '🇪🇺']);
+      expect(coder.emojiFlags([2.35, 48.85])).toStrictEqual(['🇫🇽', '🇫🇷', '🇪🇺']);
+      expect(coder.emojiFlags([-74, 40.6])).toStrictEqual(['🇺🇸']);
+      expect(coder.emojiFlags([21, 42.6])).toStrictEqual(['🇽🇰']);
+      expect(coder.emojiFlags([0, -90])).toStrictEqual(['🇦🇶']);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.emojiFlags([0, 90])).toStrictEqual([]);
+    });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.emojiFlags([33.75, 21.87])).toStrictEqual([]);
+    });
+  });
+
   describe('featuresContaining', () => {
     describe('by location', () => {
       it('codes location in officially-assigned country: New York, United States', () => {
