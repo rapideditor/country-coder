@@ -798,24 +798,26 @@ describe('country-coder', () => {
     describe('by location', () => {
       it('codes location in officially-assigned country: New York, United States', () => {
         let features = coder.featuresContaining([-74, 40.6]);
-        expect(features.length).toBe(6);
+        expect(features.length).toBe(7);
         expect(features[0].properties.nameEn).toBe('Contiguous United States');
-        expect(features[1].properties.iso1A2).toBe('US');
-        expect(features[2].properties.m49).toBe('021');
-        expect(features[3].properties.m49).toBe('003');
-        expect(features[4].properties.m49).toBe('019');
-        expect(features[5].properties.m49).toBe('001');
+        expect(features[1].properties.nameEn).toBe('US States');
+        expect(features[2].properties.iso1A2).toBe('US');
+        expect(features[3].properties.m49).toBe('021');
+        expect(features[4].properties.m49).toBe('003');
+        expect(features[5].properties.m49).toBe('019');
+        expect(features[6].properties.m49).toBe('001');
       });
 
       it('codes location in officially-assigned country: New York, United States, strict', () => {
         let features = coder.featuresContaining([-74, 40.6], true);
-        expect(features.length).toBe(6);
+        expect(features.length).toBe(7);
         expect(features[0].properties.nameEn).toBe('Contiguous United States');
-        expect(features[1].properties.iso1A2).toBe('US');
-        expect(features[2].properties.m49).toBe('021');
-        expect(features[3].properties.m49).toBe('003');
-        expect(features[4].properties.m49).toBe('019');
-        expect(features[5].properties.m49).toBe('001');
+        expect(features[1].properties.nameEn).toBe('US States');
+        expect(features[2].properties.iso1A2).toBe('US');
+        expect(features[3].properties.m49).toBe('021');
+        expect(features[4].properties.m49).toBe('003');
+        expect(features[5].properties.m49).toBe('019');
+        expect(features[6].properties.m49).toBe('001');
       });
 
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland', () => {
@@ -928,23 +930,25 @@ describe('country-coder', () => {
 
       it('codes CONUS', () => {
         let features = coder.featuresContaining('CONUS');
+        expect(features.length).toBe(7);
+        expect(features[0].properties.nameEn).toBe('Contiguous United States');
+        expect(features[1].properties.nameEn).toBe('US States');
+        expect(features[2].properties.iso1A2).toBe('US');
+        expect(features[3].properties.m49).toBe('021');
+        expect(features[4].properties.m49).toBe('003');
+        expect(features[5].properties.m49).toBe('019');
+        expect(features[6].properties.m49).toBe('001');
+      });
+
+      it('codes CONUS, strict', () => {
+        let features = coder.featuresContaining('CONUS', true);
         expect(features.length).toBe(6);
-        expect(features[0].properties.wikidata).toBe('Q578170'); // CONUS
+        expect(features[0].properties.nameEn).toBe('US States');
         expect(features[1].properties.iso1A2).toBe('US');
         expect(features[2].properties.m49).toBe('021');
         expect(features[3].properties.m49).toBe('003');
         expect(features[4].properties.m49).toBe('019');
         expect(features[5].properties.m49).toBe('001');
-      });
-
-      it('codes CONUS, strict', () => {
-        let features = coder.featuresContaining('CONUS', true);
-        expect(features.length).toBe(5);
-        expect(features[0].properties.iso1A2).toBe('US');
-        expect(features[1].properties.m49).toBe('021');
-        expect(features[2].properties.m49).toBe('003');
-        expect(features[3].properties.m49).toBe('019');
-        expect(features[4].properties.m49).toBe('001');
       });
 
       it('codes CH', () => {
