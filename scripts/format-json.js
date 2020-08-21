@@ -85,13 +85,13 @@ function processProperties(feature) {
 
 function validateFeature(feature) {
   if (!feature.geometry) {
-    var id = feature.properties.iso1A2 || feature.properties.wikidata;
+    var name = feature.properties.nameEn;
     if (feature.properties.roadSpeedUnit)
-      console.error(id + ' has no geometry but has roadSpeedUnit');
-    if (feature.properties.driveSide) console.error(id + ' has no geometry but has driveSide');
+      console.error(name + ' has no geometry but has roadSpeedUnit');
+    if (feature.properties.driveSide) console.error(name + ' has no geometry but has driveSide');
     if (feature.properties.callingCodes)
-      console.error(id + ' has no geometry but has callingCodes');
-    if (feature.properties.groups) console.error(id + ' has no geometry but has groups');
+      console.error(name + ' has no geometry but has callingCodes');
+    if (feature.properties.groups) console.error(name + ' has no geometry but has groups');
   }
 }
 
