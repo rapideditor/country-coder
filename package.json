@@ -28,7 +28,7 @@
     "npm-run-all": "^4.0.0",
     "prettier": "^2.0.5",
     "shx": "^0.3.0",
-    "typescript": "^3.5.2"
+    "typescript": "^4.0.2"
   },
   "dependencies": {
     "which-polygon": "^2.2.0"
