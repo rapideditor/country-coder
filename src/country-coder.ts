@@ -42,7 +42,9 @@ type RegionFeatureProperties = {
 
   // The rough geographic type of this feature.
   // Levels do not necessarily nest cleanly within each other.
-  // - `world`
+  // - `world`: all features
+
+  // - `unitedNations`: United Nations
   // - `union`: European Union
   // - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
 
@@ -122,6 +124,7 @@ let levels = [
   'region',
   'subunion',
   'union',
+  'unitedNations',
   'world'
 ];
 
@@ -208,7 +211,7 @@ function loadDerivedDataAndCaches(borders) {
     if (!props.groups) {
       props.groups = [];
     }
-    if (props.country) {
+    if (feature.geometry && props.country) {
       // Add `country` to `groups`
       props.groups.push(props.country);
     }
@@ -680,6 +683,11 @@ export function isIn(query: Location | string | number, bounds: string | number)
 // Returns true if the feature matching `query` is within EU jurisdiction
 export function isInEuropeanUnion(query: Location | string | number): boolean | null {
   return isIn(query, 'EU');
+}
+
+// Returns true if the feature matching `query` is, or is within, a United Nations member state
+export function isInUnitedNations(query: Location | string | number): boolean | null {
+  return isIn(query, 'UN');
 }
 
 // Returns the side traffic drives on in the feature matching `query` as a string (`right` or `left`)
