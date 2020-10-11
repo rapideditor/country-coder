@@ -69,6 +69,7 @@ let featureProperties = [
   'isoStatus',
   'driveSide',
   'roadSpeedUnit',
+  'roadHeightUnit',
   'callingCodes'
 ];
 
@@ -88,6 +89,8 @@ function validateFeature(feature) {
     var name = feature.properties.nameEn;
     if (feature.properties.roadSpeedUnit)
       console.error(name + ' has no geometry but has roadSpeedUnit');
+    if (feature.properties.roadHeightUnit)
+      console.error(name + ' has no geometry but has roadHeightUnit');
     if (feature.properties.driveSide) console.error(name + ' has no geometry but has driveSide');
     if (feature.properties.callingCodes)
       console.error(name + ' has no geometry but has callingCodes');

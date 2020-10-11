@@ -24,6 +24,7 @@ In addition to identifiers, `country-coder` can provide basic regional informati
 - ☎️ [Telephone Calling Codes](https://en.wikipedia.org/wiki/List_of_country_calling_codes) (+44)
 - 🛣 [Driving Side](https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic) (right, left)
 - 🚗 [Traffic Speed Unit](https://en.wikipedia.org/wiki/Speed_limit#Signage) (km/h, mph)
+- 🚚 [Vehicle Height Unit](https://wiki.openstreetmap.org/wiki/Key:maxheight) (m, ft)
 - 🇪🇺 [European Union Membership](https://en.wikipedia.org/wiki/Member_state_of_the_European_Union)
 
 
@@ -110,6 +111,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
 * [driveSide](#driveSide)(query: Location | string | number): string?
 * [roadSpeedUnit](#roadSpeedUnit)(query: Location | string | number): string?
+* [roadHeightUnit](#roadHeightUnit)(query: Location | string | number): string?
 * [callingCodes](#callingCodes)(query: Location | string | number): [string]
 
 ##### Properties
@@ -440,7 +442,7 @@ driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
 
 
 <a name="roadSpeedUnit" href="#roadSpeedUnit">#</a> <b>roadSpeedUnit</b>(query: Location | string | number): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L498 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L727 "Source")
 
 Returns the unit of speed used on traffic signs for the given location or identifier, if found.
 
@@ -465,8 +467,34 @@ roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 ```
 
 
+<a name="roadHeightUnit" href="#roadHeightUnit">#</a> <b>roadHeightUnit</b>(query: Location | string | number): string?
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L733 "Source")
+
+Returns the unit of length used on vehicle height restriction traffic signs for the given location or identifier, if found.
+
+```js
+roadHeightUnit([0, 51.5]);    // returns 'ft' (Britain)
+roadHeightUnit([6.1, 46.2]);  // returns 'm' (Switzerland)
+roadHeightUnit([0, 90]);      // returns null (North Pole)
+roadHeightUnit('EU');         // returns null
+roadHeightUnit('GB');         // returns 'ft'
+roadHeightUnit('GBR');        // returns 'ft'
+roadHeightUnit('826');        // returns 'ft'
+roadHeightUnit(826);          // returns 'ft'
+roadHeightUnit('Q145');       // returns 'ft'
+roadHeightUnit('🇬🇧');         // returns 'ft'
+roadHeightUnit('UK');         // returns 'ft'
+roadHeightUnit('United Kingdom'); // returns 'ft'
+roadHeightUnit('CH');         // returns 'm'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, 51.5] } };
+roadHeightUnit(pointGeoJSON);           // returns 'ft' (Britain)
+roadHeightUnit(pointGeoJSON.geometry);  // returns 'ft' (Britain)
+```
+
+
 <a name="callingCodes" href="#callingCodes">#</a> <b>callingCodes</b>(query: Location | string | number): [string]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L504 "Source")
+[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L739 "Source")
 
 Returns the full international calling code prefix of phone numbers for the given location or identifier, if any. All prefixes have a country code, with some also including an area code separated by a space character. These are commonly formatted with a preceding plus sign (e.g. `+1 242`).
 
@@ -587,6 +615,9 @@ An object containing the attributes of a RegionFeature object.
 - `roadSpeedUnit`: `string`, the speed unit used on traffic signs in this feature
     - `mph`: miles per hour
     - `km/h`: kilometers per hour
+- `roadHeightUnit`: `string`, the length unit used on vehicle height restriction signs in this feature
+    - `ft`: feet and inches
+    - `m`: meters
 - `callingCodes`: `[string]`, the international calling codes for this feature, sometimes including area codes
 
 

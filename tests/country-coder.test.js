@@ -1718,6 +1718,52 @@ describe('country-coder', () => {
     });
   });
 
+  describe('roadHeightUnit', () => {
+    it('finds feature using m by location', () => {
+      expect(coder.roadHeightUnit([2.35, 48.85])).toBe('m');
+    });
+
+    it('finds feature using ft by location', () => {
+      expect(coder.roadHeightUnit([-74, 40.6])).toBe('ft');
+    });
+
+    it('finds feature using m by identifier', () => {
+      expect(coder.roadHeightUnit('IO')).toBe('m');
+      expect(coder.roadHeightUnit('IE')).toBe('m');
+      expect(coder.roadHeightUnit('AU')).toBe('m');
+      expect(coder.roadHeightUnit('NZ')).toBe('m');
+      expect(coder.roadHeightUnit('ES')).toBe('m');
+      expect(coder.roadHeightUnit('TK')).toBe('m');
+      expect(coder.roadHeightUnit('GI')).toBe('m');
+      expect(coder.roadHeightUnit('FR')).toBe('m');
+      expect(coder.roadHeightUnit('PR')).toBe('m');
+      expect(coder.roadHeightUnit('US-PR')).toBe('m');
+    });
+
+    it('finds feature using ft by identifier', () => {
+      expect(coder.roadHeightUnit('CONUS')).toBe('ft');
+      expect(coder.roadHeightUnit('US-AK')).toBe('ft');
+      expect(coder.roadHeightUnit('Midway Atoll')).toBe('ft');
+      expect(coder.roadHeightUnit('VI')).toBe('ft');
+      expect(coder.roadHeightUnit('VG')).toBe('ft');
+      expect(coder.roadHeightUnit('IM')).toBe('ft');
+      expect(coder.roadHeightUnit('GB-ENG')).toBe('ft');
+      expect(coder.roadHeightUnit('Great Britain')).toBe('ft');
+    });
+
+    it('finds null for 001', () => {
+      expect(coder.roadHeightUnit('001')).toBeNull();
+    });
+
+    it('finds null for location of North Pole', () => {
+      expect(coder.roadHeightUnit([0, 90])).toBeNull();
+    });
+
+    it('finds null for United States due to variation in Puerto Rico', () => {
+      expect(coder.roadHeightUnit('US')).toBeNull();
+    });
+  });
+
   describe('callingCodes', () => {
     it('finds one prefix for feature with one', () => {
       expect(coder.callingCodes([2.35, 48.85])).toStrictEqual(['33']);

@@ -76,6 +76,11 @@ type RegionFeatureProperties = {
   // - `km/h`: kilometers per hour
   roadSpeedUnit: string | undefined;
 
+  // The unit used for road vehicle height restrictions within this feature
+  // - `ft`: feet and inches
+  // - `m`: meters
+  roadHeightUnit: string | undefined;
+
   // The international calling codes for this feature, sometimes including area codes
   // e.g. `1`, `1 340`
   callingCodes: Array<string> | undefined;
@@ -168,6 +173,7 @@ function loadDerivedDataAndCaches(borders) {
 
     // must load attributes only after loading geometry features into `members`
     loadRoadSpeedUnit(feature);
+    loadRoadHeightUnit(feature);
     loadDriveSide(feature);
     loadCallingCodes(feature);
 
@@ -303,6 +309,27 @@ function loadDerivedDataAndCaches(borders) {
       );
       // if all members have the same value then that's also the value for this feature
       if (vals.length === 1) props.roadSpeedUnit = vals[0];
+    }
+  }
+
+  function loadRoadHeightUnit(feature: RegionFeature) {
+    let props = feature.properties;
+    if (feature.geometry) {
+      // only `ft` regions are listed explicitly, else assume `m`
+      if (!props.roadHeightUnit) props.roadHeightUnit = 'm';
+    } else if (props.members) {
+      let vals = Array.from(
+        new Set(
+          props.members
+            .map(function (id) {
+              let member = featuresByCode[id];
+              if (member.geometry) return member.properties.roadHeightUnit || 'm';
+            })
+            .filter(Boolean)
+        )
+      );
+      // if all members have the same value then that's also the value for this feature
+      if (vals.length === 1) props.roadHeightUnit = vals[0];
     }
   }
 
@@ -700,6 +727,12 @@ export function driveSide(query: Location | string | number): string | null {
 export function roadSpeedUnit(query: Location | string | number): string | null {
   let feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.roadSpeedUnit) || null;
+}
+
+// Returns the road vehicle height restriction unit for the feature matching `query` as a string (`ft` or `m`)
+export function roadHeightUnit(query: Location | string | number): string | null {
+  let feature = smallestOrMatchingFeature(query);
+  return (feature && feature.properties.roadHeightUnit) || null;
 }
 
 // Returns the full international calling codes for phone numbers in the feature matching `query`, if any
