@@ -662,19 +662,8 @@ A geographic location in one of the supported formats.
 
 An object containing options used for geocoding.
 
-- `level`: `string`, for overlapping features, the preferred geographic classification of the one to code.  If no feature exists at the specified level, the feature at the next-highest level is coded, if any. The possible values map directly to the `level` property of [RegionFeatureProperties](#RegionFeatureProperties) objects.
-    - `world`
-    - `union`: European Union
-    - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
-    - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
-    - `subregion`: Sub-Saharan Africa, North America, Micronesia, etc.
-    - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
-    - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
-    - `country`: Ethiopia, Brazil, United States, etc.
-    - `subcountryGroup`: British Overseas Territories
-    - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
-    - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
-- `strict`: `boolean`
+- `level`: `string`, for overlapping features, the preferred geographic classification of the one to code. If no feature exists at the specified level, the feature at the next-highest level is coded, if any. For possible values, see the `level` property of [RegionFeatureProperties](#RegionFeatureProperties).
+- `maxLevel`: `string`, the highest-level that a returned feature may have. Must be greater than or equal to `level`.
 
 
 <a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>
@@ -700,6 +689,7 @@ An object containing the attributes of a RegionFeature object.
 - `members`: `[string]`, the ids of other features this feature entirely contains, the inverse of `groups`
 - `level`: `string`, the rough geographic classification of this feature
     - `world`
+    - `unitedNations`: United Nations
     - `union`: European Union
     - `subunion`: Outermost Regions of the EU, Overseas Countries and Territories of the EU
     - `region`: Africa, Americas, Antarctica, Asia, Europe, Oceania
@@ -707,7 +697,7 @@ An object containing the attributes of a RegionFeature object.
     - `intermediateRegion`: Eastern Africa, South America, Channel Islands, etc.
     - `sharedLandform`: Great Britain, Macaronesia, Mariana Islands, etc.
     - `country`: Ethiopia, Brazil, United States, etc.
-    - `subcountryGroup`: British Overseas Territories
+    - `subcountryGroup`: British Overseas Territories, Crown Dependencies, etc.
     - `territory`: Puerto Rico, Gurnsey, Hong Kong, etc.
     - `subterritory`: Sark, Ascension Island, Diego Garcia, etc.
 - `isoStatus`: `string`, the status of this feature's ISO 3166-1 code(s), if any
