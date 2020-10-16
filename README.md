@@ -131,7 +131,6 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 ## Methods
 
 <a name="feature" href="#feature">#</a> <b>feature</b>(query: Location | string | number, opts?: CodingOptions): RegionFeature?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L347 "Source")
 
 Returns the GeoJSON feature from `borders` for the given location or identifier and options, if found. Note that the `geometry` of the feature may not contain its full bounds (see [aggregateFeature](#aggregateFeature)).
 
@@ -156,7 +155,6 @@ feature(pointGeoJSON.geometry);  // returns {United Kingdom}
 
 
 <a name="iso1A2Code" href="#iso1A2Code">#</a> <b>iso1A2Code</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L358 "Source")
 
 Returns the ISO 3166-1 alpha-2 code for the given location or identifier and options, if found.
 
@@ -180,7 +178,6 @@ iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 
 
 <a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L365 "Source")
 
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
 
@@ -204,7 +201,6 @@ iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 
 
 <a name="iso1N3Code" href="#iso1N3Code">#</a> <b>iso1N3Code</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L372 "Source")
 
 Returns the ISO 3166-1 numeric-3 code for the given location or identifier and options, if found. For more comprehensive coverage, see [m49Code](#m49Code).
 
@@ -228,7 +224,6 @@ iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 
 
 <a name="m49Code" href="#m49Code">#</a> <b>m49Code</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L379 "Source")
 
 Returns the United Nations M49 code for the given location or identifier and options, if found. These codes are a superset of ISO 3166-1 numeric-3 codes, adding a subdivision (Sark) and transnational regions (e.g. Asia, Central America, Polynesia).
 
@@ -252,7 +247,6 @@ m49Code(pointGeoJSON.geometry);  // returns '826'
 
 
 <a name="wikidataQID" href="#wikidataQID">#</a> <b>wikidataQID</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L386 "Source")
 
 Returns the Wikidata QID for the given location or identifier and options, if found.
 
@@ -276,7 +270,6 @@ wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 
 
 <a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(query: Location | string | number, opts?: CodingOptions): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L396 "Source")
 
 Returns the emoji flag sequence for the given location or identifier and options, if found.
 
@@ -300,7 +293,6 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 
 
 <a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number, strict: boolean): [RegionFeature]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L404 "Source")
 
 Returns all the the features of any type that contain or match the given location or identifier, if any. If `strict` is `true` then only features that are strictly containing are returned.
 
@@ -327,7 +319,6 @@ featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
 
 
 <a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number, strict: boolean): [RegionFeature]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L427 "Source")
 
 Returns all the the features that match or are contained within the given identifier, if any. If `strict` is `true` then only features that are strictly contained are returned.
 
@@ -344,7 +335,6 @@ featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
 
 
 <a name="aggregateFeature" href="#aggregateFeature">#</a> <b>aggregateFeature</b>(id: string | number): [RegionFeature]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L449 "Source")
 
 Returns a new feature with the `properties` of the feature matching `id` and the combined `geometry` of it and all its component features. This step is not necessary when only accessing a feature's properties.
 
@@ -360,7 +350,6 @@ aggregateFeature('China');       // returns China, Hong Kong, and Macau as one f
 
 
 <a name="isIn" href="#isIn">#</a> <b>isIn</b>(query: Location | string | number, bounds: string | number): boolean
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L476 "Source")
 
 Returns `true` if the feature matching `query` is, or is within, the feature matching `bounds`.
 
@@ -386,7 +375,6 @@ isIn(pointGeoJSON.geometry, 'GB');  // returns true
 
 
 <a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(query: Location | string | number): boolean
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L487 "Source")
 
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union. This is a convenience method for `isIn(query, 'EU')`.
 
@@ -416,7 +404,6 @@ isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Germany)
 
 
 <a name="driveSide" href="#driveSide">#</a> <b>driveSide</b>(query: Location | string | number): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L492 "Source")
 
 Returns the side of the road on which traffic drives for the given location or identifier, if found.
 
@@ -442,7 +429,6 @@ driveSide(pointGeoJSON.geometry);  // returns 'left' (Britain)
 
 
 <a name="roadSpeedUnit" href="#roadSpeedUnit">#</a> <b>roadSpeedUnit</b>(query: Location | string | number): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L727 "Source")
 
 Returns the unit of speed used on traffic signs for the given location or identifier, if found.
 
@@ -494,7 +480,6 @@ roadHeightUnit(pointGeoJSON.geometry);  // returns 'ft' (Britain)
 
 
 <a name="callingCodes" href="#callingCodes">#</a> <b>callingCodes</b>(query: Location | string | number): [string]
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L739 "Source")
 
 Returns the full international calling code prefix of phone numbers for the given location or identifier, if any. All prefixes have a country code, with some also including an area code separated by a space character. These are commonly formatted with a preceding plus sign (e.g. `+1 242`).
 
@@ -521,8 +506,7 @@ callingCodes(pointGeoJSON.geometry);  // returns ['44'] (Britain)
 
 ## Properties
 
-<a name="borders" href="#borders">#</a> <b>borders</b>: RegionFeatureCollection
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L89 "Source")<br/>
+<a name="borders" href="#borders">#</a> <b>borders</b>: RegionFeatureCollection<br/>
 
 The base GeoJSON feature collection used for feature lookup. While this property is public, modifying it is not recommended and may have unintended effects.
 
@@ -590,9 +574,9 @@ An object containing the attributes of a RegionFeature object.
 - `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
 - `nameEn`: `string`, common name in English
 - `aliases`: `[string]`, additional identifiers which can be used to look up this feature
-- `country`: `string`, for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
-- `groups`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within
-- `members`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature entirely contains, the inverse of `groups`
+- `country`: `string`, for features entirely within a country, the id for that country
+- `groups`: `[string]`, the ids other features this feature is entirely within
+- `members`: `[string]`, the ids of other features this feature entirely contains, the inverse of `groups`
 - `level`: `string`, the rough geographic classification of this feature
     - `world`
     - `union`: European Union
