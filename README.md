@@ -546,9 +546,9 @@ An object containing the attributes of a RegionFeature object.
 - `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
 - `nameEn`: `string`, common name in English
 - `aliases`: `[string]`, additional identifiers which can be used to look up this feature
-- `country`: `string`, for features entirely within a country, the ISO 3166-1 alpha-2 code for that country
-- `groups`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within
-- `members`: `[string]`, the ISO 3166-1 alpha-2 or M49 codes of other features this feature entirely contains, the inverse of `groups`
+- `country`: `string`, for features entirely within a country, the id for that country
+- `groups`: `[string]`, the ids other features this feature is entirely within
+- `members`: `[string]`, the ids of other features this feature entirely contains, the inverse of `groups`
 - `level`: `string`, the rough geographic classification of this feature
     - `world`
     - `union`: European Union

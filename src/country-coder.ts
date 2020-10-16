@@ -33,10 +33,10 @@ type RegionFeatureProperties = {
   // For features entirely within a country, the ISO 3166-1 alpha-2 code for that country
   country: string | undefined;
 
-  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature is entirely within, including its country
+  // The ISO 3166-1 alpha-2, M49, or QIDs of other features this feature is entirely within, including its country
   groups: Array<string>;
 
-  // The ISO 3166-1 alpha-2 or M49 codes of other features this feature contains;
+  // The ISO 3166-1 alpha-2, M49, or QIDs of other features this feature contains;
   // the inverse of `groups`
   members: Array<string> | undefined;
 
