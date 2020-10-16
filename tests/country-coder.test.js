@@ -50,17 +50,39 @@ describe('country-coder', () => {
     describe('level', () => {
       it('assigns appropriate level values', () => {
         expect(coder.feature('AC').properties.level).toBe('subterritory');
+        expect(coder.feature('SH-HL').properties.level).toBe('subterritory');
         expect(coder.feature('DG').properties.level).toBe('subterritory');
+        expect(coder.feature('CP').properties.level).toBe('subterritory');
         expect(coder.feature('Alderney').properties.level).toBe('subterritory');
+        expect(coder.feature('Akrotiri').properties.level).toBe('subterritory');
+        expect(coder.feature('FX').properties.level).toBe('subterritory');
+        expect(coder.feature('IC').properties.level).toBe('subterritory');
 
+        expect(coder.feature('SBA').properties.level).toBe('territory');
+        expect(coder.feature('EA').properties.level).toBe('territory');
         expect(coder.feature('IM').properties.level).toBe('territory');
+        expect(coder.feature('SH').properties.level).toBe('territory');
+        expect(coder.feature('IO').properties.level).toBe('territory');
+        expect(coder.feature('PR').properties.level).toBe('territory');
         expect(coder.feature('GU').properties.level).toBe('territory');
         expect(coder.feature('GB-SCT').properties.level).toBe('territory');
         expect(coder.feature('Bir Tawil').properties.level).toBe('territory');
         expect(coder.feature('East Malaysia').properties.level).toBe('territory');
+        expect(coder.feature('Cook Islands').properties.level).toBe('territory');
+        expect(coder.feature('Niue').properties.level).toBe('territory');
 
+        expect(coder.feature('US').properties.level).toBe('country');
         expect(coder.feature('CA').properties.level).toBe('country');
+        expect(coder.feature('GB').properties.level).toBe('country');
+        expect(coder.feature('NZ').properties.level).toBe('country');
+        expect(coder.feature('IL').properties.level).toBe('country');
+        expect(coder.feature('PS').properties.level).toBe('country');
         expect(coder.feature('XK').properties.level).toBe('country');
+
+        expect(coder.feature('BOTS').properties.level).toBe('subcountryGroup');
+
+        expect(coder.feature('OMR').properties.level).toBe('subunion');
+        expect(coder.feature('OCT').properties.level).toBe('subunion');
 
         expect(coder.feature('EU').properties.level).toBe('union');
 
@@ -1218,7 +1240,7 @@ describe('country-coder', () => {
     });
 
     it('codes UN', () => {
-      let features = coder.featuresIn('UN').filter(function(feature) {
+      let features = coder.featuresIn('UN').filter(function (feature) {
         return feature.properties.level === 'country';
       });
       // there are exactly 193 UN member states as of August 2020
