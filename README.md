@@ -99,16 +99,23 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 ##### Methods
 * [feature](#feature)(query: Location | string | number, opts?: CodingOptions): RegionFeature?
 * [iso1A2Code](#iso1A2Code)(query: Location | string | number, opts?: CodingOptions): string?
+* [iso1A2Codes](#iso1A2Codes)(query: Location): [string]
 * [iso1A3Code](#iso1A3Code)(query: Location | string | number, opts?: CodingOptions): string?
+* [iso1A3Codes](#iso1A3Codes)(query: Location): [string]
 * [iso1N3Code](#iso1N3Code)(query: Location | string | number, opts?: CodingOptions): string?
+* [iso1N3Codes](#iso1N3Codes)(query: Location): [string]
 * [m49Code](#m49Code)(query: Location | string | number, opts?: CodingOptions): string?
+* [m49Codes](#m49Codes)(query: Location): [string]
 * [wikidataQID](#wikidataQID)(query: Location | string | number, opts?: CodingOptions): string?
+* [wikidataQIDs](#wikidataQIDs)(query: Location): [string]
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
+* [emojiFlags](#emojiFlags)(query: Location): [string]
 * [featuresContaining](#featuresContaining)(query: Location | string | number, strict: boolean): [RegionFeature]
 * [featuresIn](#featuresIn)(id: string | number, strict: boolean): [RegionFeature]
 * [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
 * [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
+* [isInUnitedNations](#isInUnitedNations)(query: Location | string | number): boolean
 * [driveSide](#driveSide)(query: Location | string | number): string?
 * [roadSpeedUnit](#roadSpeedUnit)(query: Location | string | number): string?
 * [roadHeightUnit](#roadHeightUnit)(query: Location | string | number): string?
@@ -177,6 +184,20 @@ iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 ```
 
 
+<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(query: Location): [string]
+
+Returns all the ISO 3166-1 alpha-2 codes for the given location, if any.
+
+```js
+iso1A2Codes([-4.5, 54.2]);  // returns ['IM', 'GB', 'UN']
+iso1A2Codes([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+iso1A2Codes(pointGeoJSON);           // returns ['IM', 'GB', 'UN']
+iso1A2Codes(pointGeoJSON.geometry);  // returns ['IM', 'GB', 'UN']
+```
+
+
 <a name="iso1A3Code" href="#iso1A3Code">#</a> <b>iso1A3Code</b>(query: Location | string | number, opts?: CodingOptions): string?
 
 Returns the ISO 3166-1 alpha-3 code for the given location or identifier and options, if found.
@@ -197,6 +218,20 @@ iso1A3Code('United Kingdom'); // returns 'GBR'
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 iso1A3Code(pointGeoJSON);           // returns 'GBR'
 iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
+```
+
+
+<a name="iso1A3Codes" href="#iso1A3Codes">#</a> <b>iso1A3Codes</b>(query: Location): [string]
+
+Returns all the ISO 3166-1 alpha-3 codes for the given location, if any.
+
+```js
+iso1A3Codes([-4.5, 54.2]);  // returns ['IMN', 'GBR']
+iso1A3Codes([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+iso1A3Codes(pointGeoJSON);           // returns ['IMN', 'GBR']
+iso1A3Codes(pointGeoJSON.geometry);  // returns ['IMN', 'GBR']
 ```
 
 
@@ -223,6 +258,20 @@ iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
+<a name="iso1N3Codes" href="#iso1N3Codes">#</a> <b>iso1N3Codes</b>(query: Location): [string]
+
+Returns all the ISO 3166-1 numeric-3 codes for the given location, if any.
+
+```js
+iso1N3Codes([-4.5, 54.2]);  // returns ['833', '826']
+iso1N3Codes([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+iso1N3Codes(pointGeoJSON);           // returns ['833', '826']
+iso1N3Codes(pointGeoJSON.geometry);  // returns ['833', '826']
+```
+
+
 <a name="m49Code" href="#m49Code">#</a> <b>m49Code</b>(query: Location | string | number, opts?: CodingOptions): string?
 
 Returns the United Nations M49 code for the given location or identifier and options, if found. These codes are a superset of ISO 3166-1 numeric-3 codes, adding a subdivision (Sark) and transnational regions (e.g. Asia, Central America, Polynesia).
@@ -243,6 +292,20 @@ m49Code('United Kingdom'); // returns '826'
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
 m49Code(pointGeoJSON);           // returns '826'
 m49Code(pointGeoJSON.geometry);  // returns '826'
+```
+
+
+<a name="m49Codes" href="#m49Codes">#</a> <b>m49Codes</b>(query: Location): [string]
+
+Returns all the United Nations M49 codes for the given location, if any.
+
+```js
+m49Codes([-4.5, 54.2]);  // returns ['833', '826', '154', '150', '001']
+m49Codes([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+m49Codes(pointGeoJSON);           // returns ['833', '826', '154', '150', '001']
+m49Codes(pointGeoJSON.geometry);  // returns ['833', '826', '154', '150', '001']
 ```
 
 
@@ -269,6 +332,20 @@ wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 ```
 
 
+<a name="wikidataQIDs" href="#wikidataQIDs">#</a> <b>wikidataQIDs</b>(query: Location): [string]
+
+Returns all the Wikidata QIDs for the given location, if any.
+
+```js
+wikidataQIDs([-4.5, 54.2]);  // returns ['Q9676', 'Q185086', 'Q145', 'Q27479', 'Q46', 'Q1065', 'Q2']
+wikidataQIDs([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+wikidataQIDs(pointGeoJSON);           // returns ['Q9676', 'Q185086', 'Q145', 'Q27479', 'Q46', 'Q1065', 'Q2']
+wikidataQIDs(pointGeoJSON.geometry);  // returns ['Q9676', 'Q185086', 'Q145', 'Q27479', 'Q46', 'Q1065', 'Q2']
+```
+
+
 <a name="emojiFlag" href="#emojiFlag">#</a> <b>emojiFlag</b>(query: Location | string | number, opts?: CodingOptions): string?
 
 Returns the emoji flag sequence for the given location or identifier and options, if found.
@@ -292,25 +369,39 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
+<a name="emojiFlags" href="#emojiFlags">#</a> <b>emojiFlags</b>(query: Location): [string]
+
+Returns all the emoji flag sequences for the given location, if any.
+
+```js
+emojiFlags([-4.5, 54.2]);  // returns ['🇮🇲', '🇬🇧', '🇺🇳']
+emojiFlags([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+emojiFlags(pointGeoJSON);           // returns ['🇮🇲', '🇬🇧', '🇺🇳']
+emojiFlags(pointGeoJSON.geometry);  // returns ['🇮🇲', '🇬🇧', '🇺🇳']
+```
+
+
 <a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number, strict: boolean): [RegionFeature]
 
 Returns all the the features of any type that contain or match the given location or identifier, if any. If `strict` is `true` then only features that are strictly containing are returned.
 
 ```js
-featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Northern Europe}, {Europe}, {United Kingdom}]
-featuresContaining([0, 51.5]);     // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining([6.1, 46.2]);   // returns [{Switzerland}, {Western Europe}, {Europe}]
+featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Crown Dependencies}, {United Kingdom}, {Northern Europe}, {Europe}, {United Nations}, {World}]
+featuresContaining([0, 51.5]);     // returns [{England}, {Countries of the United Kingdom}, {United Kingdom}, {Great Britain}, {Northern Europe}, {Europe}, {United Nations}, {World}]
+featuresContaining([6.1, 46.2]);   // returns [{Switzerland}, {Western Europe}, {Europe}, {United Nations}, {World}]
 featuresContaining([0, 90]);       // returns []
-featuresContaining('GB');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('GBR');         // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('826');         // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining(826);           // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('Q145');        // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('🇬🇧');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('UK');          // returns [{United Kingdom}, {Northern Europe}, {Europe}]
-featuresContaining('154');         // returns [{Northern Europe}, {Europe}]
-featuresContaining('GB', true);    // returns [{Northern Europe}, {Europe}]
-featuresContaining('154', true);   // returns [{Europe}]
+featuresContaining('GB');          // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('GBR');         // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('826');         // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining(826);           // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('Q145');        // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('🇬🇧');          // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('UK');          // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('154');         // returns [{Northern Europe}, {Europe}, {World}]
+featuresContaining('GB', true);    // returns [{United Nations}, {World}]
+featuresContaining('154', true);   // returns [{Europe}, {World}]
 
 let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [0, -90] } };
 featuresContaining(pointGeoJSON);            // returns [{Antarctica}]
@@ -323,14 +414,14 @@ featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
 Returns all the the features that match or are contained within the given identifier, if any. If `strict` is `true` then only features that are strictly contained are returned.
 
 ```js
-featuresIn('CN');          // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('CHN');         // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('156');         // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn(156);           // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('Q148');        // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('🇨🇳');          // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('China');       // returns [{China}, {Hong Kong}, {Macau}]
-featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
+featuresIn('CN');          // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('CHN');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('156');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn(156);           // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('Q148');        // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('🇨🇳');          // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('China');       // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('CN', true);    // returns [{Mainland China}, {Hong Kong}, {Macau}]
 ```
 
 
@@ -339,13 +430,13 @@ featuresIn('CN', true);    // returns [{Hong Kong}, {Macau}]
 Returns a new feature with the `properties` of the feature matching `id` and the combined `geometry` of it and all its component features. This step is not necessary when only accessing a feature's properties.
 
 ```js
-aggregateFeature('CN');          // returns China, Hong Kong, and Macau as one feature
-aggregateFeature('CHN');         // returns China, Hong Kong, and Macau as one feature
-aggregateFeature('156');         // returns China, Hong Kong, and Macau as one feature
-aggregateFeature(156);           // returns China, Hong Kong, and Macau as one feature
-aggregateFeature('Q148');        // returns China, Hong Kong, and Macau as one feature
-aggregateFeature('🇨🇳');          // returns China, Hong Kong, and Macau as one feature
-aggregateFeature('China');       // returns China, Hong Kong, and Macau as one feature
+aggregateFeature('CN');          // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('CHN');         // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('156');         // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature(156);           // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('Q148');        // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('🇨🇳');          // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('China');       // returns Mainland China, Hong Kong, and Macau as one feature
 ```
 
 
@@ -403,6 +494,37 @@ isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Germany)
 ```
 
 
+<a name="isInUnitedNations" href="#isInUnitedNations">#</a> <b>isInUnitedNations</b>(query: Location | string | number): boolean
+
+Returns `true` if the feature with the given location or identifier is found to be part of a member state of the United Nations. This is a convenience method for `isIn(query, 'UN')`.
+
+```js
+isInUnitedNations([13.4, 52.5]); // returns true (Germany)
+isInUnitedNations([0, 51.5]);    // returns true (Britain)
+isInUnitedNations([-4.5, 54.2]); // returns true (Isle of Man)
+isInUnitedNations([6.1, 46.2]);  // returns true (Switzerland)
+isInUnitedNations([0, 90]);      // returns false (North Pole)
+isInUnitedNations('EU');         // returns true
+isInUnitedNations('DE');         // returns true
+isInUnitedNations('DEU');        // returns true
+isInUnitedNations('276');        // returns true
+isInUnitedNations(276);          // returns true
+isInUnitedNations('Q183');       // returns true
+isInUnitedNations('🇩🇪');         // returns true
+isInUnitedNations('Germany');    // returns true
+isInUnitedNations('GB');         // returns true
+isInUnitedNations('IM');         // returns true
+isInUnitedNations('CH');         // returns true
+isInUnitedNations('XK');         // returns false (Kosovo)
+isInUnitedNations('PS');         // returns false (Palestine)
+
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [13.4, 52.5] } };
+isInUnitedNations(pointGeoJSON);           // returns true (Germany)
+isInUnitedNations(pointGeoJSON.geometry);  // returns true (Germany)
+```
+
+
 <a name="driveSide" href="#driveSide">#</a> <b>driveSide</b>(query: Location | string | number): string?
 
 Returns the side of the road on which traffic drives for the given location or identifier, if found.
@@ -454,7 +576,6 @@ roadSpeedUnit(pointGeoJSON.geometry);  // returns 'mph' (Britain)
 
 
 <a name="roadHeightUnit" href="#roadHeightUnit">#</a> <b>roadHeightUnit</b>(query: Location | string | number): string?
-[<>](https://github.com/ideditor/country-coder/blob/master/src/country-coder.ts#L733 "Source")
 
 Returns the unit of length used on vehicle height restriction traffic signs for the given location or identifier, if found.
 
