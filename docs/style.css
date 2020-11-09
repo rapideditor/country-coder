@@ -1,0 +1,305 @@
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #aaa #555;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #555;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 6px;
+  border: 3px solid #aaa;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #ddd;
+  background: #111;
+  font-size: 14px;
+  font-family: Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier, monospace;
+  overscroll-behavior: none;
+}
+
+textarea, button {
+  font-family: Consolas, 'Andale Mono WT', 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L', Monaco, 'Courier New', Courier, monospace;
+}
+
+input[type=range] {
+  vertical-align: middle;
+}
+
+textarea {
+  overflow: auto;
+  width: 98%;
+  color: #ddd;
+  background: #444;
+  border: 2px solid #666;
+  border-radius: 2px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+button {
+  display: inline-block;
+  border: none;
+  padding: 0.7rem 1rem;
+  margin: 0;
+  text-decoration: none;
+  background: #0069ed;
+  color: #eee;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+th {
+  text-align: left;
+  border-bottom: 1px solid #ccc6;
+  font-size: 16px;
+}
+th, td {
+  padding: 0 15px;
+}
+
+button:hover,
+button:focus {
+  background: #0053ba;
+}
+button:focus {
+  outline: 1px solid #eee;
+  outline-offset: -4px;
+}
+button:active {
+  transform: scale(0.99);
+}
+
+a,
+a:visited,
+.mapboxgl-ctrl-attrib span,
+.mapboxgl-ctrl-attrib a,
+.mapboxgl-ctrl-attrib a:visited {
+  color: #777;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover,
+.mapboxgl-ctrl-attrib a:hover {
+  color: #999;
+  text-decoration: none;
+}
+a.mapboxgl-ctrl-logo {
+  opacity: 0.6;
+}
+
+.hasCols { display: flex; flex-flow: row nowrap; }
+.hasRows { display: flex; flex-flow: column nowrap; }
+.hasCols > div { flex: 1; }
+.hasRows > div { flex: 1; }
+
+
+.visible   { opacity: 1; }
+.hidden    { display: none; }   /* remove from layout */
+.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+.obscured  {
+  filter: opacity(0.75) blur(10px);
+  pointer-events: none;
+}
+
+.red     { color: rgba(255, 0, 0, 0.9); }
+.green   { color: rgba(0, 255, 0, 0.9); }
+.blue    { color: rgba(176, 176, 255, 0.9); }
+.yellow  { color: rgba(255, 255, 0, 0.9); }
+.cyan    { color: rgba(0, 255, 255, 0.9); }
+.magenta { color: rgba(255, 0, 255, 0.9); }
+.orange  { color: rgba(255, 153, 0, 0.9); }
+.pink    { color: rgba(255, 0, 153, 0.9); }
+.purple  { color: rgba(153, 0, 255, 0.9); }
+
+
+#wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#viewer, #maps {
+  position: relative;
+  overflow: hidden;
+}
+
+#basemap, #geojson-view {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  transition: opacity 200ms ease;
+}
+
+#basemap {
+  z-index: 1;
+}
+#geojson-view {
+  z-index: 2;
+}
+textarea#geojson-container {
+  padding: 30px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background: #0000;
+  color: currentColor;
+  border: 0;
+  resize: none;
+}
+textarea#geojson-container:focus {
+  outline: 1px solid currentColor;
+}
+
+#attribution {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(32,32,32,0.6);
+  z-index: 3;
+}
+
+#side {
+  flex: 0 0 50%;
+  background: #222;
+}
+
+#title {
+  flex: 0 0 50px;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+#controls {
+  flex: 0 0 50px;
+  padding: 5px 10px;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 16px;
+}
+#controls > .control {
+  padding: 0 20px;
+}
+#control-zoom {
+  flex: 1;
+}
+#control-toggle {
+  flex: 0 0 200px;
+}
+#control-toggle .icon {
+  display: inline-block;
+  width: 24px;
+}
+#octocat {
+  flex: 0 0 40px;
+}
+#octocat a:visited, #octocat a {
+  color: #ddd;
+}
+#octocat a:hover {
+  color: #fff;
+}
+
+#title h2 {
+  margin: 5px 15px;
+}
+#title .icon {
+  flex: 0 0 32px;
+}
+
+#sidebar {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#sidebar > .section {
+  border-top: 1px solid #444;
+  flex: 0 0 auto;
+  padding: 10px 15px;
+}
+.section ul {
+  padding-left: 15px;
+}
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 10px;
+  margin-bottom: 3px;
+  vertical-align: middle;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #aaa;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: -5px;
+  background-color: #ddd;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #aaa;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #0053ba;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 10px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
