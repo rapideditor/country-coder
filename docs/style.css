@@ -157,12 +157,14 @@ a.mapboxgl-ctrl-logo {
 #overview-map {
   display: flex;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 10px;
   width: 150px;
   height: 150px;
   transition: opacity 200ms ease;
   border: 1px solid #ccc6;
+  border-radius: 150px;
+  filter: drop-shadow(0 0 5px black);
 }
 #overview-map .mapboxgl-control-container {
   display: none;
