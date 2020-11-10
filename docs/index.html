@@ -49,6 +49,9 @@
         <label>Zoom: </label>
         <span id='zoom-value'>1</span>
       </div>
+      <div id='control-clear' class='control hidden'>
+        <a href='javascript:mapRemoveData()'>Clear Map</a>
+      </div>
       <div id='control-toggle' class='control'>
         <div class='icon'><i class='fas fa-vector-square fa-lg'></i></div>
         <label id='geojson-toggle' class='switch'>
@@ -107,6 +110,9 @@ var _currZoom = 1;
 var _showMap = true;
 var _loco;
 
+// pull params out of the query string, if any
+var _qs = window.location.search ? utilStringQs(window.location.search) : {};
+
 
 // ----------------------------------- DOM ------------------------------------
 // select some elements to use later
@@ -118,6 +124,7 @@ var geojsonView = document.getElementById('geojson-view');
 var geojsonCheckbox = document.getElementById('geojson-checkbox');
 var geojsonContainer = document.getElementById('geojson-container');
 var zoomValue = document.getElementById('zoom-value');
+var clearMap = document.getElementById('control-clear');
 
 var baseAttribution = ' <a href="https://www.mapbox.com/about/maps/" target="_blank">© Mapbox</a> <a href="http://www.openstreetmap.org/about/" target="_blank">© OpenStreetMap</a>';
 attribution.innerHTML = baseAttribution;
@@ -192,6 +199,7 @@ window.addEventListener('DOMContentLoaded', function(e) {
       // insert into DOM
       codes.forEach(function(d) {
         var tr = document.createElement('tr');
+        tr.setAttribute('id', d.wikidata);
 
         var nameEn = document.createElement('td');
         nameEn.appendChild(document.createTextNode(d.nameEn));
@@ -220,7 +228,10 @@ window.addEventListener('DOMContentLoaded', function(e) {
       });
     })
     .then(function() {
-      return _loco = new LocationConflation();
+      _loco = new LocationConflation();
+      if (_qs.code) {     // If we got a code in the URL querystring, display it.
+        mapShowCode(_qs.code);
+      }
     });
 });
 
@@ -261,8 +272,16 @@ detailMbgl.on('load', function() {
 // Remove the data from the map..
 //
 function mapRemoveData() {
+  // deselect rows
+  var matches = document.getElementsByClassName('selectedrow');
+  while (matches.length > 0) {
+    matches[0].classList.remove('selectedrow');
+  }
+
   geojsonContainer.textContent = 'No Data';
-  // history.replaceState('{}', '', '?' + utilQsString(qs));
+  clearMap.className = 'control hidden';
+  delete _qs.code;
+  history.replaceState(null, '', '?' + utilQsString(_qs));
   document.title = 'Country Coder';
 
   [overviewMbgl, detailMbgl].forEach(function(mbgl) {
@@ -323,17 +342,39 @@ function mapShowCode(code) {
     overviewMbgl.easeTo({ center: center });
     detailMbgl.fitBounds(bounds, { padding: 50 });
 
-    geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
-    // history.replaceState(locationSet, locoTextarea.value,  '?' + utilQsString(qs));
-    // document.title = 'Country Coder - ' + JSON.stringify(locationSet);
+    // select the row
+    var row = document.getElementById(props.id);
+    row.className = 'selectedrow';
 
-  } catch (err) {
-    geojsonContainer.textContent = 'No Data';
-    // history.replaceState('{}', '', '?' + utilQsString(qs));
-    // document.title = 'Country Coder';
-  }
+    geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
+    clearMap.className = 'control visible';
+    _qs.code = code;
+    history.replaceState(null, code,  '?' + utilQsString(_qs));
+    document.title = 'Country Coder - ' + code;
+
+  } catch (err) { /* ignore */ }
 }
 
+
+function utilStringQs(str) {
+  var i = 0;  // advance past any leading '?' or '#' characters
+  while (i < str.length && (str[i] === '?' || str[i] === '#')) i++;
+  str = str.slice(i);
+
+  return str.split('&').reduce(function(obj, pair){
+    var parts = pair.split('=');
+    if (parts.length === 2) {
+      obj[parts[0]] = (null === parts[1]) ? '' : decodeURIComponent(parts[1]);
+    }
+    return obj;
+  }, {});
+}
+
+function utilQsString(obj) {
+  return Object.keys(obj).sort().map(function(key) {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+  }).join('&');
+}
 
 </script>
 </body>

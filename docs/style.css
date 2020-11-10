@@ -67,6 +67,12 @@ th {
 th, td {
   padding: 0 15px;
 }
+tr:hover {
+  background: #333;
+}
+tr.selectedrow {
+  background: #431;
+}
 
 button:hover,
 button:focus {
