@@ -139,7 +139,7 @@ a.mapboxgl-ctrl-logo {
   overflow: hidden;
 }
 
-#basemap, #geojson-view {
+#detail-map, #geojson-view {
   display: flex;
   position: absolute;
   top: 0;
@@ -148,13 +148,24 @@ a.mapboxgl-ctrl-logo {
   right: 0;
   transition: opacity 200ms ease;
 }
+#overview-map {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  transition: opacity 200ms ease;
+  border: 1px solid #ccc6;
+}
+#overview-map .mapboxgl-control-container {
+  display: none;
+}
 
-#basemap {
-  z-index: 1;
-}
-#geojson-view {
-  z-index: 2;
-}
+#detail-map    { z-index: 1; }
+#overview-map  { z-index: 2; }
+#geojson-view  { z-index: 3; }
+
 textarea#geojson-container {
   padding: 30px;
   overflow-y: scroll;
@@ -173,7 +184,7 @@ textarea#geojson-container:focus {
   bottom: 0;
   right: 0;
   background-color: rgba(32,32,32,0.6);
-  z-index: 3;
+  z-index: 4;
 }
 
 #side {

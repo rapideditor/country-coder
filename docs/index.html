@@ -68,7 +68,8 @@
       <div id='geojson-view' class='invisible'>
         <textarea id='geojson-container' name='geojson-textarea' readonly>No Data</textarea>
       </div>
-      <div id='basemap'></div>
+      <div id='detail-map'></div>
+      <div id='overview-map'></div>
       <div id='attribution' class='mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-right'></div>
     </div>
 
@@ -78,9 +79,18 @@
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWxtYXJvbiIsImEiOiJjaWZlY25lZGQ2cTJjc2trbmdiZDdjYjllIn0.Wx1n0X7aeCQyDTnK6_mrGw';
 
-var map = new mapboxgl.Map({
+var overviewMbgl = new mapboxgl.Map({
   attributionControl: false,
-  container: 'basemap',
+  container: 'overview-map',
+  style: 'mapbox://styles/mapbox/dark-v10',
+  center: [0,0],
+  zoom: -0.8,
+  interactive: false,
+  renderWorldCopies: true
+});
+var detailMbgl = new mapboxgl.Map({
+  attributionControl: false,
+  container: 'detail-map',
   style: 'mapbox://styles/mapbox/dark-v10',
   center: [0,0],
   zoom: 1,
@@ -101,7 +111,8 @@ var _loco;
 // ----------------------------------- DOM ------------------------------------
 // select some elements to use later
 var attribution = document.getElementById('attribution');
-var basemap = document.getElementById('basemap');
+var overviewMap = document.getElementById('overview-map');
+var detailMap = document.getElementById('detail-map');
 var tablebody = document.getElementById('tablebody');
 var geojsonView = document.getElementById('geojson-view');
 var geojsonCheckbox = document.getElementById('geojson-checkbox');
@@ -215,9 +226,9 @@ window.addEventListener('DOMContentLoaded', function(e) {
 
 
 // wait for map to load before adjusting it
-map.on('load', function() {
+detailMbgl.on('load', function() {
 
-  map.on('zoom', function(e) {
+  detailMbgl.on('zoom', function(e) {
     var newZoom = Math.round((e.target.transform.zoom + Number.EPSILON) * 100) / 100;
     if (newZoom !== _currZoom) {
       _currZoom = newZoom;
@@ -228,13 +239,15 @@ map.on('load', function() {
   geojsonCheckbox.addEventListener('change', function(e) {
     _showMap = !_showMap;
     if (_showMap) {
-      basemap.className = 'mapboxgl-map visible';
-      geojsonView.className = GEOJSON_CLASS + ' invisible';
+      detailMap.className = 'mapboxgl-map visible';
+      overviewMap.className = 'mapboxgl-map visible';
       attribution.innerHTML = baseAttribution;
+      geojsonView.className = GEOJSON_CLASS + ' invisible';
     } else {
-      basemap.className = 'mapboxgl-map obscured';
-      geojsonView.className = GEOJSON_CLASS + ' visible';
+      detailMap.className = 'mapboxgl-map obscured';
+      overviewMap.className = 'mapboxgl-map obscured';
       attribution.innerHTML = '';
+      geojsonView.className = GEOJSON_CLASS + ' visible';
     }
   });
 
@@ -242,23 +255,6 @@ map.on('load', function() {
 
 
 // ---------------------------------- FUNCTIONS ------------------------------------
-
-//
-// Fit to shape bounds - pass a MultiPolygon coordinates array
-//
-function flyTo(multipolygon) {
-  var bounds = multipolygon.reduce(function(bounds, ring) {
-    ring[0].forEach(function(coord) {  // ring[0] is the "outer"
-      if (coord[0] > bounds[0])  bounds[0] = coord[0];
-      if (coord[1] > bounds[1])  bounds[1] = coord[1];
-      if (coord[0] < bounds[2])  bounds[2] = coord[0];
-      if (coord[1] < bounds[3])  bounds[3] = coord[1];
-    });
-    return bounds;
-  }, [-180, -90, 180, 90]);  // W,S,E,N
-
-  map.fitBounds(bounds, { padding: 50 });
-}
 
 
 //
@@ -269,10 +265,12 @@ function mapRemoveData() {
   // history.replaceState('{}', '', '?' + utilQsString(qs));
   document.title = 'Country Coder';
 
-  if (map.getLayer('gj-fill-layer'))   map.removeLayer('gj-fill-layer');
-  if (map.getLayer('gj-line-layer'))   map.removeLayer('gj-line-layer');
-  if (map.getLayer('gj-point-layer'))  map.removeLayer('gj-point-layer');
-  if (map.getSource('gj-source'))      map.removeSource('gj-source');
+  [overviewMbgl, detailMbgl].forEach(function(mbgl) {
+    if (mbgl.getLayer('gj-fill-layer'))   mbgl.removeLayer('gj-fill-layer');
+    if (mbgl.getLayer('gj-line-layer'))   mbgl.removeLayer('gj-line-layer');
+    if (mbgl.getLayer('gj-point-layer'))  mbgl.removeLayer('gj-point-layer');
+    if (mbgl.getSource('gj-source'))      mbgl.removeSource('gj-source');
+  });
 }
 
 
@@ -288,12 +286,6 @@ function mapShowCode(code) {
     var feature = _loco.resolveLocationSet({ include: [code] }).feature;
     var props = feature.properties || {};
 
-    // Setup the LocationConflation feature layer
-    map.addSource('gj-source', { type: 'geojson', data: feature });
-    map.addLayer(GEOJSON_FILL);
-    map.addLayer(GEOJSON_LINE);
-    map.addLayer(GEOJSON_POINT);
-
     var multipolygon;
     if (feature.geometry.type === 'Polygon') {
       multipolygon = [ feature.geometry.coordinates ];
@@ -301,7 +293,35 @@ function mapShowCode(code) {
       multipolygon = feature.geometry.coordinates;
     }
 
-    flyTo(multipolygon);
+    // calc bounds
+    var bounds = multipolygon.reduce(function(bounds, ring) {
+      ring[0].forEach(function(coord) {  // ring[0] is the "outer"
+        if (coord[0] > bounds[0])  bounds[0] = coord[0];
+        if (coord[1] > bounds[1])  bounds[1] = coord[1];
+        if (coord[0] < bounds[2])  bounds[2] = coord[0];
+        if (coord[1] < bounds[3])  bounds[3] = coord[1];
+      });
+      return bounds;
+    }, [-180, -90, 180, 90]);  // W,S,E,N
+
+    var center = [ (bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2 ];
+    var area = (bounds[2] - bounds[0]) * (bounds[3] - bounds[1]);
+
+    // tolerance parameter controls the GeoJSON simplification.
+    // disable it for very tiny features, otherwise they don't show on the overview map
+    var tolerance = area < 0.5 ? 0 : 0.375;
+
+    // Add it to the maps
+    [overviewMbgl, detailMbgl].forEach(function(mbgl) {
+      mbgl.addSource('gj-source', { type: 'geojson', tolerance: tolerance, data: feature });
+      mbgl.addLayer(GEOJSON_FILL);
+      mbgl.addLayer(GEOJSON_LINE);
+      mbgl.addLayer(GEOJSON_POINT);
+    });
+
+    // Fly to it
+    overviewMbgl.easeTo({ center: center });
+    detailMbgl.fitBounds(bounds, { padding: 50 });
 
     geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
     // history.replaceState(locationSet, locoTextarea.value,  '?' + utilQsString(qs));
