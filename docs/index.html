@@ -324,19 +324,35 @@ function mapShowCode(code) {
     }, [-180, -90, 180, 90]);  // W,S,E,N
 
     var center = [ (bounds[0] + bounds[2]) / 2, (bounds[1] + bounds[3]) / 2 ];
-    var area = (bounds[2] - bounds[0]) * (bounds[3] - bounds[1]);
-
-    // tolerance parameter controls the GeoJSON simplification.
-    // disable it for very tiny features, otherwise they don't show on the overview map
-    var tolerance = area < 0.5 ? 0 : 0.375;
+    var bboxFeature = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [ bounds[0], bounds[1] ],
+            [ bounds[2], bounds[1] ],
+            [ bounds[2], bounds[3] ],
+            [ bounds[0], bounds[3] ],
+            [ bounds[0], bounds[1] ]
+          ]
+        ]
+      }
+    };
 
     // Add it to the maps
-    [overviewMbgl, detailMbgl].forEach(function(mbgl) {
-      mbgl.addSource('gj-source', { type: 'geojson', tolerance: tolerance, data: feature });
-      mbgl.addLayer(GEOJSON_FILL);
-      mbgl.addLayer(GEOJSON_LINE);
-      mbgl.addLayer(GEOJSON_POINT);
-    });
+    // Tolerance parameter controls the GeoJSON simplification.
+    // Disable it for overview, otherwise very tiny bboxes won't display
+    overviewMbgl.addSource('gj-source', { type: 'geojson', tolerance: 0, data: bboxFeature });
+    overviewMbgl.addLayer(GEOJSON_FILL);
+    overviewMbgl.addLayer(GEOJSON_LINE);
+    overviewMbgl.addLayer(GEOJSON_POINT);
+
+    detailMbgl.addSource('gj-source', { type: 'geojson', data: feature });
+    detailMbgl.addLayer(GEOJSON_FILL);
+    detailMbgl.addLayer(GEOJSON_LINE);
+    detailMbgl.addLayer(GEOJSON_POINT);
 
     // Fly to it
     overviewMbgl.easeTo({ center: center });
