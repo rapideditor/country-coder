@@ -88,6 +88,7 @@ type RegionFeatureProperties = {
 type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
 type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
 type Vec2 = [number, number]; // [lon, lat]
+type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 type PointGeometry = { type: string; coordinates: Vec2 };
 type PointFeature = { type: string; geometry: PointGeometry; properties: any };
 type Location = Vec2 | PointGeometry | PointFeature;
@@ -500,6 +501,12 @@ function featureForID(id: string | number): RegionFeature | null {
   return featuresByCode[stringID] || null;
 }
 
+function smallestFeaturesForBbox(bbox: Bbox): [RegionFeature] {
+  return whichPolygonGetter.bbox(bbox).map(function (props) {
+    return featuresByCode[props.id];
+  });
+}
+
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
   if (typeof query === 'object') {
     return smallestFeature(<Location>query);
@@ -584,7 +591,7 @@ export function emojiFlag(
   return match.properties.emojiFlag || null;
 }
 
-function propertiesForQuery(query: Location, property: string): Array<string> {
+function propertiesForQuery(query: Location | Bbox, property: string): Array<string> {
   let features = featuresContaining(query, false);
   return features
     .map(function (feature) {
@@ -594,56 +601,72 @@ function propertiesForQuery(query: Location, property: string): Array<string> {
 }
 
 // Returns all the ISO 3166-1 alpha-2 codes of features at the location
-export function iso1A2Codes(query: Location): Array<string> {
+export function iso1A2Codes(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'iso1A2');
 }
 
 // Returns all the ISO 3166-1 alpha-3 codes of features at the location
-export function iso1A3Codes(query: Location): Array<string> {
+export function iso1A3Codes(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'iso1A3');
 }
 
 // Returns all the ISO 3166-1 numeric-3 codes of features at the location
-export function iso1N3Codes(query: Location): Array<string> {
+export function iso1N3Codes(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'iso1N3');
 }
 
 // Returns all the UN M49 codes of features at the location
-export function m49Codes(query: Location): Array<string> {
+export function m49Codes(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'm49');
 }
 
 // Returns all the Wikidata QIDs of features at the location
-export function wikidataQIDs(query: Location): Array<string> {
+export function wikidataQIDs(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'wikidata');
 }
 
 // Returns all the emoji flag sequences of features at the location
-export function emojiFlags(query: Location): Array<string> {
+export function emojiFlags(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'emojiFlag');
 }
 
 // Returns the feature matching `query` and all features containing it, if any.
 // If passing `true` for `strict`, an exact match will not be included
 export function featuresContaining(
-  query: Location | string | number,
+  query: Location | Bbox | string | number,
   strict?: boolean
 ): Array<RegionFeature> {
-  let feature = smallestOrMatchingFeature(query);
-  if (!feature) return [];
+  let matchingFeatures: Array<RegionFeature>;
 
-  let features: Array<RegionFeature> = [];
+  if (Array.isArray(query) && query.length === 4) {
+    // check if bounding box
+    matchingFeatures = smallestFeaturesForBbox(<Bbox>query);
+  } else {
+    let smallestOrMatching = smallestOrMatchingFeature(<Location | string | number>query);
+    matchingFeatures = smallestOrMatching ? [smallestOrMatching] : [];
+  }
+
+  if (!matchingFeatures.length) return [];
+
+  let returnFeatures: Array<RegionFeature>;
 
   if (!strict || typeof query === 'object') {
-    features.push(feature);
+    returnFeatures = matchingFeatures.slice();
+  } else {
+    returnFeatures = [];
   }
 
-  let properties = feature.properties;
-  for (let i in properties.groups) {
-    let groupID = properties.groups[i];
-    features.push(featuresByCode[groupID]);
+  for (let j in matchingFeatures) {
+    let properties = matchingFeatures[j].properties;
+    for (let i in properties.groups) {
+      let groupID = properties.groups[i];
+      let groupFeature = featuresByCode[groupID];
+      if (returnFeatures.indexOf(groupFeature) === -1) {
+        returnFeatures.push(groupFeature);
+      }
+    }
   }
-  return features;
+  return returnFeatures;
 }
 
 // Returns the feature matching `id` and all features it contains, if any.

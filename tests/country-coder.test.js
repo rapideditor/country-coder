@@ -738,8 +738,22 @@ describe('country-coder', () => {
       expect(coder.iso1A2Codes([0, -90])).toStrictEqual(['AQ']);
     });
 
+    it('codes bounding boxes', () => {
+      expect(coder.iso1A2Codes([-4.5, 54.2, -4.4, 54.3])).toStrictEqual(['IM', 'GB', 'UN']);
+      // area of US overlapping Canada's bounding box but not its polygon
+      expect(coder.iso1A2Codes([-74, 40.6, -71.3, 44.7])).toStrictEqual(['US', 'UN']);
+      // area overlapping both US and Canada
+      expect(coder.iso1A2Codes([-74, 40.6, -71.3, 45])).toStrictEqual(['CA', 'UN', 'US']);
+    });
+
+    it('does not code invalid arguments', () => {
+      expect(coder.iso1A2Codes([])).toStrictEqual([]);
+      expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
+    });
+
     it('does not code North Pole', () => {
       expect(coder.iso1A2Codes([0, 90])).toStrictEqual([]);
+      expect(coder.iso1A2Codes([-0.1, 89.9, 0, 90])).toStrictEqual([]);
     });
 
     it('does not code location in Bir Tawil', () => {
@@ -792,13 +806,7 @@ describe('country-coder', () => {
   describe('m49Codes', () => {
     it('codes locations', () => {
       // isle of man
-      expect(coder.m49Codes([-4.5, 54.2])).toStrictEqual([
-        '833',
-        '826',
-        '154',
-        '150',
-        '001'
-      ]);
+      expect(coder.m49Codes([-4.5, 54.2])).toStrictEqual(['833', '826', '154', '150', '001']);
       expect(coder.m49Codes([-2.35, 49.43])).toStrictEqual([
         '680',
         '831',

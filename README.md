@@ -126,6 +126,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 
 ##### Types
 * [Vec2](#Vec2): [number, number]
+* [Bbox](#Bbox): [number, number, number, number]
 * [PointGeometry](#PointGeometry): a GeoJSON Point geometry object
 * [PointFeature](#PointFeature): a GeoJSON feature object with a Point geometry type
 * [Location](#Location): Vec2 | PointGeometry | PointFeature
@@ -184,9 +185,9 @@ iso1A2Code(pointGeoJSON.geometry);  // returns 'GB'
 ```
 
 
-<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(query: Location): [string]
+<a name="iso1A2Codes" href="#iso1A2Codes">#</a> <b>iso1A2Codes</b>(query: Location | Bbox): [string]
 
-Returns all the ISO 3166-1 alpha-2 codes for the given location, if any.
+Returns all the ISO 3166-1 alpha-2 codes for the given location or bounding box, if any.
 
 ```js
 iso1A2Codes([-4.5, 54.2]);  // returns ['IM', 'GB', 'UN']
@@ -221,9 +222,9 @@ iso1A3Code(pointGeoJSON.geometry);  // returns 'GBR'
 ```
 
 
-<a name="iso1A3Codes" href="#iso1A3Codes">#</a> <b>iso1A3Codes</b>(query: Location): [string]
+<a name="iso1A3Codes" href="#iso1A3Codes">#</a> <b>iso1A3Codes</b>(query: Location | Bbox): [string]
 
-Returns all the ISO 3166-1 alpha-3 codes for the given location, if any.
+Returns all the ISO 3166-1 alpha-3 codes for the given location of bounding box, if any.
 
 ```js
 iso1A3Codes([-4.5, 54.2]);  // returns ['IMN', 'GBR']
@@ -258,9 +259,9 @@ iso1N3Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
-<a name="iso1N3Codes" href="#iso1N3Codes">#</a> <b>iso1N3Codes</b>(query: Location): [string]
+<a name="iso1N3Codes" href="#iso1N3Codes">#</a> <b>iso1N3Codes</b>(query: Location | Bbox): [string]
 
-Returns all the ISO 3166-1 numeric-3 codes for the given location, if any.
+Returns all the ISO 3166-1 numeric-3 codes for the given location or bounding box, if any.
 
 ```js
 iso1N3Codes([-4.5, 54.2]);  // returns ['833', '826']
@@ -295,9 +296,9 @@ m49Code(pointGeoJSON.geometry);  // returns '826'
 ```
 
 
-<a name="m49Codes" href="#m49Codes">#</a> <b>m49Codes</b>(query: Location): [string]
+<a name="m49Codes" href="#m49Codes">#</a> <b>m49Codes</b>(query: Location | Bbox): [string]
 
-Returns all the United Nations M49 codes for the given location, if any.
+Returns all the United Nations M49 codes for the given location or bounding box, if any.
 
 ```js
 m49Codes([-4.5, 54.2]);  // returns ['833', '826', '154', '150', '001']
@@ -332,9 +333,9 @@ wikidataQID(pointGeoJSON.geometry);  // returns 'Q145'
 ```
 
 
-<a name="wikidataQIDs" href="#wikidataQIDs">#</a> <b>wikidataQIDs</b>(query: Location): [string]
+<a name="wikidataQIDs" href="#wikidataQIDs">#</a> <b>wikidataQIDs</b>(query: Location | Bbox): [string]
 
-Returns all the Wikidata QIDs for the given location, if any.
+Returns all the Wikidata QIDs for the given location or bounding box, if any.
 
 ```js
 wikidataQIDs([-4.5, 54.2]);  // returns ['Q9676', 'Q185086', 'Q145', 'Q27479', 'Q46', 'Q1065', 'Q2']
@@ -369,9 +370,9 @@ emojiFlag(pointGeoJSON.geometry);  // returns '🇬🇧'
 ```
 
 
-<a name="emojiFlags" href="#emojiFlags">#</a> <b>emojiFlags</b>(query: Location): [string]
+<a name="emojiFlags" href="#emojiFlags">#</a> <b>emojiFlags</b>(query: Location | Bbox): [string]
 
-Returns all the emoji flag sequences for the given location, if any.
+Returns all the emoji flag sequences for the given location or bounding box, if any.
 
 ```js
 emojiFlags([-4.5, 54.2]);  // returns ['🇮🇲', '🇬🇧', '🇺🇳']
@@ -383,9 +384,9 @@ emojiFlags(pointGeoJSON.geometry);  // returns ['🇮🇲', '🇬🇧', '🇺�
 ```
 
 
-<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | string | number, strict: boolean): [RegionFeature]
+<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
 
-Returns all the the features of any type that contain or match the given location or identifier, if any. If `strict` is `true` then only features that are strictly containing are returned.
+Returns all the the features of any type that contain or match the given location, bounding box, or identifier, if any. If `strict` is `true` and `query` is an identifier, then only features that are strictly containing are returned.
 
 ```js
 featuresContaining([-4.5, 54.2]);  // returns [{Isle of Man}, {Crown Dependencies}, {United Kingdom}, {Northern Europe}, {Europe}, {United Nations}, {World}]
@@ -639,6 +640,12 @@ The base GeoJSON feature collection used for feature lookup. While this property
 An array of two numbers as `[longitude, latitude]` referenced to the WGS 84 datum.
 
 `[number, number]`
+
+<a name="Bbox" href="#Bbox">#</a> <b>Bbox</b>
+
+A bounding box represented as an array of four numbers `[minLongitude, minLatitude, maxLongitude, maxLatitude]` referenced to the WGS 84 datum.
+
+`[number, number, number, number]`
 
 
 <a name="PointGeometry" href="#PointGeometry">#</a> <b>PointGeometry</b>
