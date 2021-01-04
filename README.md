@@ -99,18 +99,18 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 ##### Methods
 * [feature](#feature)(query: Location | string | number, opts?: CodingOptions): RegionFeature?
 * [iso1A2Code](#iso1A2Code)(query: Location | string | number, opts?: CodingOptions): string?
-* [iso1A2Codes](#iso1A2Codes)(query: Location): [string]
+* [iso1A2Codes](#iso1A2Codes)(query: Location | Bbox): [string]
 * [iso1A3Code](#iso1A3Code)(query: Location | string | number, opts?: CodingOptions): string?
-* [iso1A3Codes](#iso1A3Codes)(query: Location): [string]
+* [iso1A3Codes](#iso1A3Codes)(query: Location | Bbox): [string]
 * [iso1N3Code](#iso1N3Code)(query: Location | string | number, opts?: CodingOptions): string?
-* [iso1N3Codes](#iso1N3Codes)(query: Location): [string]
+* [iso1N3Codes](#iso1N3Codes)(query: Location | Bbox): [string]
 * [m49Code](#m49Code)(query: Location | string | number, opts?: CodingOptions): string?
-* [m49Codes](#m49Codes)(query: Location): [string]
+* [m49Codes](#m49Codes)(query: Location | Bbox): [string]
 * [wikidataQID](#wikidataQID)(query: Location | string | number, opts?: CodingOptions): string?
-* [wikidataQIDs](#wikidataQIDs)(query: Location): [string]
+* [wikidataQIDs](#wikidataQIDs)(query: Location | Bbox): [string]
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
-* [emojiFlags](#emojiFlags)(query: Location): [string]
-* [featuresContaining](#featuresContaining)(query: Location | string | number, strict: boolean): [RegionFeature]
+* [emojiFlags](#emojiFlags)(query: Location | Bbox): [string]
+* [featuresContaining](#featuresContaining)(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
 * [featuresIn](#featuresIn)(id: string | number, strict: boolean): [RegionFeature]
 * [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
 * [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
