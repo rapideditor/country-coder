@@ -356,7 +356,7 @@ function mapShowCode(code) {
 
     // Fly to it
     overviewMbgl.easeTo({ center: center });
-    detailMbgl.fitBounds(bounds, { padding: 50 });
+    detailMbgl.fitBounds(bounds, { padding: 50, speed: 2 });
 
     // select the row
     var row = document.getElementById(props.id);
