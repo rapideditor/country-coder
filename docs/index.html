@@ -239,8 +239,11 @@ window.addEventListener('DOMContentLoaded', function(e) {
 // wait for map to load before adjusting it
 detailMbgl.on('load', function() {
 
-  detailMbgl.on('zoom', function(e) {
-    var newZoom = Math.round((e.target.transform.zoom + Number.EPSILON) * 100) / 100;
+  detailMbgl.on('moveend', function(e) {
+    _qs.map = mapParam();
+    history.replaceState(null, '', '?' + utilQsString(_qs));
+
+    var newZoom = Math.round((e.target.transform.zoom + Number.EPSILON) * 1e2) / 1e2;
     if (newZoom !== _currZoom) {
       _currZoom = newZoom;
       zoomValue.textContent = '' + newZoom;
@@ -354,19 +357,20 @@ function mapShowCode(code) {
     detailMbgl.addLayer(GEOJSON_LINE);
     detailMbgl.addLayer(GEOJSON_POINT);
 
-    // Fly to it
-    overviewMbgl.easeTo({ center: center });
-    detailMbgl.fitBounds(bounds, { padding: 50, speed: 2 });
-
-    // select the row
+    // Select the row and update the UI
     var row = document.getElementById(props.id);
     row.className = 'selectedrow';
 
     geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
     clearMap.className = 'control visible';
-    _qs.code = code;
-    history.replaceState(null, code,  '?' + utilQsString(_qs));
     document.title = 'Country Coder - ' + code;
+    _qs.code = code;
+    delete _qs.map;
+    history.replaceState(null, code,  '?' + utilQsString(_qs));
+
+    // Fly to it
+    overviewMbgl.easeTo({ center: center });
+    detailMbgl.fitBounds(bounds, { padding: 50, speed: 2 });
 
   } catch (err) { /* ignore */ }
 }
@@ -387,9 +391,24 @@ function utilStringQs(str) {
 }
 
 function utilQsString(obj) {
+  // encode everything except special characters used in certain hash parameters:
+  // "/" in map states, ":", ",", {" and "}" in background
+  function softEncode(s) {
+    return encodeURIComponent(s).replace(/(%2F|%3A|%2C|%7B|%7D)/g, decodeURIComponent);
+  }
+
   return Object.keys(obj).sort().map(function(key) {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]);
+    return encodeURIComponent(key) + '=' + softEncode(obj[key]);
   }).join('&');
+}
+
+function mapParam() {
+  var center = detailMbgl.getCenter() ||  {lng: 0, lat: 0 };
+  var z = detailMbgl.getZoom() || 2;
+  var lat = Math.round((center.lat + Number.EPSILON) * 1e4) / 1e4;
+  var lng = Math.round((center.lng + Number.EPSILON) * 1e4) / 1e4;
+  var zoom = Math.round((z + Number.EPSILON) * 1e2) / 1e2;
+  return zoom + '/' + lat + '/' + lng;
 }
 
 </script>
