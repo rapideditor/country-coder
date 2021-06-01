@@ -173,7 +173,7 @@ var GEOJSON_POINT = {
 
 window.addEventListener('DOMContentLoaded', function(e) {
   // Load the borders json
-  fetch('https://cdn.jsdelivr.net/gh/ideditor/country-coder@master/src/data/borders.json')
+  fetch('https://cdn.jsdelivr.net/gh/ideditor/country-coder@main/src/data/borders.json')
     .then(function(response) {
       if (!response.ok) throw new Error(response.status + ' ' + response.statusText);
       return response.json();
