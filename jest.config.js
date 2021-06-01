@@ -3,7 +3,7 @@ module.exports = {
   collectCoverageFrom: ['**/built/cjs/*.js', '!**/node_modules/**'],
   coverageDirectory: '<rootDir>/.coverage',
   transform: {
-    '^.+\\.jsx?$': '<rootDir>/babel-jest-wrapper.js'
+    '^.+\\.[jt]sx?$': 'babel-jest'
   },
   setupFilesAfterEnv: ['jest-extended'],
   verbose: true
