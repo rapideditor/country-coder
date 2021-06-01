@@ -9,7 +9,15 @@ describe('country-coder', () => {
     describe('properties', () => {
       it('all identifying values are unique', () => {
         let ids = {};
-        let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'nameEn'];
+        let identifierProps = [
+          'iso1A2',
+          'iso1A3',
+          'm49',
+          'wikidata',
+          'emojiFlag',
+          'ccTLD',
+          'nameEn'
+        ];
         for (let i in coder.borders.features) {
           let identifiers = identifierProps
             .map(function (prop) {
@@ -218,6 +226,32 @@ describe('country-coder', () => {
       });
     });
 
+    describe('by ccTLD', () => {
+      it('finds feature by uppercase code: .US', () => {
+        expect(coder.feature('.US').properties.iso1N3).toBe('840');
+      });
+
+      it('finds feature by lowercase code: .us', () => {
+        expect(coder.feature('.us').properties.iso1N3).toBe('840');
+      });
+
+      it('finds feature by mixed-case code: .Us', () => {
+        expect(coder.feature('.Us').properties.iso1N3).toBe('840');
+      });
+
+      it('does not find feature for unassigned code in range: .AB', () => {
+        expect(coder.feature('.AB')).toBeNull();
+      });
+
+      it('finds United Kingdom feature by code: .uk', () => {
+        expect(coder.feature('.uk').properties.iso1N3).toBe('826');
+      });
+
+      it('does not find United Kingdom feature by code: .gb', () => {
+        expect(coder.feature('.gb')).toBeNull();
+      });
+    });
+
     describe('by Wikidata QID', () => {
       it('finds feature by uppercase QID: Q30', () => {
         expect(coder.feature('Q30').properties.iso1A2).toBe('US');
@@ -421,6 +455,28 @@ describe('country-coder', () => {
 
       it('does not find for unassigned emoji flag sequence: 🇦🇧', () => {
         expect(coder.iso1A2Code('🇦🇧')).toBeNull();
+      });
+    });
+
+    describe('by ccTLD', () => {
+      it('finds by ccTLD code: .us', () => {
+        expect(coder.iso1A2Code('.us')).toBe('US');
+      });
+
+      it('does not find for unassigned ccTLD code: .ab', () => {
+        expect(coder.iso1A2Code('.ab')).toBeNull();
+      });
+
+      it('finds United Kingdom by ccTLD code: .uk', () => {
+        expect(coder.iso1A2Code('.uk')).toBe('GB');
+      });
+
+      it('does not find United Kingdom by ccTLD code: .gb', () => {
+        expect(coder.iso1A2Code('.gb')).toBeNull();
+      });
+
+      it('finds Germany by ccTLD code: .de', () => {
+        expect(coder.iso1A2Code('.de')).toBe('DE');
       });
     });
 
@@ -726,6 +782,25 @@ describe('country-coder', () => {
     });
   });
 
+  // this doesn't need extensive tests since it's just a fetcher using `feature`
+  describe('ccTLD', () => {
+    it('returns ccTLD in officially-assigned country: New York, United States as .us', () => {
+      expect(coder.ccTLD([-74, 40.6], { level: 'country' })).toBe('.us');
+    });
+
+    it('returns ccTLD in officially-assigned country: London, United Kingdom as .uk', () => {
+      expect(coder.ccTLD([0, 51.5], { level: 'country' })).toBe('.uk');  // not .gb
+    });
+
+    it('does not return a ccTLD for a region with no ccTLD', () => {
+      expect(coder.ccTLD('Bir Tawil')).toBeNull();
+    });
+
+    it('does not return a ccTLD for uncovered location North Pole', () => {
+      expect(coder.ccTLD([0, 90])).toBeNull();
+    });
+  });
+
   describe('iso1A2Codes', () => {
     it('codes locations', () => {
       expect(coder.iso1A2Codes([-4.5, 54.2])).toStrictEqual(['IM', 'GB', 'UN']);
@@ -928,6 +1003,41 @@ describe('country-coder', () => {
 
     it('does not code location in Bir Tawil', () => {
       expect(coder.emojiFlags([33.75, 21.87])).toStrictEqual([]);
+    });
+  });
+
+  describe('ccTLDs', () => {
+    it('codes locations', () => {
+      expect(coder.ccTLDs([-4.5, 54.2])).toStrictEqual(['.im', '.uk']);   // not .gb
+      expect(coder.ccTLDs([-2.35, 49.43])).toStrictEqual(['.gg', '.uk']);   // not .gb
+      expect(coder.ccTLDs([-12.3, -37.1])).toStrictEqual(['.ta', '.sh', '.uk']);   // not .gb
+      expect(coder.ccTLDs([12.59, 55.68])).toStrictEqual(['.dk', '.eu']);
+      expect(coder.ccTLDs([2.35, 48.85])).toStrictEqual(['.fx', '.fr', '.eu']);
+      expect(coder.ccTLDs([-74, 40.6])).toStrictEqual(['.us']);
+      expect(coder.ccTLDs([21, 42.6])).toStrictEqual(['.xk']);
+      expect(coder.ccTLDs([0, -90])).toStrictEqual(['.aq']);
+    });
+
+    it('codes bounding boxes', () => {
+      expect(coder.ccTLDs([-4.5, 54.2, -4.4, 54.3])).toStrictEqual(['.im', '.uk']);  // not .gb
+      // area of US overlapping Canada's bounding box but not its polygon
+      expect(coder.ccTLDs([-74, 40.6, -71.3, 44.7])).toStrictEqual(['.us']);
+      // area overlapping both US and Canada
+      expect(coder.ccTLDs([-74, 40.6, -71.3, 45])).toStrictEqual(['.ca', '.us']);
+    });
+
+    it('does not code invalid arguments', () => {
+      expect(coder.ccTLDs([])).toStrictEqual([]);
+      expect(coder.ccTLDs([-900, 900])).toStrictEqual([]);
+    });
+
+    it('does not code North Pole', () => {
+      expect(coder.ccTLDs([0, 90])).toStrictEqual([]);
+      expect(coder.ccTLDs([-0.1, 89.9, 0, 90])).toStrictEqual([]);
+    });
+
+    it('does not code location in Bir Tawil', () => {
+      expect(coder.ccTLDs([33.75, 21.87])).toStrictEqual([]);
     });
   });
 

@@ -61,6 +61,7 @@ let featureProperties = [
   'iso1N3',
   'm49',
   'wikidata',
+  'ccTLD',
   'nameEn',
   'aliases',
   'country',

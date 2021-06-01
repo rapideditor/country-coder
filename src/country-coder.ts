@@ -23,6 +23,9 @@ type RegionFeatureProperties = {
   // The emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
   emojiFlag: string | undefined;
 
+  // The ccTLD (country code top-level domain)
+  ccTLD: string | undefined;
+
   // The common English name
   nameEn: string;
 
@@ -114,8 +117,13 @@ let featuresByCode: any = {};
 // discard special characters and instances of and/the/of that aren't the only characters
 let idFilterRegex = /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
 
-function canonicalID(id: string): string {
-  return id.replace(idFilterRegex, '').toUpperCase();
+function canonicalID(id: string | null): string {
+  let s = (id || '');
+  if (s.charAt(0) === '.') {   // skip replace if it leads with a '.' (e.g. a ccTLD like '.de', '.la')
+    return s.toUpperCase();
+  } else {
+    return s.replace(idFilterRegex, '').toUpperCase();
+  }
 }
 
 // Geographic levels, roughly from most to least granular
@@ -137,8 +145,9 @@ let levels = [
 loadDerivedDataAndCaches(borders);
 // Loads implicit feature data and the getter index caches
 function loadDerivedDataAndCaches(borders) {
-  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'nameEn'];
+  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
   let geometryFeatures: Array<RegionFeature> = [];
+
   for (let i in borders.features) {
     let feature = borders.features[i];
 
@@ -147,6 +156,7 @@ function loadDerivedDataAndCaches(borders) {
       feature.properties.iso1A2 || feature.properties.m49 || feature.properties.wikidata;
 
     loadM49(feature);
+    loadTLD(feature);
     loadIsoStatus(feature);
     loadLevel(feature);
     loadGroups(feature);
@@ -233,6 +243,15 @@ function loadDerivedDataAndCaches(borders) {
     if (!props.m49 && props.iso1N3) {
       // M49 is a superset of ISO numerics so we only need to store one
       props.m49 = props.iso1N3;
+    }
+  }
+
+  function loadTLD(feature: RegionFeature) {
+    let props = feature.properties;
+    if (props.level === 'unitedNations') return;  // `.un` is not a ccTLD
+    if (!props.ccTLD && props.iso1A2) {
+      // ccTLD is nearly the same as iso1A2, so we only need to explicitly code any exceptions
+      props.ccTLD = '.' + props.iso1A2.toLowerCase();
     }
   }
 
@@ -488,6 +507,7 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
 // Returns the feature with an identifying property matching `id`, if any
 function featureForID(id: string | number): RegionFeature | null {
   let stringID: string;
+
   if (typeof id === 'number') {
     stringID = id.toString();
     if (stringID.length === 1) {
@@ -591,6 +611,17 @@ export function emojiFlag(
   return match.properties.emojiFlag || null;
 }
 
+// Returns the ccTLD (country code top-level domain) for the feature matching the arguments, if any
+export function ccTLD(
+  query: Location | string | number,
+  opts: CodingOptions = defaultOpts
+): string | null {
+  opts.withProp = 'ccTLD';
+  let match = feature(query, opts);
+  if (!match) return null;
+  return match.properties.ccTLD || null;
+}
+
 function propertiesForQuery(query: Location | Bbox, property: string): Array<string> {
   let features = featuresContaining(query, false);
   return features
@@ -628,6 +659,11 @@ export function wikidataQIDs(query: Location | Bbox): Array<string> {
 // Returns all the emoji flag sequences of features at the location
 export function emojiFlags(query: Location | Bbox): Array<string> {
   return propertiesForQuery(query, 'emojiFlag');
+}
+
+// Returns all the ccTLD (country code top-level domain) sequences of features at the location
+export function ccTLDs(query: Location | Bbox): Array<string> {
+  return propertiesForQuery(query, 'ccTLD');
 }
 
 // Returns the feature matching `query` and all features containing it, if any.
