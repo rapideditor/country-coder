@@ -1,6 +1,6 @@
 ## ISC License
 
-Copyright (c) iD Contributors
+Copyright (c) 2019-present, country-coder contributors
 
 Permission to use, copy, modify, and/or distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
