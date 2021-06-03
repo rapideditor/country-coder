@@ -3,8 +3,6 @@
   "version": "4.0.0",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
   "repository": "github:ideditor/country-coder",
-  "main": "built/cjs/country-coder.js",
-  "module": "built/es6/country-coder.js",
   "license": "ISC",
   "keywords": [
     "reverse geocoder",
@@ -14,29 +12,33 @@
     "geolocation",
     "calling codes"
   ],
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "source": "./src/country-coder.ts",
+  "types": "./dist/country-coder.d.ts",
+  "exports": "./dist/country-coder.modern.js",
+  "main": "./dist/country-coder.cjs",
+  "module": "./dist/country-coder.module.js",
+  "unpkg": "./dist/country-coder.umd.js",
   "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
     "@mapbox/geojson-rewind": "^0.5.0",
-    "@types/node": "^15.0.2",
-    "babel-jest": "^27.0.2",
-    "jest": "^27.0.3",
-    "jest-extended": "^0.11.2",
+    "microbundle": "^0.13.1",
     "npm-run-all": "^4.0.0",
     "prettier": "^2.0.5",
-    "shx": "^0.3.0",
-    "typescript": "^4.0.2"
+    "shx": "^0.3.0"
   },
   "dependencies": {
     "which-polygon": "^2.2.0"
   },
   "scripts": {
     "all": "npm-run-all -s clean build pretty test",
-    "clean": "shx rm -rf ./built/*",
+    "clean": "shx rm -rf dist",
+    "dev": "microbundle watch",
     "build": "npm-run-all -s format-json build:**",
+    "build:bundles": "microbundle",
     "format-json": "node ./scripts/format-json.js",
-    "build:es6": "tsc --project ./tsconfig.es6.json && cp -R src/data built/es6/",
-    "build:cjs": "tsc --project ./tsconfig.cjs.json && cp -R src/data built/cjs/",
     "test": "jest --config jest.config.js tests/*.js",
     "pretty": "prettier --write \"./**/*.{ts,js}\""
   },

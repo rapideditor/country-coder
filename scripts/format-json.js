@@ -1,27 +1,27 @@
-let fs = require('fs');
+const fs = require('fs');
+const rewind = require('@mapbox/geojson-rewind');
 
-let bordersPath = './src/data/borders.json';
-let borders = JSON.parse(fs.readFileSync(bordersPath));
+const bordersPath = './src/data/borders.json';
+const borders = JSON.parse(fs.readFileSync(bordersPath));
 
-let rewind = require('@mapbox/geojson-rewind');
 // ensure exterior rings are counter-clockwise and interior rings are clockwise
 rewind(borders);
 
-let allowedKeys = ['type', 'features'];
-for (let key in borders) {
+const allowedKeys = ['type', 'features'];
+for (const key in borders) {
   if (allowedKeys.indexOf(key) === -1) {
     delete borders[key];
   }
 }
 
-let features = borders.features;
+const features = borders.features;
 delete borders.features;
 
 let outstring = JSON.stringify(borders);
 outstring = outstring.substring(0, outstring.length - 1);
 outstring += ',"features":[\n';
 
-features.sort(function (feature1, feature2) {
+features.sort((feature1, feature2) => {
   if (feature1.properties.iso1A2 && !feature2.properties.iso1A2) return 1;
   if (!feature1.properties.iso1A2 && feature2.properties.iso1A2) return -1;
   if (feature1.properties.m49 && !feature2.properties.m49) return 1;
@@ -41,21 +41,19 @@ features.sort(function (feature1, feature2) {
 function roundCoordinatePrecision(feature) {
   if (!feature.geometry || feature.geometry.type !== 'MultiPolygon') return;
 
-  for (let j in feature.geometry.coordinates) {
-    let polygon = feature.geometry.coordinates[j];
-    for (let k in polygon) {
-      let part = polygon[k];
-      for (let l in part) {
+  for (const j in feature.geometry.coordinates) {
+    const polygon = feature.geometry.coordinates[j];
+    for (const k in polygon) {
+      const part = polygon[k];
+      for (const l in part) {
         let point = part[l];
-        part[l] = point.map(function (coordinate) {
-          return Math.round(coordinate * 100000) / 100000;
-        });
+        part[l] = point.map(coord => Math.round(coord * 100000) / 100000);
       }
     }
   }
 }
 
-let featureProperties = [
+const featureProperties = [
   'iso1A2',
   'iso1A3',
   'iso1N3',
@@ -76,8 +74,8 @@ let featureProperties = [
 
 function processProperties(feature) {
   let newProperties = {};
-  for (var j in featureProperties) {
-    let prop = featureProperties[j];
+  for (const j in featureProperties) {
+    const prop = featureProperties[j];
     if (feature.properties[prop]) {
       newProperties[prop] = feature.properties[prop];
     }
@@ -87,7 +85,7 @@ function processProperties(feature) {
 
 function validateFeature(feature) {
   if (!feature.geometry) {
-    var name = feature.properties.nameEn;
+    const name = feature.properties.nameEn;
     if (feature.properties.roadSpeedUnit)
       console.error(name + ' has no geometry but has roadSpeedUnit');
     if (feature.properties.roadHeightUnit)
@@ -99,15 +97,12 @@ function validateFeature(feature) {
   }
 }
 
-for (let i in features) {
+
+for (const i in features) {
   let feature = features[i];
 
-  // sort properties and strip unrecognized ones
-  processProperties(feature);
-
-  // remove any unncessary precision
-  roundCoordinatePrecision(feature);
-
+  processProperties(feature);   // sort properties and strip unrecognized ones
+  roundCoordinatePrecision(feature); // remove any unncessary precision
   validateFeature(feature);
 
   outstring += JSON.stringify(feature);

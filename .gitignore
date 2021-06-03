@@ -4,7 +4,7 @@
 .coverage
 
 node_modules/
-built/
+dist/
 
 npm-debug.log
 package-lock.json
