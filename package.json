@@ -48,9 +48,14 @@
   },
   "jest": {
     "collectCoverage": true,
-    "collectCoverageFrom": ["**/dist/*.js", "!**/node_modules/**"],
+    "collectCoverageFrom": [
+      "**/dist/*.js",
+      "!**/node_modules/**"
+    ],
     "coverageDirectory": "<rootDir>/.coverage",
-    "setupFilesAfterEnv": ["jest-extended"],
+    "setupFilesAfterEnv": [
+      "jest-extended"
+    ],
     "verbose": true
   },
   "prettier": {
