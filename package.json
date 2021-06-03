@@ -19,11 +19,13 @@
   "source": "./src/country-coder.ts",
   "types": "./dist/country-coder.d.ts",
   "exports": "./dist/country-coder.modern.js",
-  "main": "./dist/country-coder.cjs",
+  "main": "./dist/country-coder.js",
   "module": "./dist/country-coder.module.js",
   "unpkg": "./dist/country-coder.umd.js",
   "devDependencies": {
     "@mapbox/geojson-rewind": "^0.5.0",
+    "jest": "^27.0.3",
+    "jest-extended": "^0.11.2",
     "microbundle": "^0.13.1",
     "npm-run-all": "^4.0.0",
     "prettier": "^2.0.5",
@@ -35,12 +37,27 @@
   "scripts": {
     "all": "npm-run-all -s clean build pretty test",
     "clean": "shx rm -rf dist",
-    "dev": "microbundle watch",
     "build": "npm-run-all -s format-json build:**",
-    "build:bundles": "microbundle",
+    "build:bundles": "microbundle --no-compress",
     "format-json": "node ./scripts/format-json.js",
-    "test": "jest --config jest.config.js tests/*.js",
-    "pretty": "prettier --write \"./**/*.{ts,js}\""
+    "test": "jest tests/*.js",
+    "pretty": "prettier --write \"./{src,tests}/*.{ts,js}\""
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": ["**/dist/*.js", "!**/node_modules/**"],
+    "coverageDirectory": "<rootDir>/.coverage",
+    "setupFilesAfterEnv": ["jest-extended"],
+    "verbose": true
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "none"
   },
   "engines": {
     "node": ">=10",

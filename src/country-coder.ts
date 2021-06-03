@@ -118,8 +118,9 @@ let featuresByCode: any = {};
 let idFilterRegex = /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
 
 function canonicalID(id: string | null): string {
-  let s = (id || '');
-  if (s.charAt(0) === '.') {   // skip replace if it leads with a '.' (e.g. a ccTLD like '.de', '.la')
+  let s = id || '';
+  if (s.charAt(0) === '.') {
+    // skip replace if it leads with a '.' (e.g. a ccTLD like '.de', '.la')
     return s.toUpperCase();
   } else {
     return s.replace(idFilterRegex, '').toUpperCase();
@@ -248,7 +249,7 @@ function loadDerivedDataAndCaches(borders) {
 
   function loadTLD(feature: RegionFeature) {
     let props = feature.properties;
-    if (props.level === 'unitedNations') return;  // `.un` is not a ccTLD
+    if (props.level === 'unitedNations') return; // `.un` is not a ccTLD
     if (!props.ccTLD && props.iso1A2) {
       // ccTLD is nearly the same as iso1A2, so we only need to explicitly code any exceptions
       props.ccTLD = '.' + props.iso1A2.toLowerCase();

@@ -1,4 +1,4 @@
-import * as coder from '..';
+const coder = require('..');
 
 describe('country-coder', () => {
   describe('borders', () => {
@@ -789,7 +789,7 @@ describe('country-coder', () => {
     });
 
     it('returns ccTLD in officially-assigned country: London, United Kingdom as .uk', () => {
-      expect(coder.ccTLD([0, 51.5], { level: 'country' })).toBe('.uk');  // not .gb
+      expect(coder.ccTLD([0, 51.5], { level: 'country' })).toBe('.uk'); // not .gb
     });
 
     it('does not return a ccTLD for a region with no ccTLD', () => {
@@ -1008,9 +1008,9 @@ describe('country-coder', () => {
 
   describe('ccTLDs', () => {
     it('codes locations', () => {
-      expect(coder.ccTLDs([-4.5, 54.2])).toStrictEqual(['.im', '.uk']);   // not .gb
-      expect(coder.ccTLDs([-2.35, 49.43])).toStrictEqual(['.gg', '.uk']);   // not .gb
-      expect(coder.ccTLDs([-12.3, -37.1])).toStrictEqual(['.ta', '.sh', '.uk']);   // not .gb
+      expect(coder.ccTLDs([-4.5, 54.2])).toStrictEqual(['.im', '.uk']); // not .gb
+      expect(coder.ccTLDs([-2.35, 49.43])).toStrictEqual(['.gg', '.uk']); // not .gb
+      expect(coder.ccTLDs([-12.3, -37.1])).toStrictEqual(['.ta', '.sh', '.uk']); // not .gb
       expect(coder.ccTLDs([12.59, 55.68])).toStrictEqual(['.dk', '.eu']);
       expect(coder.ccTLDs([2.35, 48.85])).toStrictEqual(['.fx', '.fr', '.eu']);
       expect(coder.ccTLDs([-74, 40.6])).toStrictEqual(['.us']);
@@ -1019,7 +1019,7 @@ describe('country-coder', () => {
     });
 
     it('codes bounding boxes', () => {
-      expect(coder.ccTLDs([-4.5, 54.2, -4.4, 54.3])).toStrictEqual(['.im', '.uk']);  // not .gb
+      expect(coder.ccTLDs([-4.5, 54.2, -4.4, 54.3])).toStrictEqual(['.im', '.uk']); // not .gb
       // area of US overlapping Canada's bounding box but not its polygon
       expect(coder.ccTLDs([-74, 40.6, -71.3, 44.7])).toStrictEqual(['.us']);
       // area overlapping both US and Canada

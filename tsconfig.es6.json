@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": ["src/*.ts"],
-  "compilerOptions": {
-    "module": "es6",
-    "target": "es6",
-    "outDir": "./built/es6"
-  }
-}
