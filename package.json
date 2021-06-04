@@ -38,7 +38,7 @@
     "all": "npm-run-all -s clean build pretty test",
     "clean": "shx rm -rf dist",
     "build": "npm-run-all -s format-json build:**",
-    "build:bundles": "microbundle --no-compress",
+    "build:bundles": "microbundle --no-compress --external none",
     "format-json": "node ./scripts/format-json.js",
     "test": "jest tests/*.js",
     "pretty": "prettier --write \"./{src,tests}/*.{ts,js}\""
