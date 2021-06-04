@@ -110,6 +110,8 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [wikidataQIDs](#wikidataQIDs)(query: Location | Bbox): [string]
 * [emojiFlag](#emojiFlag)(query: Location | string | number, opts?: CodingOptions): string?
 * [emojiFlags](#emojiFlags)(query: Location | Bbox): [string]
+* [ccTLD](#ccTLD)(query: Location | string | number, opts?: CodingOptions): string?
+* [ccTLDs](#ccTLDs)(query: Location | Bbox): [string]
 * [featuresContaining](#featuresContaining)(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
 * [featuresIn](#featuresIn)(id: string | number, strict: boolean): [RegionFeature]
 * [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
@@ -152,6 +154,7 @@ feature('826');         // returns {United Kingdom}
 feature(826);           // returns {United Kingdom}
 feature('Q145');        // returns {United Kingdom}
 feature('🇬🇧');          // returns {United Kingdom}
+feature('.uk');         // returns {United Kingdom}
 feature('UK');          // returns {United Kingdom}
 feature('IM');          // returns {Isle of Man}
 feature('United Kingdom'); // returns {United Kingdom}
@@ -175,6 +178,7 @@ iso1A2Code('826');         // returns 'GB'
 iso1A2Code(826);           // returns 'GB'
 iso1A2Code('Q145');        // returns 'GB'
 iso1A2Code('🇬🇧');          // returns 'GB'
+iso1A2Code('.uk');         // returns 'GB'
 iso1A2Code('UK');          // returns 'GB'
 iso1A2Code('IMN');         // returns 'IM'
 iso1A2Code('United Kingdom'); // returns 'GB'
@@ -212,6 +216,7 @@ iso1A3Code('826');         // returns 'GBR'
 iso1A3Code(826);           // returns 'GBR'
 iso1A3Code('Q145');        // returns 'GBR'
 iso1A3Code('🇬🇧');          // returns 'GBR'
+iso1A3Code('.uk');         // returns 'GBR'
 iso1A3Code('UK');          // returns 'GBR'
 iso1A3Code('IM');          // returns 'IMN'
 iso1A3Code('United Kingdom'); // returns 'GBR'
@@ -248,6 +253,7 @@ iso1N3Code('GB');          // returns '826'
 iso1N3Code('GBR');         // returns '826'
 iso1N3Code('Q145');        // returns '826'
 iso1N3Code('🇬🇧');          // returns '826'
+iso1N3Code('.uk');         // returns '826'
 iso1N3Code('UK');          // returns '826'
 iso1N3Code('IM');          // returns '833'
 iso1N3Code('Q15');         // returns null (Africa)
@@ -285,6 +291,7 @@ m49Code('GB');          // returns '826'
 m49Code('GBR');         // returns '826'
 m49Code('Q145');        // returns '826'
 m49Code('🇬🇧');          // returns '826'
+m49Code('.uk');         // returns '826'
 m49Code('UK');          // returns '826'
 m49Code('IM');          // returns '833'
 m49Code('Q15');         // returns '002' (Africa)
@@ -323,6 +330,7 @@ wikidataQID('GBR');         // returns 'Q145'
 wikidataQID('826');         // returns 'Q145'
 wikidataQID(826);           // returns 'Q145'
 wikidataQID('🇬🇧');          // returns 'Q145'
+wikidataQID('.uk');         // returns 'Q145'
 wikidataQID('UK');          // returns 'Q145'
 wikidataQID('IM');          // returns 'Q9676'
 wikidataQID('United Kingdom'); // returns 'Q145'
@@ -384,6 +392,43 @@ emojiFlags(pointGeoJSON.geometry);  // returns ['🇮🇲', '🇬🇧', '🇺�
 ```
 
 
+<a name="ccTLD" href="#ccTLD">#</a> <b>ccTLD</b>(query: Location | string | number, opts?: CodingOptions): string?
+
+Returns the country code top-level internet domain for the given location or identifier and options, if found.
+
+```js
+ccTLD([-4.5, 54.2]);  // returns '.uk'
+ccTLD([-4.5, 54.2], { level: 'territory' });  // returns '.im'
+ccTLD([0, 90]);       // returns null
+ccTLD('GB');          // returns '.uk'
+ccTLD('GBR');         // returns '.uk'
+ccTLD('826');         // returns '.uk'
+ccTLD(826);           // returns '.uk'
+ccTLD('Q145');        // returns '.uk'
+ccTLD('UK');          // returns '.uk'
+ccTLD('IM');          // returns '.im'
+ccTLD('United Kingdom'); // returns '.uk'
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+ccTLD(pointGeoJSON);           // returns '.uk'
+ccTLD(pointGeoJSON.geometry);  // returns '.uk'
+```
+
+
+<a name="ccTLDs" href="#ccTLDs">#</a> <b>ccTLDs</b>(query: Location | Bbox): [string]
+
+Returns all the country code top-level internet domains for the given location or bounding box, if any.
+
+```js
+ccTLDs([-4.5, 54.2]);  // returns ['.im', '.uk']
+ccTLDs([0, 90]);       // returns []
+
+let pointGeoJSON = { type: 'Feature', geometry: { type: 'Point', coordinates: [-4.5, 54.2] } };
+ccTLDs(pointGeoJSON);           // returns ['.im', '.uk']
+ccTLDs(pointGeoJSON.geometry);  // returns ['.im', '.uk']
+```
+
+
 <a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
 
 Returns all the the features of any type that contain or match the given location, bounding box, or identifier, if any. If `strict` is `true` and `query` is an identifier, then only features that are strictly containing are returned.
@@ -399,6 +444,7 @@ featuresContaining('826');         // returns [{United Kingdom}, {United Nations
 featuresContaining(826);           // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('Q145');        // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('🇬🇧');          // returns [{United Kingdom}, {United Nations}, {World}]
+featuresContaining('.uk');         // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('UK');          // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('154');         // returns [{Northern Europe}, {Europe}, {World}]
 featuresContaining('GB', true);    // returns [{United Nations}, {World}]
@@ -421,6 +467,7 @@ featuresIn('156');         // returns [{China}, {Mainland China}, {Hong Kong}, {
 featuresIn(156);           // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('Q148');        // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('🇨🇳');          // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
+featuresIn('.cn');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('China');       // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('CN', true);    // returns [{Mainland China}, {Hong Kong}, {Macau}]
 ```
@@ -437,6 +484,7 @@ aggregateFeature('156');         // returns Mainland China, Hong Kong, and Macau
 aggregateFeature(156);           // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('Q148');        // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('🇨🇳');          // returns Mainland China, Hong Kong, and Macau as one feature
+aggregateFeature('.cn');         // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('China');       // returns Mainland China, Hong Kong, and Macau as one feature
 ```
 
@@ -457,6 +505,7 @@ isIn('GB', '150');        // returns true
 isIn('GBR', 150);         // returns true
 isIn('826', 'Q46');       // returns true
 isIn('🇮🇲', '🇬🇧');         // returns true
+isIn('.im', '.uk');       // returns true
 isIn('United Kingdom', 'Europe');     // returns true
 isIn('United Kingdom', 'Africa');     // returns false
 
@@ -483,9 +532,11 @@ isInEuropeanUnion('276');        // returns true
 isInEuropeanUnion(276);          // returns true
 isInEuropeanUnion('Q183');       // returns true
 isInEuropeanUnion('🇩🇪');         // returns true
+isInEuropeanUnion('.de');        // returns true
 isInEuropeanUnion('Germany');    // returns true
 isInEuropeanUnion('GB');         // returns false
 isInEuropeanUnion('IM');         // returns false
+isInEuropeanUnion('.im');        // returns false
 isInEuropeanUnion('CH');         // returns false
 
 
@@ -512,9 +563,11 @@ isInUnitedNations('276');        // returns true
 isInUnitedNations(276);          // returns true
 isInUnitedNations('Q183');       // returns true
 isInUnitedNations('🇩🇪');         // returns true
+isInUnitedNations('.de');        // returns true
 isInUnitedNations('Germany');    // returns true
 isInUnitedNations('GB');         // returns true
 isInUnitedNations('IM');         // returns true
+isInUnitedNations('.im');        // returns true
 isInUnitedNations('CH');         // returns true
 isInUnitedNations('XK');         // returns false (Kosovo)
 isInUnitedNations('PS');         // returns false (Palestine)
@@ -541,6 +594,7 @@ driveSide('826');        // returns 'left'
 driveSide(826);          // returns 'left'
 driveSide('Q145');       // returns 'left'
 driveSide('🇬🇧');         // returns 'left'
+driveSide('.uk');        // returns 'left'
 driveSide('UK');         // returns 'left'
 driveSide('United Kingdom'); // returns 'left'
 driveSide('CH');         // returns 'right'
@@ -566,6 +620,7 @@ roadSpeedUnit('826');        // returns 'mph'
 roadSpeedUnit(826);          // returns 'mph'
 roadSpeedUnit('Q145');       // returns 'mph'
 roadSpeedUnit('🇬🇧');         // returns 'mph'
+roadSpeedUnit('.uk');        // returns 'mph'
 roadSpeedUnit('UK');         // returns 'mph'
 roadSpeedUnit('United Kingdom'); // returns 'mph'
 roadSpeedUnit('CH');         // returns 'km/h'
@@ -591,6 +646,7 @@ roadHeightUnit('826');        // returns 'ft'
 roadHeightUnit(826);          // returns 'ft'
 roadHeightUnit('Q145');       // returns 'ft'
 roadHeightUnit('🇬🇧');         // returns 'ft'
+roadHeightUnit('.uk');        // returns 'ft'
 roadHeightUnit('UK');         // returns 'ft'
 roadHeightUnit('United Kingdom'); // returns 'ft'
 roadHeightUnit('CH');         // returns 'm'
@@ -615,6 +671,7 @@ callingCodes('826');        // returns ['44']
 callingCodes(826);          // returns ['44']
 callingCodes('Q145');       // returns ['44']
 callingCodes('🇬🇧');         // returns ['44']
+callingCodes('.uk');        // returns ['44']
 callingCodes('UK');         // returns ['44']
 callingCodes('United Kingdom'); // returns ['44']
 callingCodes('BS');         // returns ['1 242']
@@ -689,6 +746,7 @@ An object containing the attributes of a RegionFeature object.
 - `m49`: `string`, UN M49 code
 - `wikidata`: `string`, Wikidata QID
 - `emojiFlag`: `string`, the emoji flag sequence derived from this feature's ISO 3166-1 alpha-2 code
+- `ccTLD`: `string`, the ccTLD (country code top-level internet domain)
 - `nameEn`: `string`, common name in English
 - `aliases`: `[string]`, additional identifiers which can be used to look up this feature
 - `country`: `string`, for features entirely within a country, the id for that country
