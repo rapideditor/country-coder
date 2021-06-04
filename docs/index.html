@@ -8,7 +8,8 @@
 <script defer src='https://kit.fontawesome.com/c772610440.js' crossorigin='anonymous'></script>
 <script defer src='https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js'></script>
 <script defer src='https://cdn.jsdelivr.net/npm/whatwg-fetch@3.2.0/dist/fetch.umd.min.js'></script>
-<script defer src='https://cdn.jsdelivr.net/gh/ideditor/location-conflation@main/dist/index.es5.js'></script>
+<script defer src='https://cdn.jsdelivr.net/gh/ideditor/country-coder@main/dist/country-coder.umd.js'></script>
+<!-- <script defer src='../dist/country-coder.umd.js'></script> -->
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.0/mapbox-gl.css' rel='stylesheet'/>
 <link href='style.css' rel='stylesheet' type='text/css'/>
 </head>
@@ -108,7 +109,6 @@ var detailMbgl = new mapboxgl.Map({
 // ----------------------------------- STATE ------------------------------------
 var _currZoom = 1;
 var _showMap = true;
-var _loco;
 
 // pull params out of the query string, if any
 var _qs = window.location.search ? utilStringQs(window.location.search) : {};
@@ -200,6 +200,7 @@ window.addEventListener('DOMContentLoaded', function(e) {
       codes.forEach(function(d) {
         var tr = document.createElement('tr');
         tr.setAttribute('id', d.wikidata);
+        tr.onclick = function() { mapShowCode(d.wikidata); };
 
         var nameEn = document.createElement('td');
         nameEn.appendChild(document.createTextNode(d.nameEn));
@@ -228,7 +229,6 @@ window.addEventListener('DOMContentLoaded', function(e) {
       });
     })
     .then(function() {
-      _loco = new LocationConflation();
       if (_qs.code) {     // If we got a code in the URL querystring, display it.
         mapShowCode(_qs.code);
       }
@@ -270,7 +270,6 @@ detailMbgl.on('load', function() {
 
 // ---------------------------------- FUNCTIONS ------------------------------------
 
-
 //
 // Remove the data from the map..
 //
@@ -305,7 +304,7 @@ function mapShowCode(code) {
 
   // Lets go!
   try {
-    var feature = _loco.resolveLocationSet({ include: [code] }).feature;
+    var feature = countryCoder.aggregateFeature(code);
     var props = feature.properties || {};
 
     var multipolygon;
@@ -358,10 +357,11 @@ function mapShowCode(code) {
     detailMbgl.addLayer(GEOJSON_POINT);
 
     // Select the row and update the UI
-    var row = document.getElementById(props.id);
+    var row = document.getElementById(props.wikidata);
     row.className = 'selectedrow';
 
-    geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
+    // geojsonContainer.textContent = _loco.stringify(feature, { maxLength: 100 });
+    geojsonContainer.textContent = prettyStringify(feature, null, 2);
     clearMap.className = 'control visible';
     document.title = 'Country Coder - ' + code;
     _qs.code = code;
@@ -409,6 +409,110 @@ function mapParam() {
   var lng = Math.round((center.lng + Number.EPSILON) * 1e4) / 1e4;
   var zoom = Math.round((z + Number.EPSILON) * 1e2) / 1e2;
   return zoom + '/' + lat + '/' + lng;
+}
+
+
+// https://github.com/lydell/json-stringify-pretty-compact
+//
+// Note: This regex matches even invalid JSON strings, but since we’re
+// working on the output of `JSON.stringify` we know that only valid strings
+// are present (unless the user supplied a weird `options.indent` but in
+// that case we don’t care since the output would be invalid anyway).
+var stringOrChar = /("(?:[^\\"]|\\.)*")|[:,]/g;
+
+function prettyStringify(passedObj, options) {
+  var indent, maxLength, replacer;
+
+  options = options || {};
+  indent = JSON.stringify(
+    [1],
+    undefined,
+    options.indent === undefined ? 2 : options.indent
+  ).slice(2, -3);
+  maxLength =
+    indent === ""
+      ? Infinity
+      : options.maxLength === undefined
+      ? 80
+      : options.maxLength;
+  replacer = options.replacer;
+
+  return (function _stringify(obj, currentIndent, reserved) {
+    // prettier-ignore
+    var end, index, items, key, keyPart, keys, length, nextIndent, prettified, start, string, value;
+
+    if (obj && typeof obj.toJSON === "function") {
+      obj = obj.toJSON();
+    }
+
+    string = JSON.stringify(obj, replacer);
+
+    if (string === undefined) {
+      return string;
+    }
+
+    length = maxLength - currentIndent.length - reserved;
+
+    if (string.length <= length) {
+      prettified = string.replace(
+        stringOrChar,
+        function (match, stringLiteral) {
+          return stringLiteral || match + " ";
+        }
+      );
+      if (prettified.length <= length) {
+        return prettified;
+      }
+    }
+
+    if (replacer != null) {
+      obj = JSON.parse(string);
+      replacer = undefined;
+    }
+
+    if (typeof obj === "object" && obj !== null) {
+      nextIndent = currentIndent + indent;
+      items = [];
+      index = 0;
+
+      if (Array.isArray(obj)) {
+        start = "[";
+        end = "]";
+        length = obj.length;
+        for (; index < length; index++) {
+          items.push(
+            _stringify(obj[index], nextIndent, index === length - 1 ? 0 : 1) ||
+              "null"
+          );
+        }
+      } else {
+        start = "{";
+        end = "}";
+        keys = Object.keys(obj);
+        length = keys.length;
+        for (; index < length; index++) {
+          key = keys[index];
+          keyPart = JSON.stringify(key) + ": ";
+          value = _stringify(
+            obj[key],
+            nextIndent,
+            keyPart.length + (index === length - 1 ? 0 : 1)
+          );
+          if (value !== undefined) {
+            items.push(keyPart + value);
+          }
+        }
+      }
+
+      if (items.length > 0) {
+        return [start, indent + items.join(",\n" + nextIndent), end].join(
+          "\n" + currentIndent
+        );
+      }
+    }
+
+    return string;
+  })(passedObj, "", 0);
 }
 
 </script>
