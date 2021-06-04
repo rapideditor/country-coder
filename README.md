@@ -16,6 +16,7 @@
 - 3️⃣ [United Nations M49 code](https://en.wikipedia.org/wiki/UN_M49) (`710`)
 - 🌐 [Wikidata QID](https://www.wikidata.org/wiki/Q43649390) (`Q258`)
 - 🇺🇳 [Emoji flag](https://en.wikipedia.org/wiki/Regional_Indicator_Symbol) (🇿🇦)
+- 💻 [ccTLD (country code top-level domain)](https://en.wikipedia.org/wiki/Country_code_top-level_domain) (`.za`)
 
 Results can optionally include non-country ISO 3166-1 features, such as Puerto Rico (`PR`) or the Isle of Man (`IM`). Some unofficial yet exceptionally-reserved or user-assigned ISO codes are also supported, such as the European Union (`EU`) and Kosovo (`XK`), as well as M49 regions like Africa (`002`) or Polynesia (`061`).
 
