@@ -1,5 +1,5 @@
-const fs = require('fs');
-const rewind = require('@mapbox/geojson-rewind');
+import fs from 'node:fs';
+import rewind from '@mapbox/geojson-rewind';
 
 const bordersPath = './src/data/borders.json';
 const borders = JSON.parse(fs.readFileSync(bordersPath));
