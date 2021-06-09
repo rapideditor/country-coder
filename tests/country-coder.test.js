@@ -1,4 +1,4 @@
-const coder = require('..');
+import * as coder from '../dist/country-coder.esm.js';
 
 describe('country-coder', () => {
   describe('borders', () => {

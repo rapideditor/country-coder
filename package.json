@@ -36,15 +36,15 @@
     "typescript": "^4.3.2"
   },
   "scripts": {
-    "all": "npm-run-all -s clean build pretty test",
+    "all": "run-s clean build pretty test",
     "clean": "shx rm -rf dist",
-    "build": "npm-run-all -s format-json build:**",
+    "build": "run-s format-json build:**",
     "build:browser": "esbuild ./src/country-coder.ts --platform=browser --format=iife --global-name=countryCoder --bundle --sourcemap --outfile=./dist/country-coder.iife.js",
     "build:cjs": "esbuild ./src/country-coder.ts --platform=node --format=cjs --bundle --outfile=./dist/country-coder.cjs.js",
-    "build:esm": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --outfile=./dist/country-coder.esm.js",
+    "build:esm": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --external:which-polygon --outfile=./dist/country-coder.esm.js",
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
-    "test": "jest tests/*.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache tests/*.js",
     "pretty": "prettier --write \"./{src,tests}/*.{ts,js}\""
   },
   "publishConfig": {
@@ -53,9 +53,10 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/dist/country-coder.cjs.js"
+      "**/dist/country-coder.esm.js"
     ],
     "coverageDirectory": "<rootDir>/.coverage",
+    "transform": {},
     "verbose": true
   },
   "prettier": {
