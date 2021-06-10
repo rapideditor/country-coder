@@ -27,12 +27,14 @@
   },
   "devDependencies": {
     "@mapbox/geojson-rewind": "^0.5.0",
+    "@types/jest": "^26.0.23",
     "esbuild": "^0.12.6",
     "jest": "^27.0.4",
     "jest-extended": "^0.11.5",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.1",
     "shx": "^0.3.3",
+    "ts-jest": "^27.0.3",
     "typescript": "^4.3.2"
   },
   "scripts": {
@@ -44,8 +46,8 @@
     "build:esm": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --external:which-polygon --outfile=./dist/country-coder.esm.js",
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --no-cache tests/*.js",
-    "pretty": "prettier --write \"./{src,tests}/*.{ts,js}\""
+    "test": "jest --env=node --colors --coverage ts-tests",
+    "pretty": "prettier --write \"./{src,ts-tests}/*.{ts,js}\""
   },
   "publishConfig": {
     "access": "public"
@@ -53,10 +55,19 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "**/dist/country-coder.esm.js"
+      "**/src/country-coder.ts"
     ],
     "coverageDirectory": "<rootDir>/.coverage",
-    "transform": {},
+    "globals": {
+      "ts-jest": {
+        "useESM" : true
+      }
+    },
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|ts?)$",
+     "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+    },
     "verbose": true
   },
   "prettier": {
