@@ -46,7 +46,7 @@
     "build:esm": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --external:which-polygon --outfile=./dist/country-coder.esm.js",
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
-    "test": "jest --env=node --colors --coverage ts-tests",
+    "test": "jest --env=node --colors --coverage tests",
     "pretty": "prettier --write \"./{src,ts-tests}/*.{ts,js}\""
   },
   "publishConfig": {
