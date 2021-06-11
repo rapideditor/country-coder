@@ -829,8 +829,7 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
-        // TODO: Evaluate how to supply non-type-safe API calls to TS members.
-        // expect(coder.iso1A2Codes([])).toStrictEqual([]);
+        expect(coder.iso1A2Codes([] as any)).toStrictEqual([]);
         expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
     });
 
@@ -1035,7 +1034,7 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
-      // expect(coder.ccTLDs([])).toStrictEqual([]);
+      expect(coder.ccTLDs([] as any)).toStrictEqual([]);
       expect(coder.ccTLDs([-900, 900])).toStrictEqual([]);
     });
 
