@@ -1,4 +1,8 @@
-import * as coder from '../dist/country-coder.esm.js';
+import * as coder from '../src/country-coder';
+
+function tuple<T extends any[]>(...data: T) {
+    return data;
+}
 
 describe('country-coder', () => {
   describe('borders', () => {
@@ -57,46 +61,46 @@ describe('country-coder', () => {
 
     describe('level', () => {
       it('assigns appropriate level values', () => {
-        expect(coder.feature('AC').properties.level).toBe('subterritory');
-        expect(coder.feature('SH-HL').properties.level).toBe('subterritory');
-        expect(coder.feature('DG').properties.level).toBe('subterritory');
-        expect(coder.feature('CP').properties.level).toBe('subterritory');
-        expect(coder.feature('Alderney').properties.level).toBe('subterritory');
-        expect(coder.feature('Akrotiri').properties.level).toBe('subterritory');
-        expect(coder.feature('FX').properties.level).toBe('subterritory');
-        expect(coder.feature('IC').properties.level).toBe('subterritory');
+        expect(coder.feature('AC')?.properties.level).toBe('subterritory');
+        expect(coder.feature('SH-HL')?.properties.level).toBe('subterritory');
+        expect(coder.feature('DG')?.properties.level).toBe('subterritory');
+        expect(coder.feature('CP')?.properties.level).toBe('subterritory');
+        expect(coder.feature('Alderney')?.properties.level).toBe('subterritory');
+        expect(coder.feature('Akrotiri')?.properties.level).toBe('subterritory');
+        expect(coder.feature('FX')?.properties.level).toBe('subterritory');
+        expect(coder.feature('IC')?.properties.level).toBe('subterritory');
 
-        expect(coder.feature('SBA').properties.level).toBe('territory');
-        expect(coder.feature('EA').properties.level).toBe('territory');
-        expect(coder.feature('IM').properties.level).toBe('territory');
-        expect(coder.feature('SH').properties.level).toBe('territory');
-        expect(coder.feature('IO').properties.level).toBe('territory');
-        expect(coder.feature('PR').properties.level).toBe('territory');
-        expect(coder.feature('GU').properties.level).toBe('territory');
-        expect(coder.feature('GB-SCT').properties.level).toBe('territory');
-        expect(coder.feature('Bir Tawil').properties.level).toBe('territory');
-        expect(coder.feature('East Malaysia').properties.level).toBe('territory');
-        expect(coder.feature('Cook Islands').properties.level).toBe('territory');
-        expect(coder.feature('Niue').properties.level).toBe('territory');
+        expect(coder.feature('SBA')?.properties.level).toBe('territory');
+        expect(coder.feature('EA')?.properties.level).toBe('territory');
+        expect(coder.feature('IM')?.properties.level).toBe('territory');
+        expect(coder.feature('SH')?.properties.level).toBe('territory');
+        expect(coder.feature('IO')?.properties.level).toBe('territory');
+        expect(coder.feature('PR')?.properties.level).toBe('territory');
+        expect(coder.feature('GU')?.properties.level).toBe('territory');
+        expect(coder.feature('GB-SCT')?.properties.level).toBe('territory');
+        expect(coder.feature('Bir Tawil')?.properties.level).toBe('territory');
+        expect(coder.feature('East Malaysia')?.properties.level).toBe('territory');
+        expect(coder.feature('Cook Islands')?.properties.level).toBe('territory');
+        expect(coder.feature('Niue')?.properties.level).toBe('territory');
 
-        expect(coder.feature('US').properties.level).toBe('country');
-        expect(coder.feature('CA').properties.level).toBe('country');
-        expect(coder.feature('GB').properties.level).toBe('country');
-        expect(coder.feature('NZ').properties.level).toBe('country');
-        expect(coder.feature('IL').properties.level).toBe('country');
-        expect(coder.feature('PS').properties.level).toBe('country');
-        expect(coder.feature('XK').properties.level).toBe('country');
+        expect(coder.feature('US')?.properties.level).toBe('country');
+        expect(coder.feature('CA')?.properties.level).toBe('country');
+        expect(coder.feature('GB')?.properties.level).toBe('country');
+        expect(coder.feature('NZ')?.properties.level).toBe('country');
+        expect(coder.feature('IL')?.properties.level).toBe('country');
+        expect(coder.feature('PS')?.properties.level).toBe('country');
+        expect(coder.feature('XK')?.properties.level).toBe('country');
 
-        expect(coder.feature('BOTS').properties.level).toBe('subcountryGroup');
+        expect(coder.feature('BOTS')?.properties.level).toBe('subcountryGroup');
 
-        expect(coder.feature('OMR').properties.level).toBe('subunion');
-        expect(coder.feature('OCT').properties.level).toBe('subunion');
+        expect(coder.feature('OMR')?.properties.level).toBe('subunion');
+        expect(coder.feature('OCT')?.properties.level).toBe('subunion');
 
-        expect(coder.feature('EU').properties.level).toBe('union');
+        expect(coder.feature('EU')?.properties.level).toBe('union');
 
-        expect(coder.feature('UN').properties.level).toBe('unitedNations');
+        expect(coder.feature('UN')?.properties.level).toBe('unitedNations');
 
-        expect(coder.feature('001').properties.level).toBe('world');
+        expect(coder.feature('001')?.properties.level).toBe('world');
       });
 
       it('each feature may have only one group per level (except North America)', () => {
@@ -110,7 +114,7 @@ describe('country-coder', () => {
               return group !== '003';
             });
             let levels = groups.map(function (group) {
-              return coder.feature(group).properties.level;
+              return coder.feature(group)?.properties.level;
             });
             levels.push(feature.properties.level);
             expect(levels.length).toBe([...new Set(levels)].length);
@@ -131,48 +135,48 @@ describe('country-coder', () => {
 
     describe('by ISO 3166-1 alpha-2', () => {
       it('finds feature by uppercase code: US', () => {
-        expect(coder.feature('US').properties.iso1N3).toBe('840');
+        expect(coder.feature('US')?.properties.iso1N3).toBe('840');
       });
 
       it('finds feature by lowercase code: us', () => {
-        expect(coder.feature('us').properties.iso1N3).toBe('840');
+        expect(coder.feature('us')?.properties.iso1N3).toBe('840');
       });
 
       it('finds feature by mixed-case code: Us', () => {
-        expect(coder.feature('Us').properties.iso1N3).toBe('840');
+        expect(coder.feature('Us')?.properties.iso1N3).toBe('840');
       });
 
       it('does not find feature for unassigned code in range: AB', () => {
-        expect(coder.feature('AB')).toBeNull();
+        expect(coder.feature('AB'))?.toBeNull();
       });
     });
 
     describe('by ISO 3166-1 alpha-3', () => {
       it('finds features by uppercase codes', () => {
-        expect(coder.feature('AND').properties.iso1A2).toBe('AD');
-        expect(coder.feature('BES').properties.iso1A2).toBe('BQ');
-        expect(coder.feature('ETH').properties.iso1A2).toBe('ET');
-        expect(coder.feature('SGS').properties.iso1A2).toBe('GS');
-        expect(coder.feature('SRB').properties.iso1A2).toBe('RS');
-        expect(coder.feature('USA').properties.iso1A2).toBe('US');
+        expect(coder.feature('AND')?.properties.iso1A2).toBe('AD');
+        expect(coder.feature('BES')?.properties.iso1A2).toBe('BQ');
+        expect(coder.feature('ETH')?.properties.iso1A2).toBe('ET');
+        expect(coder.feature('SGS')?.properties.iso1A2).toBe('GS');
+        expect(coder.feature('SRB')?.properties.iso1A2).toBe('RS');
+        expect(coder.feature('USA')?.properties.iso1A2).toBe('US');
       });
 
       it('finds features by lowercase codes', () => {
-        expect(coder.feature('and').properties.iso1A2).toBe('AD');
-        expect(coder.feature('bes').properties.iso1A2).toBe('BQ');
-        expect(coder.feature('eth').properties.iso1A2).toBe('ET');
-        expect(coder.feature('sgs').properties.iso1A2).toBe('GS');
-        expect(coder.feature('srb').properties.iso1A2).toBe('RS');
-        expect(coder.feature('usa').properties.iso1A2).toBe('US');
+        expect(coder.feature('and')?.properties.iso1A2).toBe('AD');
+        expect(coder.feature('bes')?.properties.iso1A2).toBe('BQ');
+        expect(coder.feature('eth')?.properties.iso1A2).toBe('ET');
+        expect(coder.feature('sgs')?.properties.iso1A2).toBe('GS');
+        expect(coder.feature('srb')?.properties.iso1A2).toBe('RS');
+        expect(coder.feature('usa')?.properties.iso1A2).toBe('US');
       });
 
       it('finds features by mixed-case codes', () => {
-        expect(coder.feature('And').properties.iso1A2).toBe('AD');
-        expect(coder.feature('Bes').properties.iso1A2).toBe('BQ');
-        expect(coder.feature('Eth').properties.iso1A2).toBe('ET');
-        expect(coder.feature('Sgs').properties.iso1A2).toBe('GS');
-        expect(coder.feature('Srb').properties.iso1A2).toBe('RS');
-        expect(coder.feature('Usa').properties.iso1A2).toBe('US');
+        expect(coder.feature('And')?.properties.iso1A2).toBe('AD');
+        expect(coder.feature('Bes')?.properties.iso1A2).toBe('BQ');
+        expect(coder.feature('Eth')?.properties.iso1A2).toBe('ET');
+        expect(coder.feature('Sgs')?.properties.iso1A2).toBe('GS');
+        expect(coder.feature('Srb')?.properties.iso1A2).toBe('RS');
+        expect(coder.feature('Usa')?.properties.iso1A2).toBe('US');
       });
 
       it('does not find features for unassigned codes in range', () => {
@@ -184,27 +188,27 @@ describe('country-coder', () => {
 
     describe('by ISO 3166-1 numeric-3 / M49', () => {
       it('finds feature by string: "840"', () => {
-        expect(coder.feature('840').properties.iso1A2).toBe('US');
+        expect(coder.feature('840')?.properties.iso1A2).toBe('US');
       });
 
       it('finds feature by three-digit number: 840', () => {
-        expect(coder.feature(840).properties.iso1A2).toBe('US');
+        expect(coder.feature(840)?.properties.iso1A2).toBe('US');
       });
 
       it('finds feature by two-digit number: 61', () => {
-        expect(coder.feature(61).properties.wikidata).toBe('Q35942');
+        expect(coder.feature(61)?.properties.wikidata).toBe('Q35942');
       });
 
       it('finds feature by one-digit number: 2', () => {
-        expect(coder.feature(2).properties.wikidata).toBe('Q15');
+        expect(coder.feature(2)?.properties.wikidata).toBe('Q15');
       });
 
       it('finds feature by number with extra precision: 840.000', () => {
-        expect(coder.feature(840.0).properties.iso1A2).toBe('US');
+        expect(coder.feature(840.0)?.properties.iso1A2).toBe('US');
       });
 
       it('finds world feature: "001"', () => {
-        expect(coder.feature('001').properties.wikidata).toBe('Q2');
+        expect(coder.feature('001')?.properties.wikidata).toBe('Q2');
       });
 
       it('does not find feature for unassigned code in range: "123"', () => {
@@ -218,7 +222,7 @@ describe('country-coder', () => {
 
     describe('by emoji flag sequence', () => {
       it('finds feature for emoji flag sequence: 🇺🇸', () => {
-        expect(coder.feature('🇺🇸').properties.iso1N3).toBe('840');
+        expect(coder.feature('🇺🇸')?.properties.iso1N3).toBe('840');
       });
 
       it('does not find feature for unassigned emoji flag sequence: 🇦🇧', () => {
@@ -228,15 +232,15 @@ describe('country-coder', () => {
 
     describe('by ccTLD', () => {
       it('finds feature by uppercase code: .US', () => {
-        expect(coder.feature('.US').properties.iso1N3).toBe('840');
+        expect(coder.feature('.US')?.properties.iso1N3).toBe('840');
       });
 
       it('finds feature by lowercase code: .us', () => {
-        expect(coder.feature('.us').properties.iso1N3).toBe('840');
+        expect(coder.feature('.us')?.properties.iso1N3).toBe('840');
       });
 
       it('finds feature by mixed-case code: .Us', () => {
-        expect(coder.feature('.Us').properties.iso1N3).toBe('840');
+        expect(coder.feature('.Us')?.properties.iso1N3).toBe('840');
       });
 
       it('does not find feature for unassigned code in range: .AB', () => {
@@ -244,7 +248,7 @@ describe('country-coder', () => {
       });
 
       it('finds United Kingdom feature by code: .uk', () => {
-        expect(coder.feature('.uk').properties.iso1N3).toBe('826');
+        expect(coder.feature('.uk')?.properties.iso1N3).toBe('826');
       });
 
       it('does not find United Kingdom feature by code: .gb', () => {
@@ -254,15 +258,15 @@ describe('country-coder', () => {
 
     describe('by Wikidata QID', () => {
       it('finds feature by uppercase QID: Q30', () => {
-        expect(coder.feature('Q30').properties.iso1A2).toBe('US');
+        expect(coder.feature('Q30')?.properties.iso1A2).toBe('US');
       });
 
       it('finds feature by lowercase QID: q30', () => {
-        expect(coder.feature('q30').properties.iso1A2).toBe('US');
+        expect(coder.feature('q30')?.properties.iso1A2).toBe('US');
       });
 
       it('finds feature with no ISO or M49 codes by QID: Q153732', () => {
-        expect(coder.feature('Q153732').properties.nameEn).toBe('Mariana Islands');
+        expect(coder.feature('Q153732')?.properties.nameEn).toBe('Mariana Islands');
       });
 
       it('does not find feature for non-feature QID: Q123456', () => {
@@ -272,81 +276,81 @@ describe('country-coder', () => {
 
     describe('by English name', () => {
       it('finds feature for exact name: Bhutan', () => {
-        expect(coder.feature('Bhutan').properties.iso1A2).toBe('BT');
+        expect(coder.feature('Bhutan')?.properties.iso1A2).toBe('BT');
       });
       it('finds feature for exact name containing "And": Andorra', () => {
-        expect(coder.feature('Andorra').properties.iso1A2).toBe('AD');
+        expect(coder.feature('Andorra')?.properties.iso1A2).toBe('AD');
       });
       it('finds feature for lowercase name containing "and": andorra', () => {
-        expect(coder.feature('andorra').properties.iso1A2).toBe('AD');
+        expect(coder.feature('andorra')?.properties.iso1A2).toBe('AD');
       });
       it('finds feature for name containing "the": Northern Europe', () => {
-        expect(coder.feature('Northern Europe').properties.m49).toBe('154');
+        expect(coder.feature('Northern Europe')?.properties.m49).toBe('154');
       });
       it('finds feature for name with extra "The": The United States of America', () => {
-        expect(coder.feature('The United States of America').properties.iso1A2).toBe('US');
+        expect(coder.feature('The United States of America')?.properties.iso1A2).toBe('US');
       });
       it('finds feature for name without "The": Gambia', () => {
-        expect(coder.feature('Gambia').properties.iso1A2).toBe('GM');
+        expect(coder.feature('Gambia')?.properties.iso1A2).toBe('GM');
       });
       it('finds feature not in country for name: Bir Tawil', () => {
-        expect(coder.feature('Bir Tawil').properties.wikidata).toBe('Q620634');
+        expect(coder.feature('Bir Tawil')?.properties.wikidata).toBe('Q620634');
       });
     });
 
     describe('by alias', () => {
       it('finds by European Commission codes', () => {
-        expect(coder.feature('EL').properties.iso1N3).toBe('300');
-        expect(coder.feature('el').properties.iso1N3).toBe('300');
-        expect(coder.feature('UK').properties.iso1N3).toBe('826');
+        expect(coder.feature('EL')?.properties.iso1N3).toBe('300');
+        expect(coder.feature('el')?.properties.iso1N3).toBe('300');
+        expect(coder.feature('UK')?.properties.iso1N3).toBe('826');
       });
 
       it('finds by transitionally-reserved codes', () => {
-        expect(coder.feature('BU').properties.iso1N3).toBe('104');
+        expect(coder.feature('BU')?.properties.iso1N3).toBe('104');
       });
 
       it('finds by indeterminately-reserved codes', () => {
-        expect(coder.feature('PI').properties.iso1N3).toBe('608');
-        expect(coder.feature('RP').properties.iso1N3).toBe('608');
+        expect(coder.feature('PI')?.properties.iso1N3).toBe('608');
+        expect(coder.feature('RP')?.properties.iso1N3).toBe('608');
       });
 
       it('finds by ISO 3166-2 codes', () => {
-        expect(coder.feature('UM-71').properties.nameEn).toBe('Midway Atoll');
-        expect(coder.feature('UM71').properties.nameEn).toBe('Midway Atoll');
-        expect(coder.feature('UM 71').properties.nameEn).toBe('Midway Atoll');
-        expect(coder.feature('US-AK').properties.nameEn).toBe('Alaska');
+        expect(coder.feature('UM-71')?.properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('UM71')?.properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('UM 71')?.properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('US-AK')?.properties.nameEn).toBe('Alaska');
       });
 
       it('finds by deleted codes', () => {
-        expect(coder.feature('MI').properties.nameEn).toBe('Midway Atoll');
-        expect(coder.feature('MID').properties.nameEn).toBe('Midway Atoll');
-        expect(coder.feature('488').properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('MI')?.properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('MID')?.properties.nameEn).toBe('Midway Atoll');
+        expect(coder.feature('488')?.properties.nameEn).toBe('Midway Atoll');
       });
 
       it('finds by common abbreviations', () => {
-        expect(coder.feature('CONUS').properties.nameEn).toBe('Contiguous United States');
-        expect(coder.feature('SBA').properties.wikidata).toBe('Q37362');
-        expect(coder.feature('BOTS').properties.wikidata).toBe('Q46395');
-        expect(coder.feature('UKOTS').properties.wikidata).toBe('Q46395');
+        expect(coder.feature('CONUS')?.properties.nameEn).toBe('Contiguous United States');
+        expect(coder.feature('SBA')?.properties.wikidata).toBe('Q37362');
+        expect(coder.feature('BOTS')?.properties.wikidata).toBe('Q46395');
+        expect(coder.feature('UKOTS')?.properties.wikidata).toBe('Q46395');
       });
     });
 
     describe('by location', () => {
       it('returns country feature by default', () => {
-        expect(coder.feature([12.59, 55.68]).properties.iso1A2).toBe('DK');
-        expect(coder.feature([-74, 40.6]).properties.iso1A2).toBe('US');
-        expect(coder.feature([-12.3, -37.1]).properties.iso1A2).toBe('GB');
-        expect(coder.feature([153, -27.4]).properties.iso1A2).toBe('AU');
+        expect(coder.feature([12.59, 55.68])?.properties.iso1A2).toBe('DK');
+        expect(coder.feature([-74, 40.6])?.properties.iso1A2).toBe('US');
+        expect(coder.feature([-12.3, -37.1])?.properties.iso1A2).toBe('GB');
+        expect(coder.feature([153, -27.4])?.properties.iso1A2).toBe('AU');
       });
       it('returns country feature for country level', () => {
-        expect(coder.feature([12.59, 55.68], { level: 'country' }).properties.iso1A2).toBe('DK');
-        expect(coder.feature([-74, 40.6], { level: 'country' }).properties.iso1A2).toBe('US');
-        expect(coder.feature([-12.3, -37.1], { level: 'country' }).properties.iso1A2).toBe('GB');
-        expect(coder.feature([153, -27.4], { level: 'country' }).properties.iso1A2).toBe('AU');
+        expect(coder.feature([12.59, 55.68], { level: 'country' })?.properties.iso1A2).toBe('DK');
+        expect(coder.feature([-74, 40.6], { level: 'country' })?.properties.iso1A2).toBe('US');
+        expect(coder.feature([-12.3, -37.1], { level: 'country' })?.properties.iso1A2).toBe('GB');
+        expect(coder.feature([153, -27.4], { level: 'country' })?.properties.iso1A2).toBe('AU');
       });
       it('returns next-higher-level feature for country level where no country exists (Bir Tawil)', () => {
-        expect(coder.feature([33.75, 21.87]).properties.m49).toBe('015');
-        expect(coder.feature([33.75, 21.87], { level: 'country' }).properties.m49).toBe('015');
+        expect(coder.feature([33.75, 21.87])?.properties.m49).toBe('015');
+        expect(coder.feature([33.75, 21.87], { level: 'country' })?.properties.m49).toBe('015');
       });
       it('returns null for country level where no country exists', () => {
         expect(coder.feature([33.75, 21.87], { maxLevel: 'country' })).toBeNull();
@@ -354,27 +358,27 @@ describe('country-coder', () => {
       });
 
       it('returns subterritory feature for subterritory level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'subterritory' }).properties.iso1A2).toBe(
+        expect(coder.feature([-12.3, -37.1], { level: 'subterritory' })?.properties.iso1A2).toBe(
           'TA'
         );
       });
       it('returns country feature for subterritory level where no subterritory or territory exists', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' }).properties.iso1A2).toBe(
+        expect(coder.feature([-79.4, 43.7], { level: 'subterritory' })?.properties.iso1A2).toBe(
           'CA'
         );
       });
 
       it('returns territory feature for territory level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'territory' }).properties.iso1A2).toBe('SH');
-        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
+        expect(coder.feature([-12.3, -37.1], { level: 'territory' })?.properties.iso1A2).toBe('SH');
+        expect(coder.feature([33.75, 21.87], { level: 'territory' })?.properties.wikidata).toBe(
           'Q620634'
         );
-        expect(coder.feature([33.75, 21.87], { level: 'territory' }).properties.wikidata).toBe(
+        expect(coder.feature([33.75, 21.87], { level: 'territory' })?.properties.wikidata).toBe(
           'Q620634'
         );
       });
       it('returns country feature for territory level where no territory exists', () => {
-        expect(coder.feature([-79.4, 43.7], { level: 'territory' }).properties.iso1A2).toBe('CA');
+        expect(coder.feature([-79.4, 43.7], { level: 'territory' })?.properties.iso1A2).toBe('CA');
       });
       it('returns null for territory level where no territory exists', () => {
         expect(
@@ -383,18 +387,18 @@ describe('country-coder', () => {
       });
 
       it('returns intermediateRegion feature for intermediateRegion level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'intermediateRegion' }).properties.m49).toBe(
+        expect(coder.feature([-12.3, -37.1], { level: 'intermediateRegion' })?.properties.m49).toBe(
           '011'
         );
       });
       it('returns subregion feature for subregion level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'subregion' }).properties.m49).toBe('202');
+        expect(coder.feature([-12.3, -37.1], { level: 'subregion' })?.properties.m49).toBe('202');
       });
       it('returns region feature for region level', () => {
-        expect(coder.feature([-12.3, -37.1], { level: 'region' }).properties.m49).toBe('002');
+        expect(coder.feature([-12.3, -37.1], { level: 'region' })?.properties.m49).toBe('002');
       });
       it('returns union feature for union level', () => {
-        expect(coder.feature([2.35, 48.85], { level: 'union' }).properties.iso1A2).toBe('EU');
+        expect(coder.feature([2.35, 48.85], { level: 'union' })?.properties.iso1A2).toBe('EU');
       });
 
       it('returns null for invalid level options', () => {
@@ -406,8 +410,8 @@ describe('country-coder', () => {
         ).toBeNull();
       });
       it('returns Antarctica for South Pole, country level', () => {
-        expect(coder.feature([0, -90]).properties.iso1A2).toBe('AQ');
-        expect(coder.feature([0, -90], { level: 'country' }).properties.iso1A2).toBe('AQ');
+        expect(coder.feature([0, -90])?.properties.iso1A2).toBe('AQ');
+        expect(coder.feature([0, -90], { level: 'country' })?.properties.iso1A2).toBe('AQ');
       });
       it('returns null for North Pole', () => {
         expect(coder.feature([0, 90])).toBeNull();
@@ -636,12 +640,15 @@ describe('country-coder', () => {
     });
     describe('by GeoJSON point feature, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
+
+        const coords = tuple(-74, 40.6);
+
         let pointFeature = {
           type: 'Feature',
           properties: null,
           geometry: {
             type: 'Point',
-            coordinates: [-74, 40.6]
+            coordinates: coords
           }
         };
         expect(coder.iso1A2Code(pointFeature)).toBe('US');
@@ -651,7 +658,7 @@ describe('country-coder', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         let pointGeometry = {
           type: 'Point',
-          coordinates: [-74, 40.6]
+          coordinates: tuple(-74, 40.6)
         };
         expect(coder.iso1A2Code(pointGeometry)).toBe('US');
       });
@@ -822,8 +829,8 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
-      expect(coder.iso1A2Codes([])).toStrictEqual([]);
-      expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
+        expect(coder.iso1A2Codes([] as any)).toStrictEqual([]);
+        expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
     });
 
     it('does not code North Pole', () => {
@@ -1027,7 +1034,7 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
-      expect(coder.ccTLDs([])).toStrictEqual([]);
+      expect(coder.ccTLDs([] as any)).toStrictEqual([]);
       expect(coder.ccTLDs([-900, 900])).toStrictEqual([]);
     });
 
@@ -1426,12 +1433,12 @@ describe('country-coder', () => {
 
   describe('aggregateFeature', () => {
     it('returns aggregate for feature with geometry', () => {
-      expect(coder.aggregateFeature('TA').geometry.coordinates.length).toBe(1);
+      expect(coder.aggregateFeature('TA')?.geometry.coordinates.length).toBe(1);
     });
     it('returns aggregate for feature without geometry', () => {
-      expect(coder.aggregateFeature('CN').geometry.coordinates.length).toBe(3);
-      expect(coder.aggregateFeature('SH').geometry.coordinates.length).toBe(3);
-      expect(coder.aggregateFeature('EU').geometry.coordinates.length).toBe(50);
+      expect(coder.aggregateFeature('CN')?.geometry.coordinates.length).toBe(3);
+      expect(coder.aggregateFeature('SH')?.geometry.coordinates.length).toBe(3);
+      expect(coder.aggregateFeature('EU')?.geometry.coordinates.length).toBe(50);
     });
     it('returns null for invalid ID', () => {
       expect(coder.aggregateFeature('ABC')).toBeNull();
@@ -1613,7 +1620,7 @@ describe('country-coder', () => {
           properties: null,
           geometry: {
             type: 'Point',
-            coordinates: [13.4, 52.5]
+              coordinates: tuple(13.4, 52.5)
           }
         };
         expect(coder.isInEuropeanUnion(pointFeature)).toBe(true);
@@ -1621,7 +1628,7 @@ describe('country-coder', () => {
       it('returns true for GeoJSON point geometry in Germany', () => {
         let pointGeometry = {
           type: 'Point',
-          coordinates: [13.4, 52.5]
+          coordinates: tuple(13.4, 52.5)
         };
         expect(coder.isInEuropeanUnion(pointGeometry)).toBe(true);
       });
@@ -1730,7 +1737,7 @@ describe('country-coder', () => {
           properties: null,
           geometry: {
             type: 'Point',
-            coordinates: [13.4, 52.5] // Berlin, Germany
+            coordinates: tuple(13.4, 52.5) // Berlin, Germany
           }
         };
         expect(coder.isInUnitedNations(pointFeature)).toBe(true);
@@ -1738,7 +1745,7 @@ describe('country-coder', () => {
       it('returns for GeoJSON point geometry', () => {
         let pointGeometry = {
           type: 'Point',
-          coordinates: [13.4, 52.5] // Berlin, Germany
+          coordinates: tuple(13.4, 52.5) // Berlin, Germany
         };
         expect(coder.isInUnitedNations(pointGeometry)).toBe(true);
       });

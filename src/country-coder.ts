@@ -99,11 +99,11 @@ type CodingOptions = {
   // For overlapping features, the division level of the one to get. If no feature
   // exists at the given level, the feature at the next higher level is returned.
   // See the `level` property of `RegionFeatureProperties` for possible values.
-  level: string | undefined;
+  level?: string | undefined;
   // Only a feature at the specified level or lower will be returned.
-  maxLevel: string | undefined;
+  maxLevel?: string | undefined;
   // Only a feature with the specified property will be returned.
-  withProp: string | undefined;
+  withProp?: string | undefined;
 };
 
 // The base GeoJSON feature collection

@@ -16,5 +16,7 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "strictNullChecks": true
-  }
+  },
+  "target": "esnext",
+  "module": "commonjs"
 }
