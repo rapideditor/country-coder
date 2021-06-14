@@ -47,7 +47,7 @@
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
     "test": "jest --env=node --colors --coverage tests",
-    "pretty": "prettier --write \"./{src,ts-tests}/*.{ts,js}\""
+    "pretty": "prettier --write \"./{src,tests}/*.{ts,js}\""
   },
   "publishConfig": {
     "access": "public"
@@ -60,13 +60,17 @@
     "coverageDirectory": "<rootDir>/.coverage",
     "globals": {
       "ts-jest": {
-        "useESM" : true
+        "useESM": true
       }
     },
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|ts?)$",
-     "transform": {
-        "^.+\\.tsx?$": "ts-jest"
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
     },
     "verbose": true
   },

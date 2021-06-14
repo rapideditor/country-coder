@@ -1,7 +1,7 @@
 import * as coder from '../src/country-coder';
 
 function tuple<T extends any[]>(...data: T) {
-    return data;
+  return data;
 }
 
 describe('country-coder', () => {
@@ -640,7 +640,6 @@ describe('country-coder', () => {
     });
     describe('by GeoJSON point feature, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
-
         const coords = tuple(-74, 40.6);
 
         let pointFeature = {
@@ -829,8 +828,8 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
-        expect(coder.iso1A2Codes([] as any)).toStrictEqual([]);
-        expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
+      expect(coder.iso1A2Codes([] as any)).toStrictEqual([]);
+      expect(coder.iso1A2Codes([-900, 900])).toStrictEqual([]);
     });
 
     it('does not code North Pole', () => {
@@ -1620,7 +1619,7 @@ describe('country-coder', () => {
           properties: null,
           geometry: {
             type: 'Point',
-              coordinates: tuple(13.4, 52.5)
+            coordinates: tuple(13.4, 52.5)
           }
         };
         expect(coder.isInEuropeanUnion(pointFeature)).toBe(true);
