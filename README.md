@@ -74,7 +74,7 @@ import { iso1A2Code } from '@ideditor/country-coder';              // ESM import
 
 You can also use **country-coder** directly in a web browser. A good way to do this is to fetch the appropriate file from the [jsDelivr CDN](https://www.jsdelivr.com/), which can even deliver minified versions.
 
-The latest versions of many web browsers now support [ES6 modules in script tags](https://caniuse.com/#feat=es6-module) like this:
+The latest versions of many web browsers now support [ES modules in script tags](https://caniuse.com/#feat=es6-module) like this:
 ```html
 <script type="module">
   import { iso1A2Code } from 'https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.mjs';
@@ -92,6 +92,8 @@ You can also load the IIFE build in a `<script>` tag - in this case you'll get a
   var result = countryCoder.iso1A2Code('Q145');
 </script>
 ```
+
+👉 This project uses modern JavaScript syntax for use in supported node versions and modern browsers.  If you need support for legacy environments like ES5 or Internet Explorer, you'll need to build your own bundle with something like [Babel](https://babeljs.io/docs/en/index.html).
 
 
 ## Quick Start
