@@ -77,7 +77,7 @@ You can also use **country-coder** directly in a web browser. A good way to do t
 The latest versions of many web browsers now support [ES6 modules in script tags](https://caniuse.com/#feat=es6-module) like this:
 ```html
 <script type="module">
-  import { iso1A2Code } from 'https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.esm.min.js';
+  import { iso1A2Code } from 'https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.mjs';
   var result = iso1A2Code('Q145');
 </script>
 ```
