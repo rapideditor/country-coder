@@ -47,7 +47,7 @@
     "clean": "shx rm -rf dist",
     "build": "run-s format-json build:**",
     "build:browser": "esbuild ./src/country-coder.ts --platform=browser --format=iife --global-name=countryCoder --bundle --sourcemap --outfile=./dist/country-coder.iife.js",
-    "build:cjs": "esbuild ./src/country-coder.ts --platform=node --format=cjs --bundle --sourcemap --outfile=./dist/country-coder.cjs",
+    "build:cjs": "esbuild ./src/country-coder.ts --platform=node --format=cjs --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.cjs",
     "build:mjs": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.mjs",
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
