@@ -26,8 +26,8 @@ _Breaking changes, which may affect downstream projects, are marked with a_ :war
 * :warning: Replace microbundle with [esbuild](https://esbuild.github.io/) for super fast build speed. Outputs are now:
   * `"source": "./src/country-coder.ts"`  - TypeScript source file
   * `"types": "./dist/country-coder.d.ts"` - TypeScript definition file
-  * `"main": "./dist/country-coder.cjs.js"` - CJS bundle, modern JavaScript, works with `require()`
-  * `"module": "./dist/country-coder.esm.js"` - ESM bundle, modern JavaScript, works with `import`
+  * `"main": "./dist/country-coder.cjs"` - CJS bundle, modern JavaScript, works with `require()`
+  * `"module": "./dist/country-coder.mjs"` - ESM bundle, modern JavaScript, works with `import`
   * `"browser": "./dist/country-coder.iife.js"` - IIFE bundle, modern JavaScript, works in browser `<script>` tag
   * Note: v4.1.0 was broken for some uses because of an improper "exports" specification ([#44])
 * :warning: country-coder is marked as `"type": "module"` now
