@@ -16,6 +16,10 @@ _Breaking changes, which may affect downstream projects, are marked with a_ :war
 [#xx]: https://github.com/ideditor/country-coder/issues/xx
 -->
 
+# 5.0.2
+##### 2021-Jun-17
+* Add an export map to `package.json`, fix file extensions again
+
 # 5.0.1
 ##### 2021-Jun-15
 * Use explicit file extensions for .cjs and .mjs exports ([#44])
