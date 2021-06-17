@@ -58,7 +58,7 @@ Client-side coding has a number of benefits over server-side solutions:
 
 `npm install @ideditor/country-coder`
 
-**country-coder** is distributed in several module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
+**country-coder** is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
 
 
 ```js
@@ -72,17 +72,9 @@ import { iso1A2Code } from '@ideditor/country-coder';              // ESM import
 
 ### Use in Browsers
 
-You can also use **country-coder** directly in a web browser. A good way to do this is to fetch the appropriate file from the [jsDelivr CDN](https://www.jsdelivr.com/), which can even deliver minified versions.
+You can also use **country-coder** directly in a web browser. A good way to do this is to fetch the ["iife"](https://esbuild.github.io/api/#format-iife) bundle from the [jsDelivr CDN](https://www.jsdelivr.com/), which can even deliver minified versions.
 
-The latest versions of many web browsers now support [ES modules in script tags](https://caniuse.com/#feat=es6-module) like this:
-```html
-<script type="module">
-  import { iso1A2Code } from 'https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.mjs';
-  var result = iso1A2Code('Q145');
-</script>
-```
-
-You can also load the IIFE build in a `<script>` tag - in this case you'll get a `countryCoder` global to use elsewhere in your scripts:
+When you load this file in a `<script>` tag, you'll get a `countryCoder` global to use elsewhere in your scripts:
 ```html
 <head>
 <script src="https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.iife.min.js"></script>
