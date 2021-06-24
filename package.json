@@ -21,11 +21,9 @@
   "types": "./dist/country-coder.d.ts",
   "main": "./dist/country-coder.cjs",
   "module": "./dist/country-coder.mjs",
-  "browser": "./dist/country-coder.iife.js",
   "exports": {
     "import": "./dist/country-coder.mjs",
-    "require": "./dist/country-coder.cjs",
-    "browser": "./dist/country-coder.iife.js"
+    "require": "./dist/country-coder.cjs"
   },
   "dependencies": {
     "which-polygon": "^2.2.0"
