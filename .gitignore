@@ -1,7 +1,8 @@
 .DS_Store
+.coverage
 .esm-cache
 .vscode
-.coverage
+.watchmanconfig
 
 node_modules/
 dist/
