@@ -54,11 +54,11 @@ function roundCoordinatePrecision(feature) {
 }
 
 const featureProperties = [
+  'wikidata',
   'iso1A2',
   'iso1A3',
   'iso1N3',
   'm49',
-  'wikidata',
   'ccTLD',
   'nameEn',
   'aliases',
