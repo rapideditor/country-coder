@@ -1437,7 +1437,7 @@ describe('country-coder', () => {
     it('returns aggregate for feature without geometry', () => {
       expect(coder.aggregateFeature('CN')?.geometry.coordinates.length).toBe(3);
       expect(coder.aggregateFeature('SH')?.geometry.coordinates.length).toBe(3);
-      expect(coder.aggregateFeature('EU')?.geometry.coordinates.length).toBe(50);
+      expect(coder.aggregateFeature('EU')?.geometry.coordinates.length).toBe(62);
     });
     it('returns null for invalid ID', () => {
       expect(coder.aggregateFeature('ABC')).toBeNull();
@@ -1590,6 +1590,10 @@ describe('country-coder', () => {
         expect(coder.isInEuropeanUnion([6.1, 46.2])).toBe(false);
       });
 
+      it('returns true for France', () => {
+        expect(coder.isInEuropeanUnion('fr')).toBe(true);
+      });
+
       it('returns true for location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
         expect(coder.isInEuropeanUnion([12.59, 55.68])).toBe(true);
       });
@@ -1675,11 +1679,6 @@ describe('country-coder', () => {
         expect(coder.isInEuropeanUnion('Bonaire')).toBe(false);
         expect(coder.isInEuropeanUnion('Sint Eustatius')).toBe(false);
         expect(coder.isInEuropeanUnion('Saba')).toBe(false);
-        expect(coder.isInEuropeanUnion('PF')).toBe(false);
-        expect(coder.isInEuropeanUnion('NC')).toBe(false);
-        expect(coder.isInEuropeanUnion('WF')).toBe(false);
-        expect(coder.isInEuropeanUnion('BL')).toBe(false);
-        expect(coder.isInEuropeanUnion('TF')).toBe(false);
         // special case
         expect(coder.isInEuropeanUnion('FO')).toBe(false);
       });
