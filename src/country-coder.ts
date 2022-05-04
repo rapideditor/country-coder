@@ -149,7 +149,7 @@ function loadDerivedDataAndCaches(borders) {
   let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
   let geometryFeatures: Array<RegionFeature> = [];
 
-  for (let i in borders.features) {
+  for (let i of Object.keys(borders.features)) {
     let feature = borders.features[i];
 
     // generate a unique ID for each feature
@@ -170,7 +170,7 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   // must load `members` only after fully loading `featuresByID`
-  for (let i in borders.features) {
+  for (let i of Object.keys(borders.features)) {
     let feature = borders.features[i];
     // ensure all groups are listed by their ID
     feature.properties.groups = feature.properties.groups.map(function (groupID) {
@@ -180,7 +180,7 @@ function loadDerivedDataAndCaches(borders) {
     loadMembersForGroupsOf(feature);
   }
 
-  for (let i in borders.features) {
+  for (let i of Object.keys(borders.features)) {
     let feature = borders.features[i];
 
     // must load attributes only after loading geometry features into `members`
@@ -192,7 +192,7 @@ function loadDerivedDataAndCaches(borders) {
     loadGroupGroups(feature);
   }
 
-  for (let i in borders.features) {
+  for (let i of Object.keys(borders.features)) {
     let feature = borders.features[i];
     // order groups by their `level`
     feature.properties.groups.sort(function (groupID1, groupID2) {
@@ -282,7 +282,7 @@ function loadDerivedDataAndCaches(borders) {
     if (feature.geometry || !props.members) return;
     let featureLevelIndex = levels.indexOf(props.level);
     let sharedGroups: Array<string> = [];
-    for (let i in props.members) {
+    for (let i of Object.keys(props.members)) {
       let memberID = props.members[i];
       let member = featuresByCode[memberID];
       let memberGroups = member.properties.groups.filter(function (groupID) {
@@ -304,7 +304,7 @@ function loadDerivedDataAndCaches(borders) {
         return props.groups.indexOf(groupID) === -1;
       })
     );
-    for (let j in sharedGroups) {
+    for (let j of Object.keys(sharedGroups)) {
       let groupFeature = featuresByCode[sharedGroups[j]];
       if (groupFeature.properties.members.indexOf(props.id) === -1) {
         groupFeature.properties.members.push(props.id);
@@ -402,7 +402,7 @@ function loadDerivedDataAndCaches(borders) {
 
   // Populate `members` as the inverse relationship of `groups`
   function loadMembersForGroupsOf(feature: RegionFeature) {
-    for (let j in feature.properties.groups) {
+    for (let j of Object.keys(feature.properties.groups)) {
       let groupID = feature.properties.groups[j];
       let groupFeature = featuresByCode[groupID];
 
@@ -414,17 +414,17 @@ function loadDerivedDataAndCaches(borders) {
   // Caches features by their identifying strings for rapid lookup
   function cacheFeatureByIDs(feature: RegionFeature) {
     let ids: Array<string> = [];
-    for (let k in identifierProps) {
+    for (let k of Object.keys(identifierProps)) {
       let prop = identifierProps[k];
       let id = feature.properties[prop];
       if (id) ids.push(id);
     }
     if (feature.properties.aliases) {
-      for (let j in feature.properties.aliases) {
+      for (let j of Object.keys(feature.properties.aliases)) {
         ids.push(feature.properties.aliases[j]);
       }
     }
-    for (let i in ids) {
+    for (let i of Object.keys(ids)) {
       let id = canonicalID(ids[i]);
       featuresByCode[id] = feature;
     }
@@ -489,7 +489,7 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
 
   let features = featuresContaining(loc);
 
-  for (let i in features) {
+  for (let i of Object.keys(features)) {
     let feature = features[i];
     let levelIndex = levels.indexOf(feature.properties.level);
     if (
@@ -693,9 +693,9 @@ export function featuresContaining(
     returnFeatures = [];
   }
 
-  for (let j in matchingFeatures) {
+  for (let j of Object.keys(matchingFeatures)) {
     let properties = matchingFeatures[j].properties;
-    for (let i in properties.groups) {
+    for (let i of Object.keys(properties.groups)) {
       let groupID = properties.groups[i];
       let groupFeature = featuresByCode[groupID];
       if (returnFeatures.indexOf(groupFeature) === -1) {
@@ -720,7 +720,7 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
 
   let properties = feature.properties;
   if (properties.members) {
-    for (let i in properties.members) {
+    for (let i of Object.keys(properties.members)) {
       let memberID = properties.members[i];
       features.push(featuresByCode[memberID]);
     }
@@ -735,7 +735,7 @@ export function aggregateFeature(id: string | number): RegionFeature | null {
   if (features.length === 0) return null;
 
   let aggregateCoordinates = [];
-  for (let i in features) {
+  for (let i of Object.keys(features)) {
     let feature = features[i];
     if (
       feature.geometry &&
