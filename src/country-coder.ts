@@ -115,10 +115,11 @@ let whichPolygonGetter: any = {};
 let featuresByCode: any = {};
 
 // discard special characters and instances of and/the/of that aren't the only characters
-let idFilterRegex = /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
+const idFilterRegex =
+  /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
 
 function canonicalID(id: string | null): string {
-  let s = id || '';
+  const s = id || '';
   if (s.charAt(0) === '.') {
     // skip replace if it leads with a '.' (e.g. a ccTLD like '.de', '.la')
     return s.toUpperCase();
@@ -128,7 +129,7 @@ function canonicalID(id: string | null): string {
 }
 
 // Geographic levels, roughly from most to least granular
-let levels = [
+const levels = [
   'subterritory',
   'territory',
   'subcountryGroup',
@@ -144,14 +145,13 @@ let levels = [
 ];
 
 loadDerivedDataAndCaches(borders);
+
 // Loads implicit feature data and the getter index caches
 function loadDerivedDataAndCaches(borders) {
-  let identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
+  const identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
   let geometryFeatures: Array<RegionFeature> = [];
 
-  for (let i in borders.features) {
-    let feature = borders.features[i];
-
+  borders.features.forEach((feature) => {
     // generate a unique ID for each feature
     feature.properties.id =
       feature.properties.iso1A2 || feature.properties.m49 || feature.properties.wikidata;
@@ -167,22 +167,18 @@ function loadDerivedDataAndCaches(borders) {
     cacheFeatureByIDs(feature);
 
     if (feature.geometry) geometryFeatures.push(feature);
-  }
+  });
 
   // must load `members` only after fully loading `featuresByID`
-  for (let i in borders.features) {
-    let feature = borders.features[i];
+  borders.features.forEach((feature) => {
     // ensure all groups are listed by their ID
-    feature.properties.groups = feature.properties.groups.map(function (groupID) {
+    feature.properties.groups = feature.properties.groups.map((groupID) => {
       return featuresByCode[groupID].properties.id;
     });
-
     loadMembersForGroupsOf(feature);
-  }
+  });
 
-  for (let i in borders.features) {
-    let feature = borders.features[i];
-
+  borders.features.forEach((feature) => {
     // must load attributes only after loading geometry features into `members`
     loadRoadSpeedUnit(feature);
     loadRoadHeightUnit(feature);
@@ -190,12 +186,11 @@ function loadDerivedDataAndCaches(borders) {
     loadCallingCodes(feature);
 
     loadGroupGroups(feature);
-  }
+  });
 
-  for (let i in borders.features) {
-    let feature = borders.features[i];
+  borders.features.forEach((feature) => {
     // order groups by their `level`
-    feature.properties.groups.sort(function (groupID1, groupID2) {
+    feature.properties.groups.sort((groupID1, groupID2) => {
       return (
         levels.indexOf(featuresByCode[groupID1].properties.level) -
         levels.indexOf(featuresByCode[groupID2].properties.level)
@@ -203,8 +198,8 @@ function loadDerivedDataAndCaches(borders) {
     });
     // order members by their `level` and then by order in borders
     if (feature.properties.members)
-      feature.properties.members.sort(function (id1, id2) {
-        let diff =
+      feature.properties.members.sort((id1, id2) => {
+        const diff =
           levels.indexOf(featuresByCode[id1].properties.level) -
           levels.indexOf(featuresByCode[id2].properties.level);
         if (diff === 0) {
@@ -215,17 +210,17 @@ function loadDerivedDataAndCaches(borders) {
         }
         return diff;
       });
-  }
+  });
 
   // whichPolygon doesn't support null geometry even though GeoJSON does
-  let geometryOnlyCollection: RegionFeatureCollection = {
+  const geometryOnlyCollection: RegionFeatureCollection = {
     type: 'FeatureCollection',
     features: geometryFeatures
   };
   whichPolygonGetter = whichPolygon(geometryOnlyCollection);
 
   function loadGroups(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (!props.groups) {
       props.groups = [];
     }
@@ -240,7 +235,7 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadM49(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (!props.m49 && props.iso1N3) {
       // M49 is a superset of ISO numerics so we only need to store one
       props.m49 = props.iso1N3;
@@ -248,7 +243,7 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadTLD(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (props.level === 'unitedNations') return; // `.un` is not a ccTLD
     if (!props.ccTLD && props.iso1A2) {
       // ccTLD is nearly the same as iso1A2, so we only need to explicitly code any exceptions
@@ -257,7 +252,7 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadIsoStatus(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (!props.isoStatus && props.iso1A2) {
       // Features with an ISO code but no explicit status are officially-assigned
       props.isoStatus = 'official';
@@ -265,7 +260,7 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadLevel(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (props.level) return;
     if (!props.country) {
       // a feature without an explicit `level` or `country` is itself a country
@@ -278,51 +273,50 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadGroupGroups(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (feature.geometry || !props.members) return;
-    let featureLevelIndex = levels.indexOf(props.level);
+
+    const featureLevelIndex = levels.indexOf(props.level);
     let sharedGroups: Array<string> = [];
-    for (let i in props.members) {
-      let memberID = props.members[i];
-      let member = featuresByCode[memberID];
-      let memberGroups = member.properties.groups.filter(function (groupID) {
+
+    props.members.forEach((memberID, index) => {
+      const member = featuresByCode[memberID];
+      const memberGroups = member.properties.groups.filter((groupID) => {
         return (
           groupID !== feature.properties.id &&
           featureLevelIndex < levels.indexOf(featuresByCode[groupID].properties.level)
         );
       });
-      if (i === '0') {
+      if (index === 0) {
         sharedGroups = memberGroups;
       } else {
-        sharedGroups = sharedGroups.filter(function (groupID) {
-          return memberGroups.indexOf(groupID) !== -1;
-        });
+        sharedGroups = sharedGroups.filter((groupID) => memberGroups.indexOf(groupID) !== -1);
       }
-    }
+    });
+
     props.groups = props.groups.concat(
-      sharedGroups.filter(function (groupID) {
-        return props.groups.indexOf(groupID) === -1;
-      })
+      sharedGroups.filter((groupID) => props.groups.indexOf(groupID) === -1)
     );
-    for (let j in sharedGroups) {
-      let groupFeature = featuresByCode[sharedGroups[j]];
+
+    sharedGroups.forEach((groupID) => {
+      const groupFeature = featuresByCode[groupID];
       if (groupFeature.properties.members.indexOf(props.id) === -1) {
         groupFeature.properties.members.push(props.id);
       }
-    }
+    });
   }
 
   function loadRoadSpeedUnit(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (feature.geometry) {
       // only `mph` regions are listed explicitly, else assume `km/h`
       if (!props.roadSpeedUnit) props.roadSpeedUnit = 'km/h';
     } else if (props.members) {
-      let vals = Array.from(
+      const vals = Array.from(
         new Set(
           props.members
-            .map(function (id) {
-              let member = featuresByCode[id];
+            .map((id) => {
+              const member = featuresByCode[id];
               if (member.geometry) return member.properties.roadSpeedUnit || 'km/h';
             })
             .filter(Boolean)
@@ -334,16 +328,16 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadRoadHeightUnit(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (feature.geometry) {
       // only `ft` regions are listed explicitly, else assume `m`
       if (!props.roadHeightUnit) props.roadHeightUnit = 'm';
     } else if (props.members) {
-      let vals = Array.from(
+      const vals = Array.from(
         new Set(
           props.members
-            .map(function (id) {
-              let member = featuresByCode[id];
+            .map((id) => {
+              const member = featuresByCode[id];
               if (member.geometry) return member.properties.roadHeightUnit || 'm';
             })
             .filter(Boolean)
@@ -355,16 +349,16 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadDriveSide(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (feature.geometry) {
       // only `left` regions are listed explicitly, else assume `right`
       if (!props.driveSide) props.driveSide = 'right';
     } else if (props.members) {
-      let vals = Array.from(
+      const vals = Array.from(
         new Set(
           props.members
-            .map(function (id) {
-              let member = featuresByCode[id];
+            .map((id) => {
+              const member = featuresByCode[id];
               if (member.geometry) return member.properties.driveSide || 'right';
             })
             .filter(Boolean)
@@ -376,14 +370,15 @@ function loadDerivedDataAndCaches(borders) {
   }
 
   function loadCallingCodes(feature: RegionFeature) {
-    let props = feature.properties;
+    const props = feature.properties;
     if (!feature.geometry && props.members) {
       props.callingCodes = Array.from(
         new Set(
-          props.members.reduce(function (array, id) {
-            let member = featuresByCode[id];
-            if (member.geometry && member.properties.callingCodes)
+          props.members.reduce((array, id) => {
+            const member = featuresByCode[id];
+            if (member.geometry && member.properties.callingCodes) {
               return array.concat(member.properties.callingCodes);
+            }
             return array;
           }, [])
         )
@@ -394,7 +389,8 @@ function loadDerivedDataAndCaches(borders) {
   // Calculates the emoji flag sequence from the alpha-2 code (if any) and caches it
   function loadFlag(feature: RegionFeature) {
     if (!feature.properties.iso1A2) return;
-    let flag = feature.properties.iso1A2.replace(/./g, function (char: string) {
+
+    const flag = feature.properties.iso1A2.replace(/./g, function (char: string) {
       return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
     });
     feature.properties.emojiFlag = flag;
@@ -402,32 +398,33 @@ function loadDerivedDataAndCaches(borders) {
 
   // Populate `members` as the inverse relationship of `groups`
   function loadMembersForGroupsOf(feature: RegionFeature) {
-    for (let j in feature.properties.groups) {
-      let groupID = feature.properties.groups[j];
-      let groupFeature = featuresByCode[groupID];
+    feature.properties.groups.forEach((groupID) => {
+      const groupFeature = featuresByCode[groupID];
 
-      if (!groupFeature.properties.members) groupFeature.properties.members = [];
+      if (!groupFeature.properties.members) {
+        groupFeature.properties.members = [];
+      }
       groupFeature.properties.members.push(feature.properties.id);
-    }
+    });
   }
 
   // Caches features by their identifying strings for rapid lookup
   function cacheFeatureByIDs(feature: RegionFeature) {
     let ids: Array<string> = [];
-    for (let k in identifierProps) {
-      let prop = identifierProps[k];
-      let id = feature.properties[prop];
+
+    identifierProps.forEach((prop) => {
+      const id = feature.properties[prop];
       if (id) ids.push(id);
-    }
-    if (feature.properties.aliases) {
-      for (let j in feature.properties.aliases) {
-        ids.push(feature.properties.aliases[j]);
-      }
-    }
-    for (let i in ids) {
-      let id = canonicalID(ids[i]);
-      featuresByCode[id] = feature;
-    }
+    });
+
+    (feature.properties.aliases || []).forEach((alias) => {
+      ids.push(alias);
+    });
+
+    ids.forEach((id) => {
+      let cid = canonicalID(id);
+      featuresByCode[cid] = feature;
+    });
   }
 }
 
@@ -443,18 +440,18 @@ function locArray(loc: Location): Vec2 {
 
 // Returns the smallest feature of any kind containing `loc`, if any
 function smallestFeature(loc: Location): RegionFeature | null {
-  let query = locArray(loc);
-  let featureProperties: RegionFeatureProperties = whichPolygonGetter(query);
+  const query = locArray(loc);
+  const featureProperties: RegionFeatureProperties = whichPolygonGetter(query);
   if (!featureProperties) return null;
   return featuresByCode[featureProperties.id];
 }
 
 // Returns the country feature containing `loc`, if any
 function countryFeature(loc: Location): RegionFeature | null {
-  let feature = smallestFeature(loc);
+  const feature = smallestFeature(loc);
   if (!feature) return null;
   // a feature without `country` but with geometry is itself a country
-  let countryCode = feature.properties.country || feature.properties.iso1A2;
+  const countryCode = feature.properties.country || feature.properties.iso1A2;
   return featuresByCode[<string>countryCode] || null;
 }
 
@@ -466,20 +463,20 @@ let defaultOpts = {
 
 // Returns the feature containing `loc` for the `opts`, if any
 function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null {
-  let targetLevel = opts.level || 'country';
-  let maxLevel = opts.maxLevel || 'world';
-  let withProp = opts.withProp;
+  const targetLevel = opts.level || 'country';
+  const maxLevel = opts.maxLevel || 'world';
+  const withProp = opts.withProp;
 
-  let targetLevelIndex = levels.indexOf(targetLevel);
+  const targetLevelIndex = levels.indexOf(targetLevel);
   if (targetLevelIndex === -1) return null;
 
-  let maxLevelIndex = levels.indexOf(maxLevel);
+  const maxLevelIndex = levels.indexOf(maxLevel);
   if (maxLevelIndex === -1) return null;
   if (maxLevelIndex < targetLevelIndex) return null;
 
   if (targetLevel === 'country') {
     // attempt fast path for country-level coding
-    let fastFeature = countryFeature(loc);
+    const fastFeature = countryFeature(loc);
     if (fastFeature) {
       if (!withProp || fastFeature.properties[withProp]) {
         return fastFeature;
@@ -487,10 +484,9 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
     }
   }
 
-  let features = featuresContaining(loc);
+  const features = featuresContaining(loc);
 
-  for (let i in features) {
-    let feature = features[i];
+  const match = features.find((feature) => {
     let levelIndex = levels.indexOf(feature.properties.level);
     if (
       feature.properties.level === targetLevel ||
@@ -501,8 +497,10 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
         return feature;
       }
     }
-  }
-  return null;
+    return false;
+  });
+
+  return match || null;
 }
 
 // Returns the feature with an identifying property matching `id`, if any
@@ -523,9 +521,7 @@ function featureForID(id: string | number): RegionFeature | null {
 }
 
 function smallestFeaturesForBbox(bbox: Bbox): [RegionFeature] {
-  return whichPolygonGetter.bbox(bbox).map(function (props) {
-    return featuresByCode[props.id];
-  });
+  return whichPolygonGetter.bbox(bbox).map((props) => featuresByCode[props.id]);
 }
 
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
@@ -552,7 +548,7 @@ export function iso1A2Code(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'iso1A2';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1A2 || null;
 }
@@ -563,7 +559,7 @@ export function iso1A3Code(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'iso1A3';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1A3 || null;
 }
@@ -574,7 +570,7 @@ export function iso1N3Code(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'iso1N3';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.iso1N3 || null;
 }
@@ -585,7 +581,7 @@ export function m49Code(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'm49';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.m49 || null;
 }
@@ -596,7 +592,7 @@ export function wikidataQID(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'wikidata';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.wikidata;
 }
@@ -607,7 +603,7 @@ export function emojiFlag(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'emojiFlag';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.emojiFlag || null;
 }
@@ -618,18 +614,14 @@ export function ccTLD(
   opts: CodingOptions = defaultOpts
 ): string | null {
   opts.withProp = 'ccTLD';
-  let match = feature(query, opts);
+  const match = feature(query, opts);
   if (!match) return null;
   return match.properties.ccTLD || null;
 }
 
 function propertiesForQuery(query: Location | Bbox, property: string): Array<string> {
-  let features = featuresContaining(query, false);
-  return features
-    .map(function (feature) {
-      return feature.properties[property];
-    })
-    .filter(Boolean);
+  const features = featuresContaining(query, false);
+  return features.map((feature) => feature.properties[property]).filter(Boolean);
 }
 
 // Returns all the ISO 3166-1 alpha-2 codes of features at the location
@@ -679,7 +671,7 @@ export function featuresContaining(
     // check if bounding box
     matchingFeatures = smallestFeaturesForBbox(<Bbox>query);
   } else {
-    let smallestOrMatching = smallestOrMatchingFeature(<Location | string | number>query);
+    const smallestOrMatching = smallestOrMatchingFeature(<Location | string | number>query);
     matchingFeatures = smallestOrMatching ? [smallestOrMatching] : [];
   }
 
@@ -693,23 +685,23 @@ export function featuresContaining(
     returnFeatures = [];
   }
 
-  for (let j in matchingFeatures) {
-    let properties = matchingFeatures[j].properties;
-    for (let i in properties.groups) {
-      let groupID = properties.groups[i];
-      let groupFeature = featuresByCode[groupID];
+  matchingFeatures.forEach((feature) => {
+    const properties = feature.properties;
+    properties.groups.forEach((groupID) => {
+      const groupFeature = featuresByCode[groupID];
       if (returnFeatures.indexOf(groupFeature) === -1) {
         returnFeatures.push(groupFeature);
       }
-    }
-  }
+    });
+  });
+
   return returnFeatures;
 }
 
 // Returns the feature matching `id` and all features it contains, if any.
 // If passing `true` for `strict`, an exact match will not be included
 export function featuresIn(id: string | number, strict?: boolean): Array<RegionFeature> {
-  let feature = featureForID(id);
+  const feature = featureForID(id);
   if (!feature) return [];
 
   let features: Array<RegionFeature> = [];
@@ -718,25 +710,22 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
     features.push(feature);
   }
 
-  let properties = feature.properties;
-  if (properties.members) {
-    for (let i in properties.members) {
-      let memberID = properties.members[i];
-      features.push(featuresByCode[memberID]);
-    }
-  }
+  const properties = feature.properties;
+  (properties.members || []).forEach((memberID) => {
+    features.push(featuresByCode[memberID]);
+  });
+
   return features;
 }
 
 // Returns a new feature with the properties of the feature matching `id`
 // and the combined geometry of all its component features
 export function aggregateFeature(id: string | number): RegionFeature | null {
-  let features = featuresIn(id, false);
+  const features = featuresIn(id, false);
   if (features.length === 0) return null;
 
   let aggregateCoordinates = [];
-  for (let i in features) {
-    let feature = features[i];
+  features.forEach((feature) => {
     if (
       feature.geometry &&
       feature.geometry.type === 'MultiPolygon' &&
@@ -744,7 +733,7 @@ export function aggregateFeature(id: string | number): RegionFeature | null {
     ) {
       aggregateCoordinates = aggregateCoordinates.concat(feature.geometry.coordinates);
     }
-  }
+  });
 
   return {
     type: 'Feature',
@@ -758,8 +747,8 @@ export function aggregateFeature(id: string | number): RegionFeature | null {
 
 // Returns true if the feature matching `query` is, or is a part of, the feature matching `bounds`
 export function isIn(query: Location | string | number, bounds: string | number): boolean | null {
-  let queryFeature = smallestOrMatchingFeature(query);
-  let boundsFeature = featureForID(bounds);
+  const queryFeature = smallestOrMatchingFeature(query);
+  const boundsFeature = featureForID(bounds);
 
   if (!queryFeature || !boundsFeature) return null;
 
@@ -779,24 +768,24 @@ export function isInUnitedNations(query: Location | string | number): boolean | 
 
 // Returns the side traffic drives on in the feature matching `query` as a string (`right` or `left`)
 export function driveSide(query: Location | string | number): string | null {
-  let feature = smallestOrMatchingFeature(query);
+  const feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.driveSide) || null;
 }
 
 // Returns the road speed unit for the feature matching `query` as a string (`mph` or `km/h`)
 export function roadSpeedUnit(query: Location | string | number): string | null {
-  let feature = smallestOrMatchingFeature(query);
+  const feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.roadSpeedUnit) || null;
 }
 
 // Returns the road vehicle height restriction unit for the feature matching `query` as a string (`ft` or `m`)
 export function roadHeightUnit(query: Location | string | number): string | null {
-  let feature = smallestOrMatchingFeature(query);
+  const feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.roadHeightUnit) || null;
 }
 
 // Returns the full international calling codes for phone numbers in the feature matching `query`, if any
 export function callingCodes(query: Location | string | number): Array<string> {
-  let feature = smallestOrMatchingFeature(query);
+  const feature = smallestOrMatchingFeature(query);
   return (feature && feature.properties.callingCodes) || [];
 }
