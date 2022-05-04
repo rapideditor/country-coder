@@ -16,6 +16,18 @@ _Breaking changes, which may affect downstream projects, are marked with a_ :war
 [#xx]: https://github.com/ideditor/country-coder/issues/xx
 -->
 
+# 5.0.4
+##### 2022-May-04
+* Avoid `for..in` over arrays ([#59],[#60])
+* Fix EU membership for France ([#47],[#55])
+* Add GB-UKM for UK Mainland ([#52])
+
+[#60]: https://github.com/ideditor/country-coder/issues/60
+[#59]: https://github.com/ideditor/country-coder/issues/59
+[#55]: https://github.com/ideditor/country-coder/issues/55
+[#52]: https://github.com/ideditor/country-coder/issues/52
+[#47]: https://github.com/ideditor/country-coder/issues/47
+
 
 # 5.0.3
 ##### 2021-Jun-24
