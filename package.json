@@ -31,7 +31,7 @@
   "devDependencies": {
     "@mapbox/geojson-rewind": "^0.5.0",
     "@types/jest": "^27.5.0",
-    "esbuild": "^0.14.38",
+    "esbuild": "^0.15.8",
     "esbuild-jest": "~0.5.0",
     "jest": "^28.0.3",
     "jest-extended": "^2.0.0",
