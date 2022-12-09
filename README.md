@@ -77,7 +77,7 @@ You can also use **country-coder** directly in a web browser. A good way to do t
 When you load this file in a `<script>` tag, you'll get a `countryCoder` global to use elsewhere in your scripts:
 ```html
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.0/dist/country-coder.iife.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.1/dist/country-coder.iife.min.js"></script>
 </head>
 …
 <script>
