@@ -16,6 +16,16 @@ _Breaking changes, which may affect downstream projects, are marked with a_ :war
 [#xx]: https://github.com/ideditor/country-coder/issues/xx
 -->
 
+# 5.1.0
+##### 2022-Dec-09
+* Close seam along Swiss-German border ([#61])
+* Make Ireland less spiky ([#oci-528])
+* Bump dependency versions
+
+[#61]: https://github.com/ideditor/country-coder/issues/61
+[#oci-528]: https://github.com/osmlab/osm-community-index/issues/528
+
+
 # 5.0.4
 ##### 2022-May-04
 * Avoid `for..in` over arrays ([#59],[#60])
