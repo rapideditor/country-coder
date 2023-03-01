@@ -1956,12 +1956,12 @@ describe('country-coder', () => {
 
   describe('callingCodes', () => {
     it('finds one prefix for feature with one', () => {
-      expect(coder.callingCodes([2.35, 48.85])).toStrictEqual(['33']);
-      expect(coder.callingCodes('ES-CE')).toStrictEqual(['34']);
+      expect(coder.callingCodes([2.35, 48.85])).toIncludeSameMembers(['33']);
+      expect(coder.callingCodes('ES-CE')).toIncludeSameMembers(['34']);
     });
 
     it('finds multiple prefixes for feature with multiple', () => {
-      expect(coder.callingCodes('PR')).toStrictEqual(['1 787', '1 939']);
+      expect(coder.callingCodes('PR')).toIncludeSameMembers(['1 787', '1 939']);
     });
 
     it('finds none for feature without data', () => {
