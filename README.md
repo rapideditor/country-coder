@@ -1,5 +1,5 @@
-[![build](https://github.com/ideditor/country-coder/workflows/build/badge.svg)](https://github.com/ideditor/country-coder/actions?query=workflow%3A%22build%22)
-[![npm version](https://badge.fury.io/js/%40ideditor%2Fcountry-coder.svg)](https://badge.fury.io/js/%40ideditor%2Fcountry-coder)
+[![build](https://github.com/rapideditor/country-coder/workflows/build/badge.svg)](https://github.com/rapideditor/country-coder/actions?query=workflow%3A%22build%22)
+[![npm version](https://badge.fury.io/js/%40rapideditor%2Fcountry-coder.svg)](https://badge.fury.io/js/%40rapideditor%2Fcountry-coder)
 
 # country-coder
 
@@ -56,17 +56,17 @@ Client-side coding has a number of benefits over server-side solutions:
 
 ### Use in Node
 
-`npm install @ideditor/country-coder`
+`npm install @rapideditor/country-coder`
 
 **country-coder** is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
 
 
 ```js
-const countryCoder = require('@ideditor/country-coder');           // CommonJS import all
-const iso1A2Code = require('@ideditor/country-coder').iso1A2Code;  // CommonJS import named
+const countryCoder = require('@rapideditor/country-coder');           // CommonJS import all
+const iso1A2Code = require('@rapideditor/country-coder').iso1A2Code;  // CommonJS import named
 // or
-import * as countryCoder from '@ideditor/country-coder';           // ESM import all
-import { iso1A2Code } from '@ideditor/country-coder';              // ESM import named
+import * as countryCoder from '@rapideditor/country-coder';           // ESM import all
+import { iso1A2Code } from '@rapideditor/country-coder';              // ESM import named
 ```
 
 
@@ -77,7 +77,7 @@ You can also use **country-coder** directly in a web browser. A good way to do t
 When you load this file in a `<script>` tag, you'll get a `countryCoder` global to use elsewhere in your scripts:
 ```html
 <head>
-<script src="https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.1/dist/country-coder.iife.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@rapideditor/country-coder@5.1/dist/country-coder.iife.min.js"></script>
 </head>
 …
 <script>
@@ -113,7 +113,7 @@ Read the [full API reference](#api-reference) to see everything `country-coder` 
 
 ## Contributing
 
-This package is kept intentionally minimal. However, if you find a bug or have an interesting idea for an enhancement, feel free to open an [Issue](https://github.com/ideditor/country-coder/issues) and/or [Pull Request](https://github.com/ideditor/country-coder/pulls).
+This package is kept intentionally minimal. However, if you find a bug or have an interesting idea for an enhancement, feel free to open an [Issue](https://github.com/rapideditor/country-coder/issues) and/or [Pull Request](https://github.com/rapideditor/country-coder/pulls).
 
 
 ## API Reference

@@ -6,7 +6,7 @@
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.js'></script>
 <script defer src='https://kit.fontawesome.com/c772610440.js' crossorigin='anonymous'></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@ideditor/country-coder@5.1/dist/country-coder.iife.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@rapideditor/country-coder@5.1/dist/country-coder.iife.min.js"></script>
 <!-- <script defer src='../dist/country-coder.iife.js'></script> -->
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css' rel='stylesheet'/>
 <link href='style.css' rel='stylesheet' type='text/css'/>
@@ -63,7 +63,7 @@
         <div class='icon'><i class='fas fa-file-code fa-lg'></i></div>
       </div>
       <div id='octocat'>
-        <a href='https://github.com/ideditor/country-coder' target='_blank'>
+        <a href='https://github.com/rapideditor/country-coder' target='_blank'>
         <i class='fab fa-github fa-2x'></i>
         </a>
       </div>
@@ -174,7 +174,7 @@ var GEOJSON_POINT = {
 
 window.addEventListener('DOMContentLoaded', function(e) {
   // Load the borders json
-  fetch('https://cdn.jsdelivr.net/gh/ideditor/country-coder@main/src/data/borders.json')
+  fetch('https://cdn.jsdelivr.net/gh/rapideditor/country-coder@main/src/data/borders.json')
     .then(function(response) {
       if (!response.ok) throw new Error(response.status + ' ' + response.statusText);
       return response.json();
