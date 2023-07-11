@@ -560,6 +560,11 @@ describe('country-coder', () => {
         expect(coder.iso1A2Code([21, 42.6], { level: 'country' })).toBe('XK');
       });
 
+      it('codes location in Northern Cyprus as NULL', () => {  // #121
+        expect(coder.iso1A2Code([33.8, 35.3])).toBeNull();
+        expect(coder.iso1A2Code([33.8, 35.3], { level: 'country' })).toBeNull();
+      });
+
       it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan as UZ', () => {
         expect(coder.iso1A2Code([71.13, 39.96], { level: 'country' })).toBe('UZ');
       });
@@ -676,6 +681,11 @@ describe('country-coder', () => {
       expect(coder.iso1A3Code([21, 42.6], { level: 'country' })).toBe('XKX');
     });
 
+    it('codes location in Northern Cyprus as NULL', () => {  // #121
+      expect(coder.iso1A3Code([33.8, 35.3])).toBeNull();
+      expect(coder.iso1A3Code([33.8, 35.3], { level: 'country' })).toBeNull();
+    });
+
     it('does not code location of North Pole', () => {
       expect(coder.iso1A3Code([0, 90])).toBeNull();
       expect(coder.iso1A3Code([0, 90], { level: 'country' })).toBeNull();
@@ -705,6 +715,11 @@ describe('country-coder', () => {
       expect(coder.iso1N3Code([21, 42.6], { level: 'country' })).toBeNull();
     });
 
+    it('codes location in North Cyprus', () => {  // #121
+      expect(coder.iso1N3Code([33.8, 35.3])).toBeNull();
+      expect(coder.iso1N3Code([33.8, 35.3], { level: 'country' })).toBeNull();
+    });
+
     it('does not code non-geography, non-ISO feature by Wikidata QID: Q48', () => {
       expect(coder.iso1N3Code('Q48')).toBeNull();
     });
@@ -730,6 +745,11 @@ describe('country-coder', () => {
     it('does not have code for location in user-assigned, de facto country: Kosovo', () => {
       expect(coder.m49Code([21, 42.6], { maxLevel: 'country' })).toBeNull();
       expect(coder.m49Code([21, 42.6], { level: 'country', maxLevel: 'country' })).toBeNull();
+    });
+
+    it('codes location in Northern Cyprus as 145 (West Asia)', () => {  // #121
+      expect(coder.m49Code([33.8, 35.3])).toBe('145');
+      expect(coder.m49Code([33.8, 35.3], { level: 'country' })).toBe('145');
     });
 
     it('does not code location of North Pole', () => {
