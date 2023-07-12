@@ -16,6 +16,15 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xx]: https://github.com/rapideditor/country-coder/issues/xx
 -->
 
+# 5.2.1
+##### 2023-Jul-12
+* Bump dependency versions
+* Adjust TW polygon to include Matsu and Wuqiu islands ([#127], [#128])
+
+[#127]: https://github.com/rapideditor/country-coder/issues/127
+[#128]: https://github.com/rapideditor/country-coder/issues/128
+
+
 # 5.2.0
 ##### 2023-Mar-12
 * Bump dependency versions
