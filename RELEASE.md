@@ -12,3 +12,13 @@
 - [ ] git push origin main vA.B.C
 - [ ] npm publish
 - [ ] Go to GitHub and link the release notes to the changelog
+
+### Purge JSDelivr CDN cache
+Include any URLs that iD/Rapid/others might request.
+
+```bash
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.min.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.2/dist/country-coder.iife.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.2/dist/country-coder.iife.min.js'
+```
