@@ -2,7 +2,7 @@
   "include": ["src/*"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
-    "module": "ES2020",
+    "module": "es2020",
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "dist",
@@ -15,8 +15,7 @@
     "strictBindCallApply": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "strictNullChecks": true
-  },
-  "target": "esnext",
-  "module": "commonjs"
+    "strictNullChecks": true,
+    "target": "esnext"
+  }
 }
