@@ -90,7 +90,7 @@ var overviewMbgl = new mapboxgl.Map({
   style: 'mapbox://styles/mapbox/dark-v11',
   projection: 'globe',
   center: [0,0],
-  zoom: 0.9,
+  zoom: -0.3,
   interactive: false
 });
 var detailMbgl = new mapboxgl.Map({
@@ -271,8 +271,7 @@ detailMbgl.on('load', function() {
 // wait for map to load before adjusting it
 overviewMbgl.on('style.load', function() {
   overviewMbgl.setFog({
-    color: 'rgb(186, 210, 235)',       // Lower atmosphere
-    'high-color': 'rgb(36, 92, 223)',  // Upper atmosphere
+    'range': [-1, 1],
     'horizon-blend': 0.02,             // Atmosphere thickness (default 0.2 at low zooms)
     'space-color': 'rgb(11, 11, 25)',  // Background color
     'star-intensity': 0.6              // Background star brightness (default 0.35 at low zoooms )
