@@ -4,11 +4,11 @@
 <meta charset='utf-8'/>
 <title>Country Coder</title>
 <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
-<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/mapbox-gl@2.15.0/dist/mapbox-gl.min.js'></script>
 <script defer src='https://kit.fontawesome.com/c772610440.js' crossorigin='anonymous'></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@rapideditor/country-coder@5.2/dist/country-coder.iife.min.js"></script>
 <!-- <script defer src='../dist/country-coder.iife.js'></script> -->
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.13.1/mapbox-gl.css' rel='stylesheet'/>
+<link href='https://cdn.jsdelivr.net/npm/mapbox-gl@2.15.0/dist/mapbox-gl.min.css' rel='stylesheet'/>
 <link href='style.css' rel='stylesheet' type='text/css'/>
 </head>
 
@@ -82,12 +82,12 @@
 </div>
 
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoibWlrZWxtYXJvbiIsImEiOiJjaWZlY25lZGQ2cTJjc2trbmdiZDdjYjllIn0.Wx1n0X7aeCQyDTnK6_mrGw';
+mapboxgl.accessToken = 'pk.eyJ1IjoiYmhvdXNlbCIsImEiOiJjbGZ1NG5qbTgwMzJyM3JydmJoY3ZvdDZzIn0.45qwn8YXGm4QofNsZryK4g';
 
 var overviewMbgl = new mapboxgl.Map({
   attributionControl: false,
   container: 'overview-map',
-  style: 'mapbox://styles/mapbox/dark-v10',
+  style: 'mapbox://styles/mapbox/dark-v11',
   center: [0,0],
   zoom: -0.8,
   interactive: false,
@@ -96,7 +96,7 @@ var overviewMbgl = new mapboxgl.Map({
 var detailMbgl = new mapboxgl.Map({
   attributionControl: false,
   container: 'detail-map',
-  style: 'mapbox://styles/mapbox/dark-v10',
+  style: 'mapbox://styles/mapbox/dark-v11',
   center: [0,0],
   zoom: 1,
   minZoom: 0,
