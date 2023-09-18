@@ -87,9 +87,10 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiYmhvdXNlbCIsImEiOiJjbGZ1NG5qbTgwMzJyM3JydmJoY
 var overviewMbgl = new mapboxgl.Map({
   attributionControl: false,
   container: 'overview-map',
-  style: 'mapbox://styles/mapbox/satellite-v9',
+  style: 'mapbox://styles/mapbox/dark-v11',
+  projection: 'globe',
   center: [0,0],
-  zoom: 0.1,
+  zoom: 1,
   interactive: false
 });
 var detailMbgl = new mapboxgl.Map({
@@ -97,7 +98,8 @@ var detailMbgl = new mapboxgl.Map({
   container: 'detail-map',
   style: 'mapbox://styles/mapbox/dark-v11',
   center: [0,0],
-  zoom: 1,
+  projection: 'globe',
+  zoom: 1.8,
   minZoom: 0,
   maxZoom: 24,
   minPitch: 0,
