@@ -163,7 +163,7 @@ a.mapboxgl-ctrl-logo {
   height: 150px;
   transition: opacity 200ms ease;
   border: 1px solid #ccc6;
-  border-radius: 150px;
+/*  border-radius: 150px;*/
   filter: drop-shadow(0 0 5px black);
 }
 #overview-map .mapboxgl-control-container {

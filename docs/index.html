@@ -89,7 +89,7 @@ var overviewMbgl = new mapboxgl.Map({
   container: 'overview-map',
   style: 'mapbox://styles/mapbox/satellite-v9',
   center: [0,0],
-  zoom: -0.9,
+  zoom: 0.1,
   interactive: false
 });
 var detailMbgl = new mapboxgl.Map({
@@ -369,7 +369,7 @@ function mapShowCode(code) {
 
     // Fly to it
     overviewMbgl.easeTo({ center: center });
-    detailMbgl.fitBounds(bounds, { padding: 50, speed: 2 });
+    detailMbgl.fitBounds(bounds, { padding: 50, speed: 3 });
 
   } catch (err) { /* ignore */ }
 }
