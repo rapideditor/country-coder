@@ -87,11 +87,10 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiYmhvdXNlbCIsImEiOiJjbGZ1NG5qbTgwMzJyM3JydmJoY
 var overviewMbgl = new mapboxgl.Map({
   attributionControl: false,
   container: 'overview-map',
-  style: 'mapbox://styles/mapbox/dark-v11',
+  style: 'mapbox://styles/mapbox/streets-v12',
   center: [0,0],
-  zoom: -0.8,
-  interactive: false,
-  renderWorldCopies: true
+  zoom: 1,
+  interactive: false
 });
 var detailMbgl = new mapboxgl.Map({
   attributionControl: false,
@@ -103,8 +102,7 @@ var detailMbgl = new mapboxgl.Map({
   maxZoom: 24,
   minPitch: 0,
   maxPitch: 0,
-  dragRotate: false,
-  renderWorldCopies: false
+  dragRotate: false
 });
 
 // ----------------------------------- STATE ------------------------------------
