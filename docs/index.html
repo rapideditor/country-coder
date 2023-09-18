@@ -268,15 +268,15 @@ detailMbgl.on('load', function() {
 
 });
 
-// wait for map to load before adjusting it
-overviewMbgl.on('style.load', function() {
-  overviewMbgl.setFog({
-    'range': [-1, 1],
-    'horizon-blend': 0.02,             // Atmosphere thickness (default 0.2 at low zooms)
-    'space-color': 'rgb(11, 11, 25)',  // Background color
-    'star-intensity': 0.6              // Background star brightness (default 0.35 at low zoooms )
-  });
-});
+//// wait for map to load before adjusting it
+//overviewMbgl.on('style.load', function() {
+//  overviewMbgl.setFog({
+//    'range': [-1, 1],
+//    'horizon-blend': 0.02,             // Atmosphere thickness (default 0.2 at low zooms)
+//    'space-color': 'rgb(11, 11, 25)',  // Background color
+//    'star-intensity': 0                // Background star brightness (default 0.35 at low zoooms )
+//  });
+//});
 
 
 // ---------------------------------- FUNCTIONS ------------------------------------
