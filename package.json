@@ -2,7 +2,10 @@
   "name": "@rapideditor/country-coder",
   "version": "5.2.2",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
-  "repository": "github:rapideditor/country-coder",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rapideditor/country-coder.git"
+  },
   "license": "ISC",
   "keywords": [
     "reverse geocoder",
