@@ -16,6 +16,13 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xx]: https://github.com/rapideditor/country-coder/issues/xx
 -->
 
+# 5.2.2
+##### 2023-Sep-26
+* Include 'types' in export map ([#133])
+
+[#133]: https://github.com/rapideditor/country-coder/issues/133
+
+
 # 5.2.1
 ##### 2023-Jul-12
 * Bump dependency versions
