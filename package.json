@@ -23,7 +23,8 @@
   "module": "./dist/country-coder.mjs",
   "exports": {
     "import": "./dist/country-coder.mjs",
-    "require": "./dist/country-coder.cjs"
+    "require": "./dist/country-coder.cjs",
+    "types": "./dist/country-coder.d.ts"
   },
   "dependencies": {
     "which-polygon": "^2.2.1"
