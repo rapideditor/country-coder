@@ -244,6 +244,7 @@ function loadDerivedDataAndCaches(borders) {
   function loadTLD(feature: RegionFeature) {
     const props = feature.properties;
     if (props.level === 'unitedNations') return; // `.un` is not a ccTLD
+    if (props.ccTLD === null) return; // e.g. Sark is an ISO code but not a ccTLD
     if (!props.ccTLD && props.iso1A2) {  // ccTLD is nearly the same as iso1A2, so we only need to explicitly code any exceptions
       props.ccTLD = '.' + props.iso1A2.toLowerCase();
     }
