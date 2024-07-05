@@ -517,7 +517,7 @@ describe('country-coder', () => {
     });
     describe('by M49', () => {
       it('does not find for feature with geography but no ISO code', () => {
-        expect(coder.iso1A2Code('680')).toBeNull();
+        expect(coder.iso1A2Code('061')).toBeNull();
       });
       it('does not find for feature with no geography and no ISO code', () => {
         expect(coder.iso1A2Code('142')).toBeNull();
@@ -698,7 +698,6 @@ describe('country-coder', () => {
 
     it('does not code feature without alpha-3 code by identifier', () => {
       expect(coder.iso1A3Code('Bir Tawil')).toBeNull();
-      expect(coder.iso1A3Code('Sark')).toBeNull();
       expect(coder.iso1A3Code('830')).toBeNull();
       expect(coder.iso1A3Code('Northern America')).toBeNull();
       expect(coder.iso1A3Code('Oceania')).toBeNull();
@@ -830,7 +829,7 @@ describe('country-coder', () => {
   describe('iso1A2Codes', () => {
     it('codes locations', () => {
       expect(coder.iso1A2Codes([-4.5, 54.2])).toStrictEqual(['IM', 'GB', 'UN']);
-      expect(coder.iso1A2Codes([-2.35, 49.43])).toStrictEqual(['GG', 'GB', 'UN']);
+      expect(coder.iso1A2Codes([-2.35, 49.43])).toStrictEqual(['CQ', 'GG', 'GB', 'UN']);
       expect(coder.iso1A2Codes([-12.3, -37.1])).toStrictEqual(['TA', 'SH', 'GB', 'UN']);
       expect(coder.iso1A2Codes([12.59, 55.68])).toStrictEqual(['DK', 'EU', 'UN']);
       expect(coder.iso1A2Codes([2.35, 48.85])).toStrictEqual(['FX', 'FR', 'EU', 'UN']);
@@ -865,7 +864,7 @@ describe('country-coder', () => {
   describe('iso1A3Codes', () => {
     it('codes locations', () => {
       expect(coder.iso1A3Codes([-4.5, 54.2])).toStrictEqual(['IMN', 'GBR']);
-      expect(coder.iso1A3Codes([-2.35, 49.43])).toStrictEqual(['GGY', 'GBR']);
+      expect(coder.iso1A3Codes([-2.35, 49.43])).toStrictEqual(['CRQ', 'GGY', 'GBR']);
       expect(coder.iso1A3Codes([-12.3, -37.1])).toStrictEqual(['TAA', 'SHN', 'GBR']);
       expect(coder.iso1A3Codes([12.59, 55.68])).toStrictEqual(['DNK', 'EUE']);
       expect(coder.iso1A3Codes([2.35, 48.85])).toStrictEqual(['FXX', 'FRA', 'EUE']);
@@ -886,7 +885,8 @@ describe('country-coder', () => {
   describe('iso1N3Codes', () => {
     it('codes locations', () => {
       expect(coder.iso1N3Codes([-4.5, 54.2])).toStrictEqual(['833', '826']);
-      expect(coder.iso1N3Codes([-2.35, 49.43])).toStrictEqual(['831', '826']);
+      expect(coder.iso1N3Codes([-2.35, 49.43])).toStrictEqual(['680', '831', '826']);
+      expect(coder.iso1N3Codes([-2.53, 49.45])).toStrictEqual(['831', '826']);
       expect(coder.iso1N3Codes([-12.3, -37.1])).toStrictEqual(['654', '826']);
       expect(coder.iso1N3Codes([12.59, 55.68])).toStrictEqual(['208']);
       expect(coder.iso1N3Codes([2.35, 48.85])).toStrictEqual(['249', '250']);
@@ -1014,7 +1014,7 @@ describe('country-coder', () => {
     it('codes locations', () => {
       // isle of man
       expect(coder.emojiFlags([-4.5, 54.2])).toStrictEqual(['🇮🇲', '🇬🇧', '🇺🇳']);
-      expect(coder.emojiFlags([-2.35, 49.43])).toStrictEqual(['🇬🇬', '🇬🇧', '🇺🇳']);
+      expect(coder.emojiFlags([-2.35, 49.43])).toStrictEqual(['🇨🇶', '🇬🇬', '🇬🇧', '🇺🇳']);
       expect(coder.emojiFlags([-12.3, -37.1])).toStrictEqual(['🇹🇦', '🇸🇭', '🇬🇧', '🇺🇳']);
       expect(coder.emojiFlags([12.59, 55.68])).toStrictEqual(['🇩🇰', '🇪🇺', '🇺🇳']);
       expect(coder.emojiFlags([2.35, 48.85])).toStrictEqual(['🇫🇽', '🇫🇷', '🇪🇺', '🇺🇳']);
