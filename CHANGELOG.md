@@ -16,6 +16,13 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xx]: https://github.com/rapideditor/country-coder/issues/xx
 -->
 
+# 5.3.0
+##### 2024-Jul-17
+* Support Sark/CQ in CLDR 43, Unicode 16 ([#137])
+
+[#137]: https://github.com/rapideditor/country-coder/issues/137
+
+
 # 5.2.2
 ##### 2023-Sep-26
 * Include 'types' in export map ([#133])
