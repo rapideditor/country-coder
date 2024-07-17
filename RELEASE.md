@@ -21,13 +21,13 @@ npm publish
 ```
 
 Set as latest release on GitHub:
-- Open https://github.com/facebook/Rapid/blob/main/CHANGELOG.md and copy the URL to the new release
-- Open https://github.com/facebook/Rapid/tags and pick the new tag you just pushed
+- Open https://github.com/rapideditor/country-coder/blob/main/CHANGELOG.md and copy the URL to the new release
+- Open https://github.com/rapideditor/country-coder/tags and pick the new tag you just pushed
 - There should be a link like "create a release from the tag", click that, and paste in the link to the changelog.
 
 
 ### Purge JSDelivr CDN cache
-Include any URLs that iD/Rapid/others might request.
+Include any URLs that anyone might request.
 
 ```bash
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-coder.iife.js'
