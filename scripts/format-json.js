@@ -22,20 +22,19 @@ outstring = outstring.substring(0, outstring.length - 1);
 outstring += ',"features":[\n';
 
 features.sort((feature1, feature2) => {
-  if (feature1.properties.iso1A2 && !feature2.properties.iso1A2) return 1;
-  if (!feature1.properties.iso1A2 && feature2.properties.iso1A2) return -1;
-  if (feature1.properties.m49 && !feature2.properties.m49) return 1;
-  if (!feature1.properties.m49 && feature2.properties.m49) return -1;
-  if (feature1.properties.m49) {
-    return feature1.properties.m49.localeCompare(feature2.properties.m49, 'en');
-  }
-  if (feature1.properties.iso1A2) {
-    return feature1.properties.iso1A2.localeCompare(feature2.properties.iso1A2, 'en');
-  }
-  return (
-    parseInt(feature1.properties.wikidata.slice(1)) -
-    parseInt(feature2.properties.wikidata.slice(1))
-  );
+  let code1 = feature1.properties.iso1A2 ?? '';
+  let code2 = feature2.properties.iso1A2 ?? '';
+  let compare = code1.localeCompare(code2, 'en');
+  if (compare) return compare;
+
+  code1 = feature1.properties.m49 ?? '';
+  code2 = feature2.properties.m49 ?? '';
+  compare = code1.localeCompare(code2, 'en');
+  if (compare) return compare;
+
+  code1 = parseInt(feature1.properties.wikidata.slice(1));
+  code2 = parseInt(feature2.properties.wikidata.slice(1));
+  return code1 - code2;
 });
 
 function roundCoordinatePrecision(feature) {
@@ -53,7 +52,7 @@ function roundCoordinatePrecision(feature) {
   }
 }
 
-const featureProperties = [
+const allowedProperties = [
   'iso1A2',
   'iso1A3',
   'iso1N3',
@@ -72,16 +71,17 @@ const featureProperties = [
   'callingCodes'
 ];
 
+// Keep only the allowed properties, and order them as above
 function processProperties(feature) {
-  let newProperties = {};
-  for (const j in featureProperties) {
-    const prop = featureProperties[j];
-    if (feature.properties[prop]) {
-      newProperties[prop] = feature.properties[prop];
+  const keepProps = {};
+  for (const k of allowedProperties) {
+    if (feature.properties.hasOwnProperty(k)) {
+      keepProps[k] = feature.properties[k];
     }
   }
-  feature.properties = newProperties;
+  feature.properties = keepProps;
 }
+
 
 function validateFeature(feature) {
   if (!feature.geometry) {
