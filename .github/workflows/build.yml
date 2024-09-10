@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.14, 18, 20]
+        node-version: [18, 20]
 
     steps:
     - uses: actions/checkout@v4
@@ -24,4 +24,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
+    - run: |
+        echo "::remove-matcher owner=eslint-compact::"
+        echo "::remove-matcher owner=eslint-stylish::"
     - run: npm run test

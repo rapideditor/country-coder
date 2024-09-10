@@ -2,10 +2,7 @@
   "name": "@rapideditor/country-coder",
   "version": "5.3.0",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rapideditor/country-coder.git"
-  },
+  "repository": "github:rapideditor/country-coder",
   "license": "ISC",
   "keywords": [
     "reverse geocoder",
@@ -34,64 +31,28 @@
   },
   "devDependencies": {
     "@mapbox/geojson-rewind": "^0.5.2",
-    "@types/jest": "^29.5.12",
     "@types/node": "^22.0.2",
-    "esbuild": "^0.23.0",
-    "esbuild-jest": "~0.5.0",
-    "jest": "^29.7.0",
-    "jest-extended": "^4.0.2",
+    "c8": "^10.1.2",
+    "esbuild": "^0.23.1",
     "npm-run-all": "^4.1.5",
     "shx": "^0.3.4",
-    "typescript": "^5.5.3"
+    "typescript": "^5.6.2"
   },
   "scripts": {
     "all": "run-s clean build test",
     "clean": "shx rm -rf dist",
     "build": "run-s format-json build:**",
-    "build:browser": "esbuild ./src/country-coder.ts --platform=browser --format=iife --global-name=countryCoder --bundle --sourcemap --outfile=./dist/country-coder.iife.js",
-    "build:cjs": "esbuild ./src/country-coder.ts --platform=node --format=cjs --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.cjs",
-    "build:mjs": "esbuild ./src/country-coder.ts --platform=neutral --format=esm --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.mjs",
+    "build:browser": "esbuild ./src/country-coder.ts --log-override:package.json=silent --platform=browser --format=iife --global-name=countryCoder --bundle --sourcemap --outfile=./dist/country-coder.iife.js",
+    "build:cjs": "esbuild ./src/country-coder.ts --log-override:package.json=silent --platform=node --format=cjs --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.cjs",
+    "build:mjs": "esbuild ./src/country-coder.ts --log-override:package.json=silent --platform=neutral --format=esm --bundle --sourcemap --external:which-polygon --outfile=./dist/country-coder.mjs",
     "build:types": "tsc",
     "format-json": "node ./scripts/format-json.js",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --colors"
+    "test": "c8 node --test tests/*.js"
   },
   "publishConfig": {
     "access": "public"
   },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "**/src/*.(ts|js)"
-    ],
-    "coverageDirectory": "<rootDir>/.coverage",
-    "coverageProvider": "v8",
-    "extensionsToTreatAsEsm": [
-      ".ts"
-    ],
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json"
-    ],
-    "setupFilesAfterEnv": [
-      "jest-extended/all"
-    ],
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/*.spec.(ts|js)"
-    ],
-    "transform": {
-      "^.+\\.ts$": [
-        "esbuild-jest",
-        {
-          "format": "esm",
-          "sourcemap": "true"
-        }
-      ]
-    },
-    "verbose": true
-  },
   "engines": {
-    "node": ">=16.14.0"
+    "node": ">=18"
   }
 }
