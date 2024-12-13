@@ -16,6 +16,15 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xx]: https://github.com/rapideditor/country-coder/issues/xx
 -->
 
+# 5.3.1
+##### 2024-Dec-13
+* Cyprus border refinements and corrections ([#139], [#140], [#143])
+
+[#139]: https://github.com/rapideditor/country-coder/issues/139
+[#140]: https://github.com/rapideditor/country-coder/issues/140
+[#143]: https://github.com/rapideditor/country-coder/issues/143
+
+
 # 5.3.0
 ##### 2024-Jul-17
 * Support Sark/CQ in CLDR 43, Unicode 16 ([#137])

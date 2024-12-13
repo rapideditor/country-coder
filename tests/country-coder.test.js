@@ -1446,7 +1446,7 @@ describe('country-coder', () => {
     it('returns aggregate for feature without geometry', () => {
       assert.equal(coder.aggregateFeature('CN')?.geometry.coordinates.length, 3);
       assert.equal(coder.aggregateFeature('SH')?.geometry.coordinates.length, 3);
-      assert.equal(coder.aggregateFeature('EU')?.geometry.coordinates.length, 62);
+      assert.equal(coder.aggregateFeature('EU')?.geometry.coordinates.length, 63);
     });
     it('returns null for invalid ID', () => {
       assert.equal(coder.aggregateFeature('ABC'), null);
