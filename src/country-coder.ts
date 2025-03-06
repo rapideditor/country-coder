@@ -1,3 +1,4 @@
+import type { Feature, FeatureCollection, Geometry, Position } from 'geojson';
 import whichPolygon from 'which-polygon';
 import rawBorders from './data/borders.json';
 
@@ -72,24 +73,24 @@ type RegionFeatureProperties = {
   // The side of the road that traffic drives on within this feature
   // - `right`
   // - `left`
-  driveSide: string | undefined;
+  driveSide: 'left' | 'right' | undefined;
 
   // The unit used for road traffic speeds within this feature
   // - `mph`: miles per hour
   // - `km/h`: kilometers per hour
-  roadSpeedUnit: string | undefined;
+  roadSpeedUnit: 'mph' | 'km/h' | undefined;
 
   // The unit used for road vehicle height restrictions within this feature
   // - `ft`: feet and inches
   // - `m`: meters
-  roadHeightUnit: string | undefined;
+  roadHeightUnit: 'ft' | 'm' | undefined;
 
   // The international calling codes for this feature, sometimes including area codes
   // e.g. `1`, `1 340`
   callingCodes: Array<string> | undefined;
 };
-type RegionFeature = { type: string; geometry: any; properties: RegionFeatureProperties };
-type RegionFeatureCollection = { type: string; features: Array<RegionFeature> };
+type RegionFeature = Feature<Geometry, RegionFeatureProperties>;
+type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperties>;
 type Vec2 = [number, number]; // [lon, lat]
 type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 type PointGeometry = { type: string; coordinates: Vec2 };
@@ -698,7 +699,7 @@ export function aggregateFeature(id: string | number): RegionFeature | null {
   const features = featuresIn(id, false);
   if (features.length === 0) return null;
 
-  let aggregateCoordinates = [];
+  let aggregateCoordinates: Position[][][] = [];
   for (const feature of features) {
     if (feature.geometry?.type === 'MultiPolygon' && feature.geometry.coordinates) {
       aggregateCoordinates = aggregateCoordinates.concat(feature.geometry.coordinates);
