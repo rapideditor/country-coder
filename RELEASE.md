@@ -34,6 +34,6 @@ curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-cod
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-coder.iife.min.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.min.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.3/dist/country-coder.iife.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.3/dist/country-coder.iife.min.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.4/dist/country-coder.iife.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.4/dist/country-coder.iife.min.js'
 ```

@@ -13,8 +13,29 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 ##### YYYY-MMM-DD
 *
 
-[#xx]: https://github.com/rapideditor/country-coder/issues/xx
+[#xxx]: https://github.com/rapideditor/country-coder/issues/xxx
 -->
+
+# 5.4.0
+##### 2025-Apr-28
+* Drop support for Node 18
+* Improved TypeScript definitions ([#145])
+* Border refinements:
+  * Slovakia - Hungary ([#146])
+  * Italy - Slovenia ([#147])
+  * Malaysia - Philippines ([#148])
+  * Brazil ([#149])
+  * Canada - United States([#150])
+  * Germany - Switzerland ([#151])
+
+[#145]: https://github.com/rapideditor/country-coder/issues/145
+[#146]: https://github.com/rapideditor/country-coder/issues/146
+[#147]: https://github.com/rapideditor/country-coder/issues/147
+[#148]: https://github.com/rapideditor/country-coder/issues/148
+[#149]: https://github.com/rapideditor/country-coder/issues/149
+[#150]: https://github.com/rapideditor/country-coder/issues/150
+[#151]: https://github.com/rapideditor/country-coder/issues/151
+
 
 # 5.3.1
 ##### 2024-Dec-13
