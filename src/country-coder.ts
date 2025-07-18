@@ -384,14 +384,49 @@ function loadDerivedDataAndCaches(borders) {
     }
   }
 
-  // Calculates the emoji flag sequence from the alpha-2 code (if any) and caches it
+  // Calculates the emoji flag (if any) and caches it
   function loadFlag(feature: RegionFeature) {
-    if (!feature.properties.iso1A2) return;
+    let flag: string = '';
 
-    const flag = feature.properties.iso1A2.replace(/./g, function (char: string) {
-      return String.fromCodePoint(<number>char.charCodeAt(0) + 127397);
-    });
-    feature.properties.emojiFlag = flag;
+    // Most emoji flags can be generated from their 2 letter code.
+    // Skip 'FX' (Metropolitan France), allow it to roll up to 'FR' - #25
+    const country = feature.properties.iso1A2;
+    if (country && country !== 'FX') {
+      flag = _toEmojiCountryFlag(country);
+    }
+
+    // Support a few regional flags - #157
+    const regionStrings = {
+      Q21: 'gbeng',  // GB-ENG (England)
+      Q22: 'gbsct',  // GB-SCT (Scotland)
+      Q25: 'gbwls'   // GB-WLS (Wales)
+    };
+    const region = regionStrings[feature.properties.wikidata];
+    if (region) {
+      flag = _toEmojiRegionFlag(region);
+    }
+
+    if (flag) {
+      feature.properties.emojiFlag = flag;
+    }
+
+    // Normally, take isoA2 chars and jump up into "Enclosed Alphanumeric Supplement" block
+    // see https://en.wikipedia.org/wiki/Regional_indicator_symbol
+    // see https://en.wikipedia.org/wiki/Enclosed_Alphanumeric_Supplement
+    function _toEmojiCountryFlag(s: string): string {
+      return s.replace(/./g, c => String.fromCodePoint(<number>c.charCodeAt(0) + 0x1F1A5));
+    }
+
+    // Regional flags are encoded as U+1F3F4 (black flag) + the region string (jump up to "Tags" block) + U+E007F (end)
+    // see https://en.wikipedia.org/wiki/Tags_(Unicode_block)
+    function _toEmojiRegionFlag(s: string) {
+      const codepoints = [0x1F3F4];
+      for (const c of [...s]) {
+        codepoints.push(<number>c.codePointAt(0) + 0xE0000);
+      }
+      codepoints.push(0xE007F);
+      return String.fromCodePoint.apply(null, codepoints);
+    }
   }
 
   // Populate `members` as the inverse relationship of `groups`

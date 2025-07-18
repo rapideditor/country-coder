@@ -224,8 +224,13 @@ describe('country-coder', () => {
     });
 
     describe('by emoji flag sequence', () => {
-      it('finds feature for emoji flag sequence: 🇺🇸', () => {
-        assert.equal(coder.feature('🇺🇸')?.properties.iso1N3, '840');
+      it('finds feature by known emoji flag sequence', () => {
+        assert.equal(coder.feature('🇺🇸')?.properties?.wikidata, 'Q30');   // United States of America
+        assert.equal(coder.feature('🇫🇷')?.properties?.wikidata, 'Q142');  // France
+        assert.equal(coder.feature('🇬🇧')?.properties?.wikidata, 'Q145');  // United Kingdom
+        assert.equal(coder.feature('🏴󠁧󠁢󠁥󠁮󠁧󠁿')?.properties?.wikidata, 'Q21');   // England
+        assert.equal(coder.feature('🏴󠁧󠁢󠁷󠁬󠁳󠁿')?.properties?.wikidata, 'Q25');   // Wales
+        assert.equal(coder.feature('🏴󠁧󠁢󠁳󠁣󠁴󠁿')?.properties?.wikidata, 'Q22');   // Scotland
       });
 
       it('does not find feature for unassigned emoji flag sequence: 🇦🇧', () => {
@@ -504,6 +509,7 @@ describe('country-coder', () => {
         assert.equal(coder.iso1A2Code('RP'), 'PH');
       });
     });
+
     describe('by M49', () => {
       it('does not find for feature with geography but no ISO code', () => {
         assert.equal(coder.iso1A2Code('061'), null);
@@ -512,6 +518,7 @@ describe('country-coder', () => {
         assert.equal(coder.iso1A2Code('142'), null);
       });
     });
+
     describe('by location, country level', () => {
       it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
         assert.equal(coder.iso1A2Code([-79.4, 43.7], { level: 'country' }), 'CA');
@@ -575,6 +582,7 @@ describe('country-coder', () => {
         assert.equal(coder.iso1A2Code([33.75, 21.87], { level: 'country' }), null);
       });
     });
+
     describe('by location, territory level', () => {
       it('codes location in officially-assigned country: Toronto, Canada as CA', () => {
         assert.equal(coder.iso1A2Code([-79.4, 43.7], { level: 'territory' }), 'CA');
@@ -632,6 +640,7 @@ describe('country-coder', () => {
         assert.equal(coder.iso1A2Code([33.75, 21.87], { level: 'territory' }), null);
       });
     });
+
     describe('by GeoJSON point feature, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         const coords = [-74, 40.6];
@@ -647,6 +656,7 @@ describe('country-coder', () => {
         assert.equal(coder.iso1A2Code(pointFeature), 'US');
       });
     });
+
     describe('by GeoJSON point geometry, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         let pointGeometry = {
@@ -1001,12 +1011,16 @@ describe('country-coder', () => {
 
   describe('emojiFlags', () => {
     it('codes locations', () => {
-      // isle of man
-      assert.deepEqual(coder.emojiFlags([-4.5, 54.2]), ['🇮🇲', '🇬🇧', '🇺🇳']);
       assert.deepEqual(coder.emojiFlags([-2.35, 49.43]), ['🇨🇶', '🇬🇬', '🇬🇧', '🇺🇳']);
       assert.deepEqual(coder.emojiFlags([-12.3, -37.1]), ['🇹🇦', '🇸🇭', '🇬🇧', '🇺🇳']);
       assert.deepEqual(coder.emojiFlags([12.59, 55.68]), ['🇩🇰', '🇪🇺', '🇺🇳']);
-      assert.deepEqual(coder.emojiFlags([2.35, 48.85]), ['🇫🇽', '🇫🇷', '🇪🇺', '🇺🇳']);
+      assert.deepEqual(coder.emojiFlags([2.35, 48.85]), ['🇫🇷', '🇪🇺', '🇺🇳']);  // skip 'FX', rolls up to 'FR'
+      assert.deepEqual(coder.emojiFlags([0, 51.5]), ['🏴󠁧󠁢󠁥󠁮󠁧󠁿', '🇬🇧', '🇺🇳']);      // London, England
+      assert.deepEqual(coder.emojiFlags([-3.18, 51.4]), ['🏴󠁧󠁢󠁷󠁬󠁳󠁿', '🇬🇧', '🇺🇳']);  // Cardiff, Wales
+      assert.deepEqual(coder.emojiFlags([-3.2, 55.94]), ['🏴󠁧󠁢󠁳󠁣󠁴󠁿', '🇬🇧', '🇺🇳']);  // Edinburgh, Scotland
+      assert.deepEqual(coder.emojiFlags([-4.5, 54.2]), ['🇮🇲', '🇬🇧', '🇺🇳']);   // Isle of Man
+      assert.deepEqual(coder.emojiFlags([-5.9, 54.6]), ['🇬🇧', '🇺🇳']);         // Belfast, Northern Ireland
+      assert.deepEqual(coder.emojiFlags([-6.27, 53.3]), ['🇮🇪', '🇪🇺', '🇺🇳']);  // Dublin, Ireland
       assert.deepEqual(coder.emojiFlags([-74, 40.6]), ['🇺🇸', '🇺🇳']);
       assert.deepEqual(coder.emojiFlags([21, 42.6]), ['🇽🇰']);
       assert.deepEqual(coder.emojiFlags([0, -90]), ['🇦🇶']);
