@@ -16,6 +16,14 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xxx]: https://github.com/rapideditor/country-coder/issues/xxx
 -->
 
+# 5.5.0
+##### 2025-Jul-18
+* Test against Node 24
+* Support some regional emoji flags ([#157])
+
+[#157]: https://github.com/rapideditor/country-coder/issues/157
+
+
 # 5.4.0
 ##### 2025-Apr-28
 * Drop support for Node 18

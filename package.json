@@ -1,6 +1,6 @@
 {
   "name": "@rapideditor/country-coder",
-  "version": "5.4.0",
+  "version": "5.5.0",
   "description": "Convert longitude-latitude pairs to ISO 3166-1 codes quickly and locally",
   "repository": "github:rapideditor/country-coder",
   "license": "ISC",

@@ -14,7 +14,7 @@ npm run all
 # Update CHANGELOG.md
 
 export VERSION=vA.B.C-pre.D
-git add . && git commit -m  "$VERSION"
+git add . && git commit -m "$VERSION"
 git tag "$VERSION"
 git push origin main "$VERSION"
 npm publish
@@ -34,6 +34,6 @@ curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-cod
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-coder.iife.min.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.min.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.4/dist/country-coder.iife.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.4/dist/country-coder.iife.min.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.5/dist/country-coder.iife.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.5/dist/country-coder.iife.min.js'
 ```
