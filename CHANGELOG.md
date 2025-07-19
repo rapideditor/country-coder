@@ -16,6 +16,19 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xxx]: https://github.com/rapideditor/country-coder/issues/xxx
 -->
 
+
+# 5.5.1
+##### 2025-Jul-18
+* Border refinements:
+  * Ukraine - Russia ([#153])
+  * Austria - Hungary ([#154])
+  * France - Spain ([#155])
+
+[#153]: https://github.com/rapideditor/country-coder/issues/153
+[#154]: https://github.com/rapideditor/country-coder/issues/154
+[#155]: https://github.com/rapideditor/country-coder/issues/155
+
+
 # 5.5.0
 ##### 2025-Jul-18
 * Test against Node 24
