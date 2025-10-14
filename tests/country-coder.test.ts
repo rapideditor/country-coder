@@ -1,6 +1,6 @@
-import { describe, it } from 'node:test';
-import { strict as assert } from 'node:assert';
-import * as coder from '../dist/country-coder.mjs';
+import { describe, it } from 'bun:test';
+import { strict as assert } from 'bun:assert';
+import * as coder from '../src/country-coder';
 
 
 describe('country-coder', () => {

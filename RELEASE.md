@@ -6,8 +6,8 @@
 # Make sure your main branch is up to date and all tests pass
 git checkout main
 git pull origin
-npm install
-npm run all
+bun install
+bun run all
 
 # Pick a version, see https://semver.org/ - for example: 'A.B.C' or 'A.B.C-pre.D'
 # Update version number in `package.json`
@@ -17,7 +17,7 @@ export VERSION=vA.B.C-pre.D
 git add . && git commit -m "$VERSION"
 git tag "$VERSION"
 git push origin main "$VERSION"
-npm publish
+bun publish
 ```
 
 Set as latest release on GitHub:
