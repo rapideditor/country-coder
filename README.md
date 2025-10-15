@@ -113,6 +113,8 @@ Read the [full API reference](#api-reference) to see everything `country-coder` 
 
 ## Contributing
 
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more info.
+
 This package is kept intentionally minimal. However, if you find a bug or have an interesting idea for an enhancement, feel free to open an [Issue](https://github.com/rapideditor/country-coder/issues) and/or [Pull Request](https://github.com/rapideditor/country-coder/pulls).
 
 
