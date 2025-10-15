@@ -1,15 +1,19 @@
 # Contributing
 
 This project uses **GitHub** to track issues and manage our source code.
-Check out the [Git Guides](https://github.com/git-guides) to learn more.
+- Check out the [Git Guides](https://github.com/git-guides) to learn more.
 
-This project uses **TypeScript** as the programming language of choice.
-Check out the [TypeScript Docs](https://www.typescriptlang.org/docs/) to learn more.
-(It's a lot like JavaScript, so knowing that already will help you a lot).
+This project uses the **JavaScript** programming language.
+- [MDN's JavaScript guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) is a great resource for learning about JavaScript.
+
+This project uses the **TypeScript** programming language.
+- Check out the [TypeScript Docs](https://www.typescriptlang.org/docs/) to learn more.
+- (It's a superset of JavaScript, so knowing that already will help you a lot).
 
 This project uses **Bun** as our development environment.
-Check out the [Bun Docs](https://bun.com/docs) to learn more.
-(It's a lot like Node/Jest/Esbuild, so knowing those already will help you a lot).
+- Check out the [Bun Docs](https://bun.com/docs) to learn more.
+- (It's similar to other JavaScript tools like Node/Jest/Esbuild/Vite, so knowing any of those already will help you a lot).
+- Bun supports both JavaScript and TypeScript.
 
 If you want to contribute to country-coder, you'll probably need to:
 - [Install Bun](https://bun.com/docs/installation)
