@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'bun:fs';
 import rewind from '@mapbox/geojson-rewind';
 
 const bordersPath = './src/data/borders.json';
@@ -86,14 +86,21 @@ function processProperties(feature) {
 function validateFeature(feature) {
   if (!feature.geometry) {
     const name = feature.properties.nameEn;
-    if (feature.properties.roadSpeedUnit)
-      console.error(name + ' has no geometry but has roadSpeedUnit');
-    if (feature.properties.roadHeightUnit)
-      console.error(name + ' has no geometry but has roadHeightUnit');
-    if (feature.properties.driveSide) console.error(name + ' has no geometry but has driveSide');
-    if (feature.properties.callingCodes)
-      console.error(name + ' has no geometry but has callingCodes');
-    if (feature.properties.groups) console.error(name + ' has no geometry but has groups');
+    if (feature.properties.roadSpeedUnit) {
+      console.warn(`Warning:  '${name}' has no geometry but has 'roadSpeedUnit'`);
+    }
+    if (feature.properties.roadHeightUnit) {
+      console.warn(`Warning:  '${name}' has no geometry but has 'roadHeightUnit'`);
+    }
+    if (feature.properties.driveSide) {
+      console.warn(`Warning:  '${name}' has no geometry but has 'driveSide'`);
+    }
+    if (feature.properties.callingCodes) {
+      console.warn(`Warning:  '${name}' has no geometry but has 'callingCodes'`);
+    }
+    if (feature.properties.groups) {
+      console.warn(`Warning:  '${name}' has no geometry but has 'groups'`);
+    }
   }
 }
 
