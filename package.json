@@ -35,20 +35,16 @@
     "@types/geojson": "^7946.0.16",
     "@types/which-polygon": "^2.2.5",
     "npm-run-all2": "^8.0.4",
-    "shx": "^0.4.0",
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "all": "run-s clean build test",
-    "clean": "shx rm -rf dist",
-    "build": "run-s format-json build:**",
-    "build:browser": "bun build ./src/index.ts --target=browser --format=iife --minify --sourcemap=linked --outdir='./dist' --entry-naming='country-coder.iife.[ext]'",
-    "build:cjs": "bun build ./src/country-coder.ts --target=node --format=cjs --sourcemap=linked --external=which-polygon --outdir='./dist' --entry-naming='country-coder.c[ext]'",
-    "build:mjs": "bun build ./src/country-coder.ts --target=node --format=esm --sourcemap=linked --external=which-polygon --outdir='./dist' --entry-naming='country-coder.m[ext]'",
-    "build:types": "tsc",
-    "format-json": "bun run ./scripts/format-json.js",
-    "prepare": "bun repl -e 'if (!Bun.semver.satisfies(Bun.version, `>=1.3.0`)) { console.error(`Project requires Bun version >=1.3.0`); process.exit(1) }'",
-    "test": "bun test --dots --coverage tests/*.ts"
+    "all": "run-s clean builds test",
+    "clean": "rm -rf dist",
+    "builds": "run-s format build types",
+    "build": "bun ./scripts/build.ts",
+    "format": "bun ./scripts/format-json.js",
+    "test": "bun test --dots --coverage tests/*.ts",
+    "types": "tsc"
   },
   "publishConfig": {
     "access": "public"
