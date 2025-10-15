@@ -5,7 +5,6 @@ await Promise.all([
     outdir: './dist',
     target: 'browser',
     format: 'iife',
-    minify: true,
     sourcemap: 'linked',
     naming: 'country-coder.iife.[ext]'  // .iife.js
   }),
