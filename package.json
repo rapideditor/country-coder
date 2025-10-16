@@ -18,13 +18,11 @@
   ],
   "type": "module",
   "source": "./src/country-coder.ts",
-  "types": "./dist/country-coder.d.ts",
-  "main": "./dist/country-coder.cjs",
-  "module": "./dist/country-coder.mjs",
   "exports": {
+    "types": "./dist/country-coder.d.ts",
     "import": "./dist/country-coder.mjs",
     "require": "./dist/country-coder.cjs",
-    "types": "./dist/country-coder.d.ts"
+    "browser": "./dist/country-coder.iife.js"
   },
   "dependencies": {
     "which-polygon": "^2.2.1"
