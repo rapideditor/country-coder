@@ -36,11 +36,12 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "all": "run-s clean builds test",
-    "clean": "rm -rf dist",
-    "builds": "run-s format build types",
+    "all": "run-s clean buildall test",
     "build": "bun ./scripts/build.ts",
+    "buildall": "run-s format build types",
+    "clean": "rm -rf dist",
     "format": "bun ./scripts/format-json.js",
+    "start": "bun ./scripts/server.ts",
     "test": "bun test --dots --coverage tests/*.ts",
     "types": "tsc"
   },
