@@ -39,7 +39,7 @@
     "all": "run-s clean buildall test",
     "build": "bun ./scripts/build.ts",
     "buildall": "run-s format build types",
-    "clean": "rm -rf dist",
+    "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
     "start": "bun ./scripts/server.ts",
     "test": "bun test --dots --coverage tests/*.ts",
