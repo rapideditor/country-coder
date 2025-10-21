@@ -30,10 +30,8 @@ Set as latest release on GitHub:
 Include any URLs that anyone might request.
 
 ```bash
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-coder.iife.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder/dist/country-coder.iife.min.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@latest/dist/country-coder.iife.js'
+curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@latest/dist/country-coder.iife.min.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.js'
 curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5/dist/country-coder.iife.min.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.5/dist/country-coder.iife.js'
-curl 'https://purge.jsdelivr.net/npm/@rapideditor/country-coder@5.5/dist/country-coder.iife.min.js'
 ```

@@ -17,7 +17,7 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 -->
 
 # 5.6.0
-##### 2025-??
+##### 2025-Oct-21
 * This project uses [`bun`](https://bun.com/) now, for simpler developer tooling ([#160])
 
 [#160]: https://github.com/rapideditor/country-coder/issues/160
