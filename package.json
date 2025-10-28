@@ -19,6 +19,7 @@
   "type": "module",
   "source": "./src/country-coder.ts",
   "exports": {
+    "bun": "./src/country-coder.ts",
     "types": "./dist/country-coder.d.ts",
     "import": "./dist/country-coder.mjs",
     "require": "./dist/country-coder.cjs",
@@ -36,20 +37,19 @@
     "typescript": "^5.9.3"
   },
   "scripts": {
-    "all": "run-s clean buildall test",
-    "build": "bun ./scripts/build.ts",
-    "buildall": "run-s format build types",
+    "all": "run-s clean build test",
+    "build": "run-s format build:js build:ts",
+    "build:js": "bun ./scripts/build_js.ts",
+    "build:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
     "start": "bun ./scripts/server.ts",
-    "test": "bun test --dots --coverage tests/*.ts",
-    "types": "tsc"
+    "test": "bun test --dots --coverage tests/*.ts"
   },
   "publishConfig": {
     "access": "public"
   },
   "engines": {
-    "bun": ">=1.3.0",
-    "node": ">=20"
+    "bun": ">=1.3.0"
   }
 }
