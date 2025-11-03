@@ -24,14 +24,14 @@ describe('country-coder', () => {
           'ccTLD',
           'nameEn'
         ];
-        for (let i in coder.borders.features) {
-          let identifiers = identifierProps
+        for (const i in coder.borders.features) {
+          const identifiers = identifierProps
             .map(function (prop) {
               return coder.borders.features[i].properties[prop];
             })
             .concat(coder.borders.features[i].properties.aliases || [])
             .filter(Boolean);
-          for (let j in identifiers) {
+          for (const j in identifiers) {
             const id = identifiers[j];
             assert.ok(id);
             assert.ok(!seen.has(id));
@@ -41,7 +41,7 @@ describe('country-coder', () => {
       });
 
       it('each feature has either member features or geometry but not both', () => {
-        for (let i in coder.borders.features) {
+        for (const i in coder.borders.features) {
           const feature = coder.borders.features[i];
           const hasMembers = feature.properties.members && feature.properties.members.length;
           assert.ok(hasMembers || feature.geometry);
@@ -53,7 +53,7 @@ describe('country-coder', () => {
     describe('id', () => {
       it('assigns unique id to every feature', () => {
         const seen = new Set();
-        for (let i in coder.borders.features) {
+        for (const i in coder.borders.features) {
           const id = coder.borders.features[i].properties.id;
           assert.ok(id);
           assert.ok(!seen.has(id));
@@ -107,8 +107,8 @@ describe('country-coder', () => {
       });
 
       it('each feature may have only one group per level (except North America)', () => {
-        for (let i in coder.borders.features) {
-          let feature = coder.borders.features[i];
+        for (const i in coder.borders.features) {
+          const feature = coder.borders.features[i];
           let groups = feature.properties.groups;
           if (groups) {
             groups = groups.slice().filter(function (group) {
@@ -116,7 +116,7 @@ describe('country-coder', () => {
               // defined by the UN, but ignore that here
               return group !== '003';
             });
-            let levels = groups.map(function (group) {
+            const levels = groups.map(function (group) {
               return coder.feature(group)?.properties.level;
             });
             levels.push(feature.properties.level);
@@ -659,7 +659,7 @@ describe('country-coder', () => {
 
     describe('by GeoJSON point geometry, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
-        let pointGeometry = {
+        const pointGeometry = {
           type: 'Point',
           coordinates: [-74, 40.6]
         };
@@ -1073,7 +1073,7 @@ describe('country-coder', () => {
   describe('featuresContaining', () => {
     describe('by location', () => {
       it('codes location in officially-assigned country: New York, United States', () => {
-        let features = coder.featuresContaining([-74, 40.6]);
+        const features = coder.featuresContaining([-74, 40.6]);
         assert.equal(features.length, 8);
         assert.equal(features[0].properties.nameEn, 'Contiguous United States');
         assert.equal(features[1].properties.nameEn, 'US States');
@@ -1086,7 +1086,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in officially-assigned country: New York, United States, strict', () => {
-        let features = coder.featuresContaining([-74, 40.6], true);
+        const features = coder.featuresContaining([-74, 40.6], true);
         assert.equal(features.length, 8);
         assert.equal(features[0].properties.nameEn, 'Contiguous United States');
         assert.equal(features[1].properties.nameEn, 'US States');
@@ -1099,7 +1099,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland', () => {
-        let features = coder.featuresContaining([6.1, 46.2]);
+        const features = coder.featuresContaining([6.1, 46.2]);
         assert.equal(features.length, 5);
         assert.equal(features[0].properties.iso1A2, 'CH');
         assert.equal(features[1].properties.m49, '155');
@@ -1109,7 +1109,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
-        let features = coder.featuresContaining([12.59, 55.68]);
+        const features = coder.featuresContaining([12.59, 55.68]);
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.wikidata, 'Q35');
         assert.equal(features[1].properties.iso1A2, 'DK');
@@ -1121,7 +1121,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany', () => {
-        let features = coder.featuresContaining([13.4, 52.5]);
+        const features = coder.featuresContaining([13.4, 52.5]);
         assert.equal(features.length, 6);
         assert.equal(features[0].properties.iso1A2, 'DE');
         assert.equal(features[1].properties.m49, '155');
@@ -1132,7 +1132,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Isle of Man, United Kingdom', () => {
-        let features = coder.featuresContaining([-4.5, 54.2]);
+        const features = coder.featuresContaining([-4.5, 54.2]);
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.iso1A2, 'IM');
         assert.equal(features[1].properties.wikidata, 'Q185086');
@@ -1144,7 +1144,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in England, United Kingdom', () => {
-        let features = coder.featuresContaining([0, 51.5]);
+        const features = coder.featuresContaining([0, 51.5]);
         assert.equal(features.length, 8);
         assert.equal(features[0].properties.nameEn, 'England');
         assert.equal(features[1].properties.nameEn, 'Countries of the United Kingdom');
@@ -1157,7 +1157,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in exceptionally-reserved subfeature of officially-assigned country, in EU, in Eurozone: Paris, Metropolitan France', () => {
-        let features = coder.featuresContaining([2.35, 48.85]);
+        const features = coder.featuresContaining([2.35, 48.85]);
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.iso1A2, 'FX');
         assert.equal(features[1].properties.iso1A2, 'FR');
@@ -1169,7 +1169,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK', () => {
-        let features = coder.featuresContaining([-12.3, -37.1]);
+        const features = coder.featuresContaining([-12.3, -37.1]);
         assert.equal(features.length, 9);
         assert.equal(features[0].properties.iso1A2, 'TA');
         assert.equal(features[1].properties.iso1A2, 'SH');
@@ -1183,7 +1183,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in user-assigned, de facto country: Kosovo', () => {
-        let features = coder.featuresContaining([21, 42.6]);
+        const features = coder.featuresContaining([21, 42.6]);
         assert.equal(features.length, 4);
         assert.equal(features[0].properties.iso1A2, 'XK');
         assert.equal(features[1].properties.m49, '039');
@@ -1192,7 +1192,7 @@ describe('country-coder', () => {
       });
 
       it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan', () => {
-        let features = coder.featuresContaining([71.13, 39.96]);
+        const features = coder.featuresContaining([71.13, 39.96]);
         assert.equal(features.length, 5);
         assert.equal(features[0].properties.iso1A2, 'UZ');
         assert.equal(features[1].properties.m49, '143');
@@ -1202,7 +1202,7 @@ describe('country-coder', () => {
       });
 
       it('codes South Pole as AQ', () => {
-        let features = coder.featuresContaining([0, -90]);
+        const features = coder.featuresContaining([0, -90]);
         assert.equal(features.length, 2);
         assert.equal(features[0].properties.iso1A2, 'AQ');
         assert.equal(features[1].properties.m49, '001');
@@ -1214,7 +1214,7 @@ describe('country-coder', () => {
     });
     describe('by code', () => {
       it('codes US', () => {
-        let features = coder.featuresContaining('US');
+        const features = coder.featuresContaining('US');
         assert.equal(features.length, 3);
         assert.equal(features[0].properties.iso1A2, 'US');
         assert.equal(features[1].properties.iso1A2, 'UN');
@@ -1222,14 +1222,14 @@ describe('country-coder', () => {
       });
 
       it('codes US, strict', () => {
-        let features = coder.featuresContaining('US', true);
+        const features = coder.featuresContaining('US', true);
         assert.equal(features.length, 2);
         assert.equal(features[0].properties.iso1A2, 'UN');
         assert.equal(features[1].properties.m49, '001');
       });
 
       it('codes CONUS', () => {
-        let features = coder.featuresContaining('CONUS');
+        const features = coder.featuresContaining('CONUS');
         assert.equal(features.length, 8);
         assert.equal(features[0].properties.nameEn, 'Contiguous United States');
         assert.equal(features[1].properties.nameEn, 'US States');
@@ -1242,7 +1242,7 @@ describe('country-coder', () => {
       });
 
       it('codes CONUS, strict', () => {
-        let features = coder.featuresContaining('CONUS', true);
+        const features = coder.featuresContaining('CONUS', true);
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.nameEn, 'US States');
         assert.equal(features[1].properties.iso1A2, 'US');
@@ -1254,7 +1254,7 @@ describe('country-coder', () => {
       });
 
       it('codes CH', () => {
-        let features = coder.featuresContaining('CH');
+        const features = coder.featuresContaining('CH');
         assert.equal(features.length, 5);
         assert.equal(features[0].properties.iso1A2, 'CH');
         assert.equal(features[1].properties.m49, '155');
@@ -1264,7 +1264,7 @@ describe('country-coder', () => {
       });
 
       it('codes DK', () => {
-        let features = coder.featuresContaining('DK');
+        const features = coder.featuresContaining('DK');
         assert.equal(features.length, 3);
         assert.equal(features[0].properties.iso1A2, 'DK');
         assert.equal(features[1].properties.iso1A2, 'UN');
@@ -1272,7 +1272,7 @@ describe('country-coder', () => {
       });
 
       it('codes DE', () => {
-        let features = coder.featuresContaining('DE');
+        const features = coder.featuresContaining('DE');
         assert.equal(features.length, 6);
         assert.equal(features[0].properties.iso1A2, 'DE');
         assert.equal(features[1].properties.m49, '155');
@@ -1283,7 +1283,7 @@ describe('country-coder', () => {
       });
 
       it('codes IM', () => {
-        let features = coder.featuresContaining('IM');
+        const features = coder.featuresContaining('IM');
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.iso1A2, 'IM');
         assert.equal(features[1].properties.wikidata, 'Q185086');
@@ -1295,7 +1295,7 @@ describe('country-coder', () => {
       });
 
       it('codes GB', () => {
-        let features = coder.featuresContaining('GB');
+        const features = coder.featuresContaining('GB');
         assert.equal(features.length, 3);
         assert.equal(features[0].properties.iso1A2, 'GB');
         assert.equal(features[1].properties.iso1A2, 'UN');
@@ -1303,7 +1303,7 @@ describe('country-coder', () => {
       });
 
       it('codes FX', () => {
-        let features = coder.featuresContaining('FX');
+        const features = coder.featuresContaining('FX');
         assert.equal(features.length, 7);
         assert.equal(features[0].properties.iso1A2, 'FX');
         assert.equal(features[1].properties.iso1A2, 'FR');
@@ -1315,7 +1315,7 @@ describe('country-coder', () => {
       });
 
       it('codes TA', () => {
-        let features = coder.featuresContaining('TA');
+        const features = coder.featuresContaining('TA');
         assert.equal(features.length, 9);
         assert.equal(features[0].properties.iso1A2, 'TA');
         assert.equal(features[1].properties.iso1A2, 'SH');
@@ -1329,7 +1329,7 @@ describe('country-coder', () => {
       });
 
       it('codes XK', () => {
-        let features = coder.featuresContaining('XK');
+        const features = coder.featuresContaining('XK');
         assert.equal(features.length, 4);
         assert.equal(features[0].properties.iso1A2, 'XK');
         assert.equal(features[1].properties.m49, '039');
@@ -1338,7 +1338,7 @@ describe('country-coder', () => {
       });
 
       it('codes UZ', () => {
-        let features = coder.featuresContaining('UZ');
+        const features = coder.featuresContaining('UZ');
         assert.equal(features.length, 5);
         assert.equal(features[0].properties.iso1A2, 'UZ');
         assert.equal(features[1].properties.m49, '143');
@@ -1348,7 +1348,7 @@ describe('country-coder', () => {
       });
 
       it('codes AQ', () => {
-        let features = coder.featuresContaining('AQ');
+        const features = coder.featuresContaining('AQ');
         assert.equal(features.length, 2);
         assert.equal(features[0].properties.iso1A2, 'AQ');
         assert.equal(features[1].properties.m49, '001');
@@ -1358,7 +1358,7 @@ describe('country-coder', () => {
 
   describe('featuresIn', () => {
     it('codes CN', () => {
-      let features = coder.featuresIn('CN');
+      const features = coder.featuresIn('CN');
       assert.equal(features.length, 4);
       assert.equal(features[0].properties.iso1A2, 'CN');
       assert.equal(features[1].properties.wikidata, 'Q19188');
@@ -1367,7 +1367,7 @@ describe('country-coder', () => {
     });
 
     it('codes CN, strict', () => {
-      let features = coder.featuresIn('CN', true);
+      const features = coder.featuresIn('CN', true);
       assert.equal(features.length, 3);
       assert.equal(features[0].properties.wikidata, 'Q19188');
       assert.equal(features[1].properties.iso1A2, 'HK');
@@ -1375,7 +1375,7 @@ describe('country-coder', () => {
     });
 
     it('codes 830', () => {
-      let features = coder.featuresIn(830);
+      const features = coder.featuresIn(830);
       assert.equal(features.length, 6);
       assert.equal(features[0].properties.m49, '830');
       assert.equal(features[1].properties.wikidata, 'Q179313');
@@ -1386,7 +1386,7 @@ describe('country-coder', () => {
     });
 
     it('codes 830, strict', () => {
-      let features = coder.featuresIn(830, true);
+      const features = coder.featuresIn(830, true);
       assert.equal(features.length, 5);
       assert.equal(features[0].properties.wikidata, 'Q179313');
       assert.equal(features[1].properties.wikidata, 'Q3311985');
@@ -1396,7 +1396,7 @@ describe('country-coder', () => {
     });
 
     it('codes "Crown Dependencies", strict', () => {
-      let features = coder.featuresIn('Crown Dependencies', true);
+      const features = coder.featuresIn('Crown Dependencies', true);
       assert.equal(features.length, 6);
       assert.equal(features[0].properties.wikidata, 'Q179313');
       assert.equal(features[1].properties.wikidata, 'Q3311985');
@@ -1407,14 +1407,14 @@ describe('country-coder', () => {
     });
 
     it('codes "SBA", strict', () => {
-      let features = coder.featuresIn('SBA', true);
+      const features = coder.featuresIn('SBA', true);
       assert.equal(features.length, 2);
       assert.equal(features[0].properties.wikidata, 'Q9143535');
       assert.equal(features[1].properties.wikidata, 'Q9206745');
     });
 
     it('codes 🇸🇭 (Saint Helena)', () => {
-      let features = coder.featuresIn('🇸🇭');
+      const features = coder.featuresIn('🇸🇭');
       assert.equal(features.length, 4);
       assert.equal(features[0].properties.iso1A2, 'SH');
       assert.equal(features[1].properties.wikidata, 'Q34497');
@@ -1423,7 +1423,7 @@ describe('country-coder', () => {
     });
 
     it('codes 🇸🇭 (Saint Helena), strict', () => {
-      let features = coder.featuresIn('🇸🇭', true);
+      const features = coder.featuresIn('🇸🇭', true);
       assert.equal(features.length, 3);
       assert.equal(features[0].properties.wikidata, 'Q34497');
       assert.equal(features[1].properties.iso1A2, 'AC');
@@ -1431,7 +1431,7 @@ describe('country-coder', () => {
     });
 
     it('codes UN', () => {
-      let features = coder.featuresIn('UN').filter(function (feature) {
+      const features = coder.featuresIn('UN').filter(function (feature) {
         return feature.properties.level === 'country';
       });
       // there are exactly 193 UN member states as of August 2020
@@ -1439,7 +1439,7 @@ describe('country-coder', () => {
     });
 
     it('codes AQ', () => {
-      let features = coder.featuresIn('AQ');
+      const features = coder.featuresIn('AQ');
       assert.equal(features.length, 1);
       assert.equal(features[0].properties.iso1A2, 'AQ');
     });
@@ -1641,7 +1641,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInEuropeanUnion([21, 42.6]), false);
       });
       it('returns true for GeoJSON point feature in Germany', () => {
-        let pointFeature = {
+        const pointFeature = {
           type: 'Feature',
           properties: null,
           geometry: {
@@ -1652,7 +1652,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInEuropeanUnion(pointFeature), true);
       });
       it('returns true for GeoJSON point geometry in Germany', () => {
-        let pointGeometry = {
+        const pointGeometry = {
           type: 'Point',
           coordinates: [13.4, 52.5]
         };
@@ -1753,7 +1753,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInUnitedNations([21, 42.6]), false); // Kosovo
       });
       it('returns for GeoJSON point feature', () => {
-        let pointFeature = {
+        const pointFeature = {
           type: 'Feature',
           properties: null,
           geometry: {
@@ -1764,7 +1764,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInUnitedNations(pointFeature), true);
       });
       it('returns for GeoJSON point geometry', () => {
-        let pointGeometry = {
+        const pointGeometry = {
           type: 'Point',
           coordinates: [13.4, 52.5] // Berlin, Germany
         };

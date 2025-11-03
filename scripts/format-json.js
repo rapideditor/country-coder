@@ -1,8 +1,7 @@
-import fs from 'bun:fs';
 import rewind from '@mapbox/geojson-rewind';
 
-const bordersPath = './src/data/borders.json';
-const borders = JSON.parse(fs.readFileSync(bordersPath));
+const bordersFile = Bun.file('./src/data/borders.json');
+const borders = await bordersFile.json();
 
 // ensure exterior rings are counter-clockwise and interior rings are clockwise
 rewind(borders);
@@ -32,8 +31,8 @@ features.sort((feature1, feature2) => {
   compare = code1.localeCompare(code2, 'en');
   if (compare) return compare;
 
-  code1 = parseInt(feature1.properties.wikidata.slice(1));
-  code2 = parseInt(feature2.properties.wikidata.slice(1));
+  code1 = parseInt(feature1.properties.wikidata.slice(1), 10);
+  code2 = parseInt(feature2.properties.wikidata.slice(1), 10);
   return code1 - code2;
 });
 
@@ -119,4 +118,4 @@ for (const i in features) {
 }
 outstring += ']}';
 
-fs.writeFileSync(bordersPath, outstring);
+await Bun.write(bordersFile, outstring);

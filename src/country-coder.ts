@@ -2,7 +2,7 @@ import type { Feature, FeatureCollection, Geometry, Position } from 'geojson';
 import whichPolygon from 'which-polygon';
 import rawBorders from './data/borders.json';
 
-type RegionFeatureProperties = {
+interface RegionFeatureProperties {
   // Unique identifier specific to country-coder
   id: string;
 
@@ -89,14 +89,25 @@ type RegionFeatureProperties = {
   // e.g. `1`, `1 340`
   callingCodes: Array<string> | undefined;
 };
+
 type RegionFeature = Feature<Geometry, RegionFeatureProperties>;
 type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperties>;
 type Vec2 = [number, number]; // [lon, lat]
 type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
-type PointGeometry = { type: string; coordinates: Vec2 };
-type PointFeature = { type: string; geometry: PointGeometry; properties: any };
+
+interface PointGeometry {
+  type: string;
+  coordinates: Vec2
+};
+
+interface PointFeature {
+  type: string;
+  geometry: PointGeometry;
+  properties: any
+};
 type Location = Vec2 | PointGeometry | PointFeature;
-type CodingOptions = {
+
+interface CodingOptions {
   // For overlapping features, the division level of the one to get. If no feature
   // exists at the given level, the feature at the next higher level is returned.
   // See the `level` property of `RegionFeatureProperties` for possible values.
@@ -108,12 +119,12 @@ type CodingOptions = {
 };
 
 // The base GeoJSON feature collection
-export let borders: RegionFeatureCollection = <RegionFeatureCollection>rawBorders;
+export const borders: RegionFeatureCollection = rawBorders as RegionFeatureCollection;
 
 // The whichPolygon interface for looking up a feature by point
 let _whichPolygon: any = {};
 // The cache for looking up a feature by identifier
-let _featuresByCode: any = {};
+const _featuresByCode: any = {};
 
 // discard special characters and instances of and/the/of that aren't the only characters
 const idFilterRegex =
@@ -150,7 +161,7 @@ loadDerivedDataAndCaches(borders);
 // Loads implicit feature data and the getter index caches
 function loadDerivedDataAndCaches(borders) {
   const identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
-  let geometryFeatures: Array<RegionFeature> = [];
+  const geometryFeatures: Array<RegionFeature> = [];
 
   for (const feature of borders.features) {
     // generate a unique ID for each feature
@@ -315,7 +326,11 @@ function loadDerivedDataAndCaches(borders) {
           props.members
             .map(id => {
               const member = _featuresByCode[id];
-              if (member.geometry) return member.properties.roadSpeedUnit || 'km/h';
+              if (member.geometry) {
+                return member.properties.roadSpeedUnit || 'km/h';
+              } else {
+                return null;
+              }
             })
             .filter(Boolean)
         )
@@ -336,7 +351,11 @@ function loadDerivedDataAndCaches(borders) {
           props.members
             .map(id => {
               const member = _featuresByCode[id];
-              if (member.geometry) return member.properties.roadHeightUnit || 'm';
+              if (member.geometry) {
+                return member.properties.roadHeightUnit || 'm';
+              } else {
+                return null;
+              }
             })
             .filter(Boolean)
         )
@@ -357,7 +376,11 @@ function loadDerivedDataAndCaches(borders) {
           props.members
             .map(id => {
               const member = _featuresByCode[id];
-              if (member.geometry) return member.properties.driveSide || 'right';
+              if (member.geometry) {
+                return member.properties.driveSide || 'right';
+              } else {
+                return null;
+              }
             })
             .filter(Boolean)
         )
@@ -386,7 +409,7 @@ function loadDerivedDataAndCaches(borders) {
 
   // Calculates the emoji flag (if any) and caches it
   function loadFlag(feature: RegionFeature) {
-    let flag: string = '';
+    let flag = '';
 
     // Most emoji flags can be generated from their 2 letter code.
     // Skip 'FX' (Metropolitan France), allow it to roll up to 'FR' - #25
@@ -414,7 +437,7 @@ function loadDerivedDataAndCaches(borders) {
     // see https://en.wikipedia.org/wiki/Regional_indicator_symbol
     // see https://en.wikipedia.org/wiki/Enclosed_Alphanumeric_Supplement
     function _toEmojiCountryFlag(s: string): string {
-      return s.replace(/./g, c => String.fromCodePoint(<number>c.charCodeAt(0) + 0x1F1A5));
+      return s.replace(/./g, c => String.fromCodePoint(c.charCodeAt(0) + 0x1F1A5));
     }
 
     // Regional flags are encoded as U+1F3F4 (black flag) + the region string (jump up to "Tags" block) + U+E007F (end)
@@ -422,7 +445,7 @@ function loadDerivedDataAndCaches(borders) {
     function _toEmojiRegionFlag(s: string) {
       const codepoints = [0x1F3F4];
       for (const c of [...s]) {
-        codepoints.push(<number>c.codePointAt(0) + 0xE0000);
+        codepoints.push(c.codePointAt(0) as number + 0xE0000);
       }
       codepoints.push(0xE007F);
       return String.fromCodePoint.apply(null, codepoints);
@@ -443,7 +466,7 @@ function loadDerivedDataAndCaches(borders) {
 
   // Caches features by their identifying strings for rapid lookup
   function cacheFeatureByIDs(feature: RegionFeature) {
-    let ids: Array<string> = [];
+    const ids: Array<string> = [];
 
     for (const prop of identifierProps) {
       const id = feature.properties[prop];
@@ -466,11 +489,12 @@ function loadDerivedDataAndCaches(borders) {
 // Returns the [longitude, latitude] for the location argument
 function locArray(loc: Location): Vec2 {
   if (Array.isArray(loc)) {
-    return <Vec2>loc;
-  } else if ((<PointGeometry>loc).coordinates) {
-    return (<PointGeometry>loc).coordinates;
+    return loc as Vec2;
+  } else if ((loc as PointGeometry).coordinates) {
+    return (loc as PointGeometry).coordinates;
+  } else {
+    return (loc as PointFeature).geometry.coordinates;
   }
-  return (<PointFeature>loc).geometry.coordinates;
 }
 
 // Returns the smallest feature of any kind containing `loc`, if any
@@ -488,10 +512,10 @@ function countryFeature(loc: Location): RegionFeature | null {
 
   // a feature without `country` but with geometry is itself a country
   const countryCode = feature.properties.country || feature.properties.iso1A2;
-  return _featuresByCode[<string>countryCode] || null;
+  return _featuresByCode[countryCode as string] || null;
 }
 
-let defaultOpts = {
+const defaultOpts = {
   level: undefined,
   maxLevel: undefined,
   withProp: undefined
@@ -523,7 +547,7 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
   const features = featuresContaining(loc);
 
   const match = features.find((feature) => {
-    let levelIndex = levels.indexOf(feature.properties.level);
+    const levelIndex = levels.indexOf(feature.properties.level);
     if (
       feature.properties.level === targetLevel ||
       // if no feature exists at the target level, return the first feature at the next level up
@@ -562,7 +586,7 @@ function smallestFeaturesForBbox(bbox: Bbox): [RegionFeature] {
 
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
   if (typeof query === 'object') {
-    return smallestFeature(<Location>query);
+    return smallestFeature(query as Location);
   }
   return featureForID(query);
 }
@@ -570,7 +594,7 @@ function smallestOrMatchingFeature(query: Location | string | number): RegionFea
 // Returns the feature matching the given arguments, if any
 export function feature(query: Location | string | number, opts: CodingOptions = defaultOpts): RegionFeature | null {
   if (typeof query === 'object') {
-    return featureForLoc(<Location>query, opts);
+    return featureForLoc(query as Location, opts);
   }
   return featureForID(query);
 }
@@ -680,9 +704,9 @@ export function featuresContaining(query: Location | Bbox | string | number, str
   let matchingFeatures: Array<RegionFeature>;
 
   if (Array.isArray(query) && query.length === 4) {  // check if bounding box
-    matchingFeatures = smallestFeaturesForBbox(<Bbox>query);
+    matchingFeatures = smallestFeaturesForBbox(query as Bbox);
   } else {
-    const smallestOrMatching = smallestOrMatchingFeature(<Location | string | number>query);
+    const smallestOrMatching = smallestOrMatchingFeature(query as Location | string | number);
     matchingFeatures = smallestOrMatching ? [smallestOrMatching] : [];
   }
 
@@ -714,8 +738,7 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
   const feature = featureForID(id);
   if (!feature) return [];
 
-  let features: Array<RegionFeature> = [];
-
+  const features: Array<RegionFeature> = [];
   if (!strict) {
     features.push(feature);
   }

@@ -3,7 +3,7 @@ import { styleText } from 'bun:util';
 const project = 'country-coder';
 const hostname = '127.0.0.1';
 const port = 8080;
-const matchCDN = new RegExp(`(['"\`])(https?:\/\/cdn.jsdelivr.*${project}.*\/)(dist.*["'\`])`, 'gi');
+const matchCDN = new RegExp(`(['"\`])(https?://cdn.jsdelivr.*${project}.*/)(dist.*["'\`])`, 'gi');
 
 
 // Replace urls for CDN `dist/*` files with local `dist/*` files.
