@@ -21,6 +21,7 @@
   ],
   "type": "module",
   "source": "./src/country-coder.ts",
+  "types": "./dist/country-coder.d.ts",
   "exports": {
     "bun": "./src/country-coder.ts",
     "types": "./dist/country-coder.d.ts",
