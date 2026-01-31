@@ -16,6 +16,14 @@ _Breaking changes, which may affect downstream projects, are marked with a_ тЪая
 [#xxx]: https://github.com/rapideditor/country-coder/issues/xxx
 -->
 
+# 5.6.1
+##### 2026-Jan-31
+* Fix TypeScript for node resolution packages ([#163],[#164])
+
+[#163]: https://github.com/rapideditor/country-coder/issues/163
+[#164]: https://github.com/rapideditor/country-coder/issues/164
+
+
 # 5.6.0
 ##### 2025-Oct-21
 * This project uses [`bun`](https://bun.com/) now, for simpler developer tooling ([#160])
