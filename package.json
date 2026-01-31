@@ -52,6 +52,7 @@
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
     "lint": "eslint ./scripts ./src ./test",
+    "postpublish": "bun ./scripts/postpublish.ts",
     "start": "bun ./scripts/server.ts",
     "test": "bun test --dots --coverage ./test"
   },
