@@ -1,4 +1,5 @@
-import { styleText } from 'bun:util';
+import { $ } from 'bun';
+import { styleText } from 'node:util';
 
 const project = 'country-coder';
 const hostname = '127.0.0.1';
@@ -17,7 +18,7 @@ function replaceCDNPath(s: string): string {
 // p2 = cdn url     - removed
 // p3 = dist/file"  - 'dist' + file (if any) + end string
 function replacer(match: string, p1: string, p2: string, p3: string): string {
-  return p1 + p3.replace('.min', '');
+  return p1 + p3;
 }
 
 
@@ -30,25 +31,51 @@ const server = Bun.serve({
   },
   async fetch(req) {
     const url = new URL(req.url);
+
+    // Handle special cases first
+    // By default, redirect root `/` to `docs/`
+    if (url.pathname === '/') {
+      console.log(styleText('yellowBright', `307:  Temporary Redirect → 'docs/'`));
+      return new Response('Temporary Redirect', { status: 307, headers: { location: 'docs/' }});
+    }
+    // Chrome Devtools - generate a workspace JSON file
+    // see: http://goo.gle/devtools-automatic-workspace-folders
+    if (url.pathname === '/.well-known/appspecific/com.chrome.devtools.json') {
+      const contentType = 'application/json;charset=utf-8';
+      const root = (await $`pwd`.text()).replace(/[\r\n]/g, '');
+      const json = {
+        workspace: {
+          root: root,
+          uuid: Bun.randomUUIDv7()
+        }
+      };
+
+      console.log(styleText('yellowBright', `${req.method}:  ${url.pathname}`));
+      console.log(
+        styleText('greenBright', `200:  Generating workspace JSON`) +
+        styleText('green', `  ${contentType}`)
+      );
+      return new Response(JSON.stringify(json), { status: 200, headers: { 'content-type': contentType }});
+    }
+
     const path = url.pathname.split('/');
     const last = path.length - 1;
     console.log(styleText('yellowBright', `${req.method}:  ${url.pathname}`));
 
-    path[0] = 'docs';          // leading '/' -> serve from './docs/*'
     if (path[last] === '') {   // no filename, default to 'index.html'
       path[last] = 'index.html';
     }
-    if (path[1] === 'dist') {  // Also allow serving files from './dist/*'
-      path.shift();            // (remove leading 'docs')
+    if (path[1] === 'docs' && path[2] === 'dist') {  // Also allow serving files from './dist/*'
+      path.splice(1, 1);                             // (remove 'docs')
     }
 
-    const filepath = './' + path.join('/');
+    const filepath = '.' + path.join('/').replace('.min', '');
     try {
       const file = Bun.file(filepath);
       if (await file.exists()) {
         console.log(
           styleText('greenBright', `200:  Found → '${file.name}'`) +
-          styleText('green', `  ${file.type}'`)
+          styleText('green', `  ${file.type}`)
         );
         if (/(html|javascript)/.test(file.type)) {
           const content: string = await file.text();

@@ -1,20 +1,38 @@
 {
-  "include": ["src/country-coder.ts"],
   "compilerOptions": {
-    "module": "esnext",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
+    // Language and Environment
+    "target": "ES2022",
+    "lib": ["ESNext"],
+
+    // Modules
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "strictNullChecks": true,
-    "target": "esnext"
-  }
+    "isolatedModules": true,
+
+    // Emit
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "sourceMap": true,
+
+    // Interop
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+  },
+  "include": [
+    "src/country-coder.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "scripts"
+  ]
 }
