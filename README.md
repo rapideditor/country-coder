@@ -808,3 +808,9 @@ An object containing the attributes of a RegionFeature object.
 <a name="RegionFeatureCollection" href="#RegionFeatureCollection">#</a> <b>RegionFeatureCollection</b>
 
 A GeoJSON feature collection containing RegionFeature objects.
+
+
+## License
+
+This project is available under the [ISC License](LICENSE.md).
+ISC is a permissive free software license — functionally equivalent to the MIT License.

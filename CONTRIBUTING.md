@@ -22,10 +22,19 @@ If you want to contribute to country-coder, you'll probably need to:
 - `bun install` the dependencies
 
 As you change things, you'll want to `bun run all` to ensure that things are working.
-(This command just runs `clean`, `builds`, and `test`)
+(This command runs `clean`, `lint`, `build`, and `test`.)
+
+You can also test the preview page in a local server:
+- `bun start` - then open `http://127.0.0.1:8080/` in a browser.
 
 It's also good to check on the dependencies sometimes with commands like:
 - `bun outdated`  - what packages have updates available?
 - `bun update --interactive`  - choose which updates to apply
 
 Try to keep things simple!
+
+## AI-Assisted Contributions
+
+We welcome contributions made with the help of AI tools.
+If you use them, you are responsible for understanding and reviewing the output before submitting it.
+Generated code, issues, and PR descriptions should be clear and relevant — not verbose for the sake of it.
