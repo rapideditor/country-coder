@@ -108,6 +108,12 @@ The same method can convert from other identifiers.
 iso1A2Code('Q145');  // returns 'GB'
 ```
 
+> [!WARNING]
+> Numeric identifiers are accepted for convenience, but string identifiers are recommended.
+> In JavaScript, leading-zero numeric literals like `021`, `030`, or `053` can be misparsed in non-strict code before `country-coder` receives them.
+> Prefer string values like `'021'`, `'030'`, and `'053'` for ISO numeric-3 and UN M49 identifiers.
+> Numeric identifier support may be deprecated in a future release.
+
 Read the [full API reference](#api-reference) to see everything `country-coder` can do.
 
 
@@ -161,6 +167,12 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [RegionFeatureProperties](#RegionFeatureProperties)
 * [RegionFeatureCollection](#RegionFeatureCollection)
 
+> [!WARNING]
+> Numeric identifiers are accepted for convenience, but string identifiers are recommended.
+> In JavaScript, leading-zero numeric literals like `021`, `030`, or `053` can be misparsed in non-strict code before `country-coder` receives them.
+> Prefer string values like `'021'`, `'030'`, and `'053'` for ISO numeric-3 and UN M49 identifiers.
+> Numeric identifier support may be deprecated in a future release.
+
 
 ## Methods
 
@@ -175,7 +187,6 @@ feature([0, 90]);       // returns null
 feature('GB');          // returns {United Kingdom}
 feature('GBR');         // returns {United Kingdom}
 feature('826');         // returns {United Kingdom}
-feature(826);           // returns {United Kingdom}
 feature('Q145');        // returns {United Kingdom}
 feature('🇬🇧');          // returns {United Kingdom}
 feature('.uk');         // returns {United Kingdom}
@@ -199,7 +210,6 @@ iso1A2Code([-4.5, 54.2], { level: 'territory' });  // returns 'IM'
 iso1A2Code([0, 90]);       // returns null
 iso1A2Code('GBR');         // returns 'GB'
 iso1A2Code('826');         // returns 'GB'
-iso1A2Code(826);           // returns 'GB'
 iso1A2Code('Q145');        // returns 'GB'
 iso1A2Code('🇬🇧');          // returns 'GB'
 iso1A2Code('.uk');         // returns 'GB'
@@ -237,7 +247,6 @@ iso1A3Code([-4.5, 54.2], { level: 'territory' });  // returns 'IMN'
 iso1A3Code([0, 90]);       // returns null
 iso1A3Code('GB');          // returns 'GBR'
 iso1A3Code('826');         // returns 'GBR'
-iso1A3Code(826);           // returns 'GBR'
 iso1A3Code('Q145');        // returns 'GBR'
 iso1A3Code('🇬🇧');          // returns 'GBR'
 iso1A3Code('.uk');         // returns 'GBR'
@@ -352,7 +361,6 @@ wikidataQID([0, 90]);       // returns null
 wikidataQID('GB');          // returns 'Q145'
 wikidataQID('GBR');         // returns 'Q145'
 wikidataQID('826');         // returns 'Q145'
-wikidataQID(826);           // returns 'Q145'
 wikidataQID('🇬🇧');          // returns 'Q145'
 wikidataQID('.uk');         // returns 'Q145'
 wikidataQID('UK');          // returns 'Q145'
@@ -390,7 +398,6 @@ emojiFlag([0, 90]);       // returns null
 emojiFlag('GB');          // returns '🇬🇧'
 emojiFlag('GBR');         // returns '🇬🇧'
 emojiFlag('826');         // returns '🇬🇧'
-emojiFlag(826);           // returns '🇬🇧'
 emojiFlag('Q145');        // returns '🇬🇧'
 emojiFlag('UK');          // returns '🇬🇧'
 emojiFlag('IM');          // returns '🇮🇲'
@@ -427,7 +434,6 @@ ccTLD([0, 90]);       // returns null
 ccTLD('GB');          // returns '.uk'
 ccTLD('GBR');         // returns '.uk'
 ccTLD('826');         // returns '.uk'
-ccTLD(826);           // returns '.uk'
 ccTLD('Q145');        // returns '.uk'
 ccTLD('UK');          // returns '.uk'
 ccTLD('IM');          // returns '.im'
@@ -465,7 +471,6 @@ featuresContaining([0, 90]);       // returns []
 featuresContaining('GB');          // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('GBR');         // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('826');         // returns [{United Kingdom}, {United Nations}, {World}]
-featuresContaining(826);           // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('Q145');        // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('🇬🇧');          // returns [{United Kingdom}, {United Nations}, {World}]
 featuresContaining('.uk');         // returns [{United Kingdom}, {United Nations}, {World}]
@@ -488,7 +493,6 @@ Returns all the the features that match or are contained within the given identi
 featuresIn('CN');          // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('CHN');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('156');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
-featuresIn(156);           // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('Q148');        // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('🇨🇳');          // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
 featuresIn('.cn');         // returns [{China}, {Mainland China}, {Hong Kong}, {Macau}]
@@ -505,7 +509,6 @@ Returns a new feature with the `properties` of the feature matching `id` and the
 aggregateFeature('CN');          // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('CHN');         // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('156');         // returns Mainland China, Hong Kong, and Macau as one feature
-aggregateFeature(156);           // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('Q148');        // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('🇨🇳');          // returns Mainland China, Hong Kong, and Macau as one feature
 aggregateFeature('.cn');         // returns Mainland China, Hong Kong, and Macau as one feature
@@ -553,7 +556,6 @@ isInEuropeanUnion('EU');         // returns true
 isInEuropeanUnion('DE');         // returns true
 isInEuropeanUnion('DEU');        // returns true
 isInEuropeanUnion('276');        // returns true
-isInEuropeanUnion(276);          // returns true
 isInEuropeanUnion('Q183');       // returns true
 isInEuropeanUnion('🇩🇪');         // returns true
 isInEuropeanUnion('.de');        // returns true
@@ -584,7 +586,6 @@ isInUnitedNations('EU');         // returns true
 isInUnitedNations('DE');         // returns true
 isInUnitedNations('DEU');        // returns true
 isInUnitedNations('276');        // returns true
-isInUnitedNations(276);          // returns true
 isInUnitedNations('Q183');       // returns true
 isInUnitedNations('🇩🇪');         // returns true
 isInUnitedNations('.de');        // returns true
@@ -615,7 +616,6 @@ driveSide('EU');         // returns null
 driveSide('GB');         // returns 'left'
 driveSide('GBR');        // returns 'left'
 driveSide('826');        // returns 'left'
-driveSide(826);          // returns 'left'
 driveSide('Q145');       // returns 'left'
 driveSide('🇬🇧');         // returns 'left'
 driveSide('.uk');        // returns 'left'
@@ -641,7 +641,6 @@ roadSpeedUnit('EU');         // returns null
 roadSpeedUnit('GB');         // returns 'mph'
 roadSpeedUnit('GBR');        // returns 'mph'
 roadSpeedUnit('826');        // returns 'mph'
-roadSpeedUnit(826);          // returns 'mph'
 roadSpeedUnit('Q145');       // returns 'mph'
 roadSpeedUnit('🇬🇧');         // returns 'mph'
 roadSpeedUnit('.uk');        // returns 'mph'
@@ -667,7 +666,6 @@ roadHeightUnit('EU');         // returns null
 roadHeightUnit('GB');         // returns 'ft'
 roadHeightUnit('GBR');        // returns 'ft'
 roadHeightUnit('826');        // returns 'ft'
-roadHeightUnit(826);          // returns 'ft'
 roadHeightUnit('Q145');       // returns 'ft'
 roadHeightUnit('🇬🇧');         // returns 'ft'
 roadHeightUnit('.uk');        // returns 'ft'
@@ -692,7 +690,6 @@ callingCodes('EU');         // returns []
 callingCodes('GB');         // returns ['44']
 callingCodes('GBR');        // returns ['44']
 callingCodes('826');        // returns ['44']
-callingCodes(826);          // returns ['44']
 callingCodes('Q145');       // returns ['44']
 callingCodes('🇬🇧');         // returns ['44']
 callingCodes('.uk');        // returns ['44']
