@@ -6,6 +6,7 @@
 
     // Modules
     "module": "ESNext",
+    "moduleDetection": "force",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,

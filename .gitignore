@@ -1,12 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+secrets.json
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+coverage/
+.vscode/
+!.vscode/extensions.json
+.idea/
+
+# Agent memory
 SCRATCHPAD.md
 
-npm-debug.log
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
+# Logs
+*.log
+npm-debug.log*
 
-.vscode/
-coverage/
-dist/
-node_modules/
+# Runtime temp files
+*.tmp
+*.temp

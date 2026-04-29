@@ -44,13 +44,15 @@
     "typescript-eslint": "^8.57.1"
   },
   "scripts": {
-    "all": "bun run --sequential clean lint build test",
+    "all": "bun run --sequential clean check build test",
     "build": "bun run --sequential format 'build:*'",
     "build:js": "bun ./scripts/build_js.ts",
     "build:ts": "tsc",
+    "check": "bun run --parallel 'check:*'",
+    "check:lint": "eslint ./scripts ./src ./test",
+    "check:ts": "tsc --noEmit",
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
-    "lint": "eslint ./scripts ./src ./test",
     "postpublish": "bun ./scripts/postpublish.ts",
     "start": "bun ./scripts/server.ts",
     "test": "bun test --dots --coverage ./test"

@@ -1,8 +1,8 @@
-* text=auto
+# Force LF line endings for all text files
+* text=auto eol=lf
 *.bat eol=crlf
-*.js eol=lf
-*.ts eol=lf
 
+*.css linguist-detectable
 *.json linguist-detectable
 *.md linguist-documentation
 

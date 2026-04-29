@@ -2,9 +2,9 @@ name: build
 
 on:
   push:
-    branches: ['main']
+    branches: [ main ]
   pull_request:
-    branches: ['main']
+    branches: [ main ]
 
 env:
   FORCE_COLOR: 2
@@ -14,18 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v5
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+    - run: bun install
     - run: |
         echo "::remove-matcher owner=eslint-compact::"
         echo "::remove-matcher owner=eslint-stylish::"
-
-    - name: 📥  Checkout
-      uses: actions/checkout@v4
-
-    - name: 🥟  Setup Bun
-      uses: oven-sh/setup-bun@v2
-
-    - name: 🏗️  Install
-      run: bun install
-
-    - name: 🔨  Build and Test
-      run: bun run all
+    - run: bun run all
