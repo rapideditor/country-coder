@@ -189,6 +189,33 @@ describe('country-coder', () => {
       });
     });
 
+    describe('invalid code prefixes', () => {
+      for (const prefix of ['and', 'the', 'of', 'el', 'la', 'de']) {
+        for (const code of ['by', 'bw', '001', 'q30', 'us-ak', 'conus']) {
+          it(`does not interpret "${prefix}-${code}" as "${code}"`, () => {
+            assert.equal(coder.feature(`${prefix}-${code}`), null);
+          });
+        }
+      }
+
+      it('does not discard code components at the end or in the middle', () => {
+        assert.equal(coder.feature('by-de'), null);
+        assert.equal(coder.feature('us-el-ak'), null);
+      });
+
+      it('does not resolve invalid codes through derived lookups', () => {
+        assert.equal(coder.iso1A2Code('de-by'), null);
+        assert.equal(coder.wikidataQID('el-001'), null);
+        assert.equal(coder.isIn('de-by', 'Europe'), null);
+      });
+
+      it('preserves valid codes, aliases, and short country identifiers', () => {
+        for (const id of ['DE', 'LA', 'EL', 'AND', 'US-AK', 'UM 71', '.de', '.la']) {
+          assert.ok(coder.feature(id), id);
+        }
+      });
+    });
+
     describe('by ISO 3166-1 numeric-3 / M49', () => {
       it('finds feature by string: "840"', () => {
         assert.equal(coder.feature('840')?.properties.iso1A2, 'US');
@@ -300,6 +327,12 @@ describe('country-coder', () => {
       });
       it('finds feature for name without "The": Gambia', () => {
         assert.equal(coder.feature('Gambia')?.properties.iso1A2, 'GM');
+      });
+      it('preserves punctuation and optional short words in names', () => {
+        assert.equal(coder.feature('United-States-of-America')?.properties.iso1A2, 'US');
+        assert.equal(coder.feature('Trinidad-and-Tobago')?.properties.iso1A2, 'TT');
+        assert.equal(coder.feature('Trinidad Tobago')?.properties.iso1A2, 'TT');
+        assert.equal(coder.feature('Salvador')?.properties.iso1A2, 'SV');
       });
       it('finds feature not in country for name: Bir Tawil', () => {
         assert.equal(coder.feature('Bir Tawil')?.properties.wikidata, 'Q620634');
