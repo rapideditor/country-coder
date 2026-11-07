@@ -125,10 +125,11 @@ export const borders: RegionFeatureCollection = rawBorders as RegionFeatureColle
 let _whichPolygon: any = {};
 // The cache for looking up a feature by identifier
 const _featuresByCode: any = {};
+const _featuresByName: Record<string, RegionFeature> = {};
 
-// discard special characters and instances of and/the/of that aren't the only characters
-const idFilterRegex =
-  /(?=(?!^(and|the|of|el|la|de)$))(\b(and|the|of|el|la|de)\b)|[-_ .,'()&[\]/]/gi;
+// discard special characters from identifiers and short words from names
+const idFilterRegex = /[-_ .,'()&[\]/]/g;
+const nameFilterRegex = /\b(and|the|of|el|la|de)\b/gi;
 
 function canonicalID(id: string | null): string {
   const s = id || '';
@@ -138,6 +139,10 @@ function canonicalID(id: string | null): string {
   } else {
     return s.replace(idFilterRegex, '').toUpperCase();
   }
+}
+
+function canonicalName(name: string): string {
+  return canonicalID(name.replace(nameFilterRegex, ''));
 }
 
 // Geographic levels, roughly from most to least granular
@@ -483,6 +488,7 @@ function loadDerivedDataAndCaches(borders) {
       const cid = canonicalID(id);
       _featuresByCode[cid] = feature;
     }
+    _featuresByName[canonicalName(feature.properties.nameEn)] = feature;
   }
 }
 
@@ -576,6 +582,7 @@ function featureForID(id: string | number): RegionFeature | null {
     }
   } else {
     stringID = canonicalID(id);
+    return _featuresByCode[stringID] || _featuresByName[canonicalName(id)] || null;
   }
   return _featuresByCode[stringID] || null;
 }
