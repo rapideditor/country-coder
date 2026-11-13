@@ -1,5 +1,6 @@
 import { describe, it } from 'bun:test';
-import { strict as assert } from 'bun:assert';
+import { strict as assert } from 'node:assert';
+import type { Feature, Point } from 'geojson';
 import * as coder from '../src/country-coder';
 
 
@@ -678,7 +679,7 @@ describe('country-coder', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
         const coords = [-74, 40.6];
 
-        const pointFeature = {
+        const pointFeature: Feature<Point> = {
           type: 'Feature',
           properties: null,
           geometry: {
@@ -692,7 +693,7 @@ describe('country-coder', () => {
 
     describe('by GeoJSON point geometry, country level', () => {
       it('codes location in officially-assigned country: New York, United States as US', () => {
-        const pointGeometry = {
+        const pointGeometry: Point = {
           type: 'Point',
           coordinates: [-74, 40.6]
         };
@@ -879,6 +880,7 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
+      // @ts-expect-error testing invalid input
       assert.deepEqual(coder.iso1A2Codes([]), []);
       assert.deepEqual(coder.iso1A2Codes([-900, 900]), []);
     });
@@ -1089,6 +1091,7 @@ describe('country-coder', () => {
     });
 
     it('does not code invalid arguments', () => {
+      // @ts-expect-error testing invalid input
       assert.deepEqual(coder.ccTLDs([]), []);
       assert.deepEqual(coder.ccTLDs([-900, 900]), []);
     });
@@ -1674,7 +1677,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInEuropeanUnion([21, 42.6]), false);
       });
       it('returns true for GeoJSON point feature in Germany', () => {
-        const pointFeature = {
+        const pointFeature: Feature<Point> = {
           type: 'Feature',
           properties: null,
           geometry: {
@@ -1685,7 +1688,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInEuropeanUnion(pointFeature), true);
       });
       it('returns true for GeoJSON point geometry in Germany', () => {
-        const pointGeometry = {
+        const pointGeometry: Point = {
           type: 'Point',
           coordinates: [13.4, 52.5]
         };
@@ -1786,7 +1789,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInUnitedNations([21, 42.6]), false); // Kosovo
       });
       it('returns for GeoJSON point feature', () => {
-        const pointFeature = {
+        const pointFeature: Feature<Point> = {
           type: 'Feature',
           properties: null,
           geometry: {
@@ -1797,7 +1800,7 @@ describe('country-coder', () => {
         assert.equal(coder.isInUnitedNations(pointFeature), true);
       });
       it('returns for GeoJSON point geometry', () => {
-        const pointGeometry = {
+        const pointGeometry: Point = {
           type: 'Point',
           coordinates: [13.4, 52.5] // Berlin, Germany
         };

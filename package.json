@@ -34,20 +34,20 @@
   },
   "devDependencies": {
     "@mapbox/geojson-rewind": "^0.5.2",
-    "@types/bun": "^1.3.11",
+    "@types/bun": "^1.4.4",
     "@types/geojson": "^7946.0.16",
     "@types/which-polygon": "^2.2.5",
     "oxlint": "^1.93.0",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "scripts": {
     "all": "bun run --sequential clean check build test",
     "build": "bun run --sequential format 'build:*'",
     "build:js": "bun ./scripts/build_js.ts",
-    "build:ts": "tsc",
+    "build:ts": "tsc -p tsconfig.build.json",
     "check": "bun run --parallel 'check:*'",
     "check:lint": "oxlint ./scripts ./src ./test",
-    "check:ts": "tsc --noEmit",
+    "check:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
     "postpublish": "bun ./scripts/postpublish.ts",
