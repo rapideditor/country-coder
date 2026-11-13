@@ -24,13 +24,13 @@ describe('country-coder', () => {
           'emojiFlag',
           'ccTLD',
           'nameEn'
-        ];
+        ] as const;
         for (const i in coder.borders.features) {
           const identifiers = identifierProps
             .map(function (prop) {
-              return coder.borders.features[i].properties[prop];
+              return coder.borders.features[i]?.properties[prop];
             })
-            .concat(coder.borders.features[i].properties.aliases || [])
+            .concat(coder.borders.features[i]?.properties.aliases || [])
             .filter(Boolean);
           for (const j in identifiers) {
             const id = identifiers[j];
@@ -42,8 +42,7 @@ describe('country-coder', () => {
       });
 
       it('each feature has either member features or geometry but not both', () => {
-        for (const i in coder.borders.features) {
-          const feature = coder.borders.features[i];
+        for (const feature of coder.borders.features) {
           const hasMembers = feature.properties.members && feature.properties.members.length;
           assert.ok(hasMembers || feature.geometry);
           assert.ok(!(hasMembers && feature.geometry));
@@ -55,7 +54,7 @@ describe('country-coder', () => {
       it('assigns unique id to every feature', () => {
         const seen = new Set();
         for (const i in coder.borders.features) {
-          const id = coder.borders.features[i].properties.id;
+          const id = coder.borders.features[i]?.properties.id;
           assert.ok(id);
           assert.ok(!seen.has(id));
           seen.add(id);
@@ -108,8 +107,7 @@ describe('country-coder', () => {
       });
 
       it('each feature may have only one group per level (except North America)', () => {
-        for (const i in coder.borders.features) {
-          const feature = coder.borders.features[i];
+        for (const feature of coder.borders.features) {
           let groups = feature.properties.groups;
           if (groups) {
             groups = groups.slice().filter(function (group) {
@@ -1111,137 +1109,137 @@ describe('country-coder', () => {
       it('codes location in officially-assigned country: New York, United States', () => {
         const features = coder.featuresContaining([-74, 40.6]);
         assert.equal(features.length, 8);
-        assert.equal(features[0].properties.nameEn, 'Contiguous United States');
-        assert.equal(features[1].properties.nameEn, 'US States');
-        assert.equal(features[2].properties.iso1A2, 'US');
-        assert.equal(features[3].properties.m49, '021');
-        assert.equal(features[4].properties.m49, '003');
-        assert.equal(features[5].properties.m49, '019');
-        assert.equal(features[6].properties.iso1A2, 'UN');
-        assert.equal(features[7].properties.m49, '001');
+        assert.equal(features[0]?.properties.nameEn, 'Contiguous United States');
+        assert.equal(features[1]?.properties.nameEn, 'US States');
+        assert.equal(features[2]?.properties.iso1A2, 'US');
+        assert.equal(features[3]?.properties.m49, '021');
+        assert.equal(features[4]?.properties.m49, '003');
+        assert.equal(features[5]?.properties.m49, '019');
+        assert.equal(features[6]?.properties.iso1A2, 'UN');
+        assert.equal(features[7]?.properties.m49, '001');
       });
 
       it('codes location in officially-assigned country: New York, United States, strict', () => {
         const features = coder.featuresContaining([-74, 40.6], true);
         assert.equal(features.length, 8);
-        assert.equal(features[0].properties.nameEn, 'Contiguous United States');
-        assert.equal(features[1].properties.nameEn, 'US States');
-        assert.equal(features[2].properties.iso1A2, 'US');
-        assert.equal(features[3].properties.m49, '021');
-        assert.equal(features[4].properties.m49, '003');
-        assert.equal(features[5].properties.m49, '019');
-        assert.equal(features[6].properties.iso1A2, 'UN');
-        assert.equal(features[7].properties.m49, '001');
+        assert.equal(features[0]?.properties.nameEn, 'Contiguous United States');
+        assert.equal(features[1]?.properties.nameEn, 'US States');
+        assert.equal(features[2]?.properties.iso1A2, 'US');
+        assert.equal(features[3]?.properties.m49, '021');
+        assert.equal(features[4]?.properties.m49, '003');
+        assert.equal(features[5]?.properties.m49, '019');
+        assert.equal(features[6]?.properties.iso1A2, 'UN');
+        assert.equal(features[7]?.properties.m49, '001');
       });
 
       it('codes location in officially-assigned country, outside but surrounded by EU: Geneva, Switzerland', () => {
         const features = coder.featuresContaining([6.1, 46.2]);
         assert.equal(features.length, 5);
-        assert.equal(features[0].properties.iso1A2, 'CH');
-        assert.equal(features[1].properties.m49, '155');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.iso1A2, 'UN');
-        assert.equal(features[4].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'CH');
+        assert.equal(features[1]?.properties.m49, '155');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.iso1A2, 'UN');
+        assert.equal(features[4]?.properties.m49, '001');
       });
 
       it('codes location in officially-assigned country, in EU, outside Eurozone: Copenhagen, Denmark', () => {
         const features = coder.featuresContaining([12.59, 55.68]);
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.wikidata, 'Q35');
-        assert.equal(features[1].properties.iso1A2, 'DK');
-        assert.equal(features[2].properties.m49, '154');
-        assert.equal(features[3].properties.m49, '150');
-        assert.equal(features[4].properties.iso1A2, 'EU');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.wikidata, 'Q35');
+        assert.equal(features[1]?.properties.iso1A2, 'DK');
+        assert.equal(features[2]?.properties.m49, '154');
+        assert.equal(features[3]?.properties.m49, '150');
+        assert.equal(features[4]?.properties.iso1A2, 'EU');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes location in officially-assigned country, in EU, in Eurozone: Berlin, Germany', () => {
         const features = coder.featuresContaining([13.4, 52.5]);
         assert.equal(features.length, 6);
-        assert.equal(features[0].properties.iso1A2, 'DE');
-        assert.equal(features[1].properties.m49, '155');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.iso1A2, 'EU');
-        assert.equal(features[4].properties.iso1A2, 'UN');
-        assert.equal(features[5].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'DE');
+        assert.equal(features[1]?.properties.m49, '155');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.iso1A2, 'EU');
+        assert.equal(features[4]?.properties.iso1A2, 'UN');
+        assert.equal(features[5]?.properties.m49, '001');
       });
 
       it('codes location in officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Isle of Man, United Kingdom', () => {
         const features = coder.featuresContaining([-4.5, 54.2]);
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.iso1A2, 'IM');
-        assert.equal(features[1].properties.wikidata, 'Q185086');
-        assert.equal(features[2].properties.iso1A2, 'GB');
-        assert.equal(features[3].properties.m49, '154');
-        assert.equal(features[4].properties.m49, '150');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'IM');
+        assert.equal(features[1]?.properties.wikidata, 'Q185086');
+        assert.equal(features[2]?.properties.iso1A2, 'GB');
+        assert.equal(features[3]?.properties.m49, '154');
+        assert.equal(features[4]?.properties.m49, '150');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes location in England, United Kingdom', () => {
         const features = coder.featuresContaining([0, 51.5]);
         assert.equal(features.length, 8);
-        assert.equal(features[0].properties.nameEn, 'England');
-        assert.equal(features[1].properties.nameEn, 'Countries of the United Kingdom');
-        assert.equal(features[2].properties.iso1A2, 'GB');
-        assert.equal(features[3].properties.nameEn, 'Great Britain');
-        assert.equal(features[4].properties.m49, '154');
-        assert.equal(features[5].properties.m49, '150');
-        assert.equal(features[6].properties.iso1A2, 'UN');
-        assert.equal(features[7].properties.m49, '001');
+        assert.equal(features[0]?.properties.nameEn, 'England');
+        assert.equal(features[1]?.properties.nameEn, 'Countries of the United Kingdom');
+        assert.equal(features[2]?.properties.iso1A2, 'GB');
+        assert.equal(features[3]?.properties.nameEn, 'Great Britain');
+        assert.equal(features[4]?.properties.m49, '154');
+        assert.equal(features[5]?.properties.m49, '150');
+        assert.equal(features[6]?.properties.iso1A2, 'UN');
+        assert.equal(features[7]?.properties.m49, '001');
       });
 
       it('codes location in exceptionally-reserved subfeature of officially-assigned country, in EU, in Eurozone: Paris, Metropolitan France', () => {
         const features = coder.featuresContaining([2.35, 48.85]);
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.iso1A2, 'FX');
-        assert.equal(features[1].properties.iso1A2, 'FR');
-        assert.equal(features[2].properties.m49, '155');
-        assert.equal(features[3].properties.m49, '150');
-        assert.equal(features[4].properties.iso1A2, 'EU');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'FX');
+        assert.equal(features[1]?.properties.iso1A2, 'FR');
+        assert.equal(features[2]?.properties.m49, '155');
+        assert.equal(features[3]?.properties.m49, '150');
+        assert.equal(features[4]?.properties.iso1A2, 'EU');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes location in exceptionally-reserved subfeature of officially-assigned subfeature, outside EU, of officially-assigned country, in EU: Tristan da Cunha, SH, UK', () => {
         const features = coder.featuresContaining([-12.3, -37.1]);
         assert.equal(features.length, 9);
-        assert.equal(features[0].properties.iso1A2, 'TA');
-        assert.equal(features[1].properties.iso1A2, 'SH');
-        assert.equal(features[2].properties.wikidata, 'Q46395');
-        assert.equal(features[3].properties.iso1A2, 'GB');
-        assert.equal(features[4].properties.m49, '011');
-        assert.equal(features[5].properties.m49, '202');
-        assert.equal(features[6].properties.m49, '002');
-        assert.equal(features[7].properties.iso1A2, 'UN');
-        assert.equal(features[8].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'TA');
+        assert.equal(features[1]?.properties.iso1A2, 'SH');
+        assert.equal(features[2]?.properties.wikidata, 'Q46395');
+        assert.equal(features[3]?.properties.iso1A2, 'GB');
+        assert.equal(features[4]?.properties.m49, '011');
+        assert.equal(features[5]?.properties.m49, '202');
+        assert.equal(features[6]?.properties.m49, '002');
+        assert.equal(features[7]?.properties.iso1A2, 'UN');
+        assert.equal(features[8]?.properties.m49, '001');
       });
 
       it('codes location in user-assigned, de facto country: Kosovo', () => {
         const features = coder.featuresContaining([21, 42.6]);
         assert.equal(features.length, 4);
-        assert.equal(features[0].properties.iso1A2, 'XK');
-        assert.equal(features[1].properties.m49, '039');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'XK');
+        assert.equal(features[1]?.properties.m49, '039');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.m49, '001');
       });
 
       it('codes location in exclave of officially-assigned country: Sokh District, Uzbekistan', () => {
         const features = coder.featuresContaining([71.13, 39.96]);
         assert.equal(features.length, 5);
-        assert.equal(features[0].properties.iso1A2, 'UZ');
-        assert.equal(features[1].properties.m49, '143');
-        assert.equal(features[2].properties.m49, '142');
-        assert.equal(features[3].properties.iso1A2, 'UN');
-        assert.equal(features[4].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'UZ');
+        assert.equal(features[1]?.properties.m49, '143');
+        assert.equal(features[2]?.properties.m49, '142');
+        assert.equal(features[3]?.properties.iso1A2, 'UN');
+        assert.equal(features[4]?.properties.m49, '001');
       });
 
       it('codes South Pole as AQ', () => {
         const features = coder.featuresContaining([0, -90]);
         assert.equal(features.length, 2);
-        assert.equal(features[0].properties.iso1A2, 'AQ');
-        assert.equal(features[1].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'AQ');
+        assert.equal(features[1]?.properties.m49, '001');
       });
 
       it('does not code North Pole', () => {
@@ -1252,142 +1250,142 @@ describe('country-coder', () => {
       it('codes US', () => {
         const features = coder.featuresContaining('US');
         assert.equal(features.length, 3);
-        assert.equal(features[0].properties.iso1A2, 'US');
-        assert.equal(features[1].properties.iso1A2, 'UN');
-        assert.equal(features[2].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'US');
+        assert.equal(features[1]?.properties.iso1A2, 'UN');
+        assert.equal(features[2]?.properties.m49, '001');
       });
 
       it('codes US, strict', () => {
         const features = coder.featuresContaining('US', true);
         assert.equal(features.length, 2);
-        assert.equal(features[0].properties.iso1A2, 'UN');
-        assert.equal(features[1].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'UN');
+        assert.equal(features[1]?.properties.m49, '001');
       });
 
       it('codes CONUS', () => {
         const features = coder.featuresContaining('CONUS');
         assert.equal(features.length, 8);
-        assert.equal(features[0].properties.nameEn, 'Contiguous United States');
-        assert.equal(features[1].properties.nameEn, 'US States');
-        assert.equal(features[2].properties.iso1A2, 'US');
-        assert.equal(features[3].properties.m49, '021');
-        assert.equal(features[4].properties.m49, '003');
-        assert.equal(features[5].properties.m49, '019');
-        assert.equal(features[6].properties.iso1A2, 'UN');
-        assert.equal(features[7].properties.m49, '001');
+        assert.equal(features[0]?.properties.nameEn, 'Contiguous United States');
+        assert.equal(features[1]?.properties.nameEn, 'US States');
+        assert.equal(features[2]?.properties.iso1A2, 'US');
+        assert.equal(features[3]?.properties.m49, '021');
+        assert.equal(features[4]?.properties.m49, '003');
+        assert.equal(features[5]?.properties.m49, '019');
+        assert.equal(features[6]?.properties.iso1A2, 'UN');
+        assert.equal(features[7]?.properties.m49, '001');
       });
 
       it('codes CONUS, strict', () => {
         const features = coder.featuresContaining('CONUS', true);
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.nameEn, 'US States');
-        assert.equal(features[1].properties.iso1A2, 'US');
-        assert.equal(features[2].properties.m49, '021');
-        assert.equal(features[3].properties.m49, '003');
-        assert.equal(features[4].properties.m49, '019');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.nameEn, 'US States');
+        assert.equal(features[1]?.properties.iso1A2, 'US');
+        assert.equal(features[2]?.properties.m49, '021');
+        assert.equal(features[3]?.properties.m49, '003');
+        assert.equal(features[4]?.properties.m49, '019');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes CH', () => {
         const features = coder.featuresContaining('CH');
         assert.equal(features.length, 5);
-        assert.equal(features[0].properties.iso1A2, 'CH');
-        assert.equal(features[1].properties.m49, '155');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.iso1A2, 'UN');
-        assert.equal(features[4].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'CH');
+        assert.equal(features[1]?.properties.m49, '155');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.iso1A2, 'UN');
+        assert.equal(features[4]?.properties.m49, '001');
       });
 
       it('codes DK', () => {
         const features = coder.featuresContaining('DK');
         assert.equal(features.length, 3);
-        assert.equal(features[0].properties.iso1A2, 'DK');
-        assert.equal(features[1].properties.iso1A2, 'UN');
-        assert.equal(features[2].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'DK');
+        assert.equal(features[1]?.properties.iso1A2, 'UN');
+        assert.equal(features[2]?.properties.m49, '001');
       });
 
       it('codes DE', () => {
         const features = coder.featuresContaining('DE');
         assert.equal(features.length, 6);
-        assert.equal(features[0].properties.iso1A2, 'DE');
-        assert.equal(features[1].properties.m49, '155');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.iso1A2, 'EU');
-        assert.equal(features[4].properties.iso1A2, 'UN');
-        assert.equal(features[5].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'DE');
+        assert.equal(features[1]?.properties.m49, '155');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.iso1A2, 'EU');
+        assert.equal(features[4]?.properties.iso1A2, 'UN');
+        assert.equal(features[5]?.properties.m49, '001');
       });
 
       it('codes IM', () => {
         const features = coder.featuresContaining('IM');
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.iso1A2, 'IM');
-        assert.equal(features[1].properties.wikidata, 'Q185086');
-        assert.equal(features[2].properties.iso1A2, 'GB');
-        assert.equal(features[3].properties.m49, '154');
-        assert.equal(features[4].properties.m49, '150');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'IM');
+        assert.equal(features[1]?.properties.wikidata, 'Q185086');
+        assert.equal(features[2]?.properties.iso1A2, 'GB');
+        assert.equal(features[3]?.properties.m49, '154');
+        assert.equal(features[4]?.properties.m49, '150');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes GB', () => {
         const features = coder.featuresContaining('GB');
         assert.equal(features.length, 3);
-        assert.equal(features[0].properties.iso1A2, 'GB');
-        assert.equal(features[1].properties.iso1A2, 'UN');
-        assert.equal(features[2].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'GB');
+        assert.equal(features[1]?.properties.iso1A2, 'UN');
+        assert.equal(features[2]?.properties.m49, '001');
       });
 
       it('codes FX', () => {
         const features = coder.featuresContaining('FX');
         assert.equal(features.length, 7);
-        assert.equal(features[0].properties.iso1A2, 'FX');
-        assert.equal(features[1].properties.iso1A2, 'FR');
-        assert.equal(features[2].properties.m49, '155');
-        assert.equal(features[3].properties.m49, '150');
-        assert.equal(features[4].properties.iso1A2, 'EU');
-        assert.equal(features[5].properties.iso1A2, 'UN');
-        assert.equal(features[6].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'FX');
+        assert.equal(features[1]?.properties.iso1A2, 'FR');
+        assert.equal(features[2]?.properties.m49, '155');
+        assert.equal(features[3]?.properties.m49, '150');
+        assert.equal(features[4]?.properties.iso1A2, 'EU');
+        assert.equal(features[5]?.properties.iso1A2, 'UN');
+        assert.equal(features[6]?.properties.m49, '001');
       });
 
       it('codes TA', () => {
         const features = coder.featuresContaining('TA');
         assert.equal(features.length, 9);
-        assert.equal(features[0].properties.iso1A2, 'TA');
-        assert.equal(features[1].properties.iso1A2, 'SH');
-        assert.equal(features[2].properties.wikidata, 'Q46395');
-        assert.equal(features[3].properties.iso1A2, 'GB');
-        assert.equal(features[4].properties.m49, '011');
-        assert.equal(features[5].properties.m49, '202');
-        assert.equal(features[6].properties.m49, '002');
-        assert.equal(features[7].properties.iso1A2, 'UN');
-        assert.equal(features[8].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'TA');
+        assert.equal(features[1]?.properties.iso1A2, 'SH');
+        assert.equal(features[2]?.properties.wikidata, 'Q46395');
+        assert.equal(features[3]?.properties.iso1A2, 'GB');
+        assert.equal(features[4]?.properties.m49, '011');
+        assert.equal(features[5]?.properties.m49, '202');
+        assert.equal(features[6]?.properties.m49, '002');
+        assert.equal(features[7]?.properties.iso1A2, 'UN');
+        assert.equal(features[8]?.properties.m49, '001');
       });
 
       it('codes XK', () => {
         const features = coder.featuresContaining('XK');
         assert.equal(features.length, 4);
-        assert.equal(features[0].properties.iso1A2, 'XK');
-        assert.equal(features[1].properties.m49, '039');
-        assert.equal(features[2].properties.m49, '150');
-        assert.equal(features[3].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'XK');
+        assert.equal(features[1]?.properties.m49, '039');
+        assert.equal(features[2]?.properties.m49, '150');
+        assert.equal(features[3]?.properties.m49, '001');
       });
 
       it('codes UZ', () => {
         const features = coder.featuresContaining('UZ');
         assert.equal(features.length, 5);
-        assert.equal(features[0].properties.iso1A2, 'UZ');
-        assert.equal(features[1].properties.m49, '143');
-        assert.equal(features[2].properties.m49, '142');
-        assert.equal(features[3].properties.iso1A2, 'UN');
-        assert.equal(features[4].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'UZ');
+        assert.equal(features[1]?.properties.m49, '143');
+        assert.equal(features[2]?.properties.m49, '142');
+        assert.equal(features[3]?.properties.iso1A2, 'UN');
+        assert.equal(features[4]?.properties.m49, '001');
       });
 
       it('codes AQ', () => {
         const features = coder.featuresContaining('AQ');
         assert.equal(features.length, 2);
-        assert.equal(features[0].properties.iso1A2, 'AQ');
-        assert.equal(features[1].properties.m49, '001');
+        assert.equal(features[0]?.properties.iso1A2, 'AQ');
+        assert.equal(features[1]?.properties.m49, '001');
       });
     });
   });
@@ -1396,74 +1394,74 @@ describe('country-coder', () => {
     it('codes CN', () => {
       const features = coder.featuresIn('CN');
       assert.equal(features.length, 4);
-      assert.equal(features[0].properties.iso1A2, 'CN');
-      assert.equal(features[1].properties.wikidata, 'Q19188');
-      assert.equal(features[2].properties.iso1A2, 'HK');
-      assert.equal(features[3].properties.iso1A2, 'MO');
+      assert.equal(features[0]?.properties.iso1A2, 'CN');
+      assert.equal(features[1]?.properties.wikidata, 'Q19188');
+      assert.equal(features[2]?.properties.iso1A2, 'HK');
+      assert.equal(features[3]?.properties.iso1A2, 'MO');
     });
 
     it('codes CN, strict', () => {
       const features = coder.featuresIn('CN', true);
       assert.equal(features.length, 3);
-      assert.equal(features[0].properties.wikidata, 'Q19188');
-      assert.equal(features[1].properties.iso1A2, 'HK');
-      assert.equal(features[2].properties.iso1A2, 'MO');
+      assert.equal(features[0]?.properties.wikidata, 'Q19188');
+      assert.equal(features[1]?.properties.iso1A2, 'HK');
+      assert.equal(features[2]?.properties.iso1A2, 'MO');
     });
 
     it('codes 830', () => {
       const features = coder.featuresIn(830);
       assert.equal(features.length, 6);
-      assert.equal(features[0].properties.m49, '830');
-      assert.equal(features[1].properties.wikidata, 'Q179313');
-      assert.equal(features[2].properties.wikidata, 'Q3311985');
-      assert.equal(features[3].properties.m49, '680');
-      assert.equal(features[4].properties.iso1A2, 'GG');
-      assert.equal(features[5].properties.iso1A2, 'JE');
+      assert.equal(features[0]?.properties.m49, '830');
+      assert.equal(features[1]?.properties.wikidata, 'Q179313');
+      assert.equal(features[2]?.properties.wikidata, 'Q3311985');
+      assert.equal(features[3]?.properties.m49, '680');
+      assert.equal(features[4]?.properties.iso1A2, 'GG');
+      assert.equal(features[5]?.properties.iso1A2, 'JE');
     });
 
     it('codes 830, strict', () => {
       const features = coder.featuresIn(830, true);
       assert.equal(features.length, 5);
-      assert.equal(features[0].properties.wikidata, 'Q179313');
-      assert.equal(features[1].properties.wikidata, 'Q3311985');
-      assert.equal(features[2].properties.m49, '680');
-      assert.equal(features[3].properties.iso1A2, 'GG');
-      assert.equal(features[4].properties.iso1A2, 'JE');
+      assert.equal(features[0]?.properties.wikidata, 'Q179313');
+      assert.equal(features[1]?.properties.wikidata, 'Q3311985');
+      assert.equal(features[2]?.properties.m49, '680');
+      assert.equal(features[3]?.properties.iso1A2, 'GG');
+      assert.equal(features[4]?.properties.iso1A2, 'JE');
     });
 
     it('codes "Crown Dependencies", strict', () => {
       const features = coder.featuresIn('Crown Dependencies', true);
       assert.equal(features.length, 6);
-      assert.equal(features[0].properties.wikidata, 'Q179313');
-      assert.equal(features[1].properties.wikidata, 'Q3311985');
-      assert.equal(features[2].properties.m49, '680');
-      assert.equal(features[3].properties.iso1A2, 'GG');
-      assert.equal(features[4].properties.iso1A2, 'IM');
-      assert.equal(features[5].properties.iso1A2, 'JE');
+      assert.equal(features[0]?.properties.wikidata, 'Q179313');
+      assert.equal(features[1]?.properties.wikidata, 'Q3311985');
+      assert.equal(features[2]?.properties.m49, '680');
+      assert.equal(features[3]?.properties.iso1A2, 'GG');
+      assert.equal(features[4]?.properties.iso1A2, 'IM');
+      assert.equal(features[5]?.properties.iso1A2, 'JE');
     });
 
     it('codes "SBA", strict', () => {
       const features = coder.featuresIn('SBA', true);
       assert.equal(features.length, 2);
-      assert.equal(features[0].properties.wikidata, 'Q9143535');
-      assert.equal(features[1].properties.wikidata, 'Q9206745');
+      assert.equal(features[0]?.properties.wikidata, 'Q9143535');
+      assert.equal(features[1]?.properties.wikidata, 'Q9206745');
     });
 
     it('codes 🇸🇭 (Saint Helena)', () => {
       const features = coder.featuresIn('🇸🇭');
       assert.equal(features.length, 4);
-      assert.equal(features[0].properties.iso1A2, 'SH');
-      assert.equal(features[1].properties.wikidata, 'Q34497');
-      assert.equal(features[2].properties.iso1A2, 'AC');
-      assert.equal(features[3].properties.iso1A2, 'TA');
+      assert.equal(features[0]?.properties.iso1A2, 'SH');
+      assert.equal(features[1]?.properties.wikidata, 'Q34497');
+      assert.equal(features[2]?.properties.iso1A2, 'AC');
+      assert.equal(features[3]?.properties.iso1A2, 'TA');
     });
 
     it('codes 🇸🇭 (Saint Helena), strict', () => {
       const features = coder.featuresIn('🇸🇭', true);
       assert.equal(features.length, 3);
-      assert.equal(features[0].properties.wikidata, 'Q34497');
-      assert.equal(features[1].properties.iso1A2, 'AC');
-      assert.equal(features[2].properties.iso1A2, 'TA');
+      assert.equal(features[0]?.properties.wikidata, 'Q34497');
+      assert.equal(features[1]?.properties.iso1A2, 'AC');
+      assert.equal(features[2]?.properties.iso1A2, 'TA');
     });
 
     it('codes UN', () => {
@@ -1477,7 +1475,7 @@ describe('country-coder', () => {
     it('codes AQ', () => {
       const features = coder.featuresIn('AQ');
       assert.equal(features.length, 1);
-      assert.equal(features[0].properties.iso1A2, 'AQ');
+      assert.equal(features[0]?.properties.iso1A2, 'AQ');
     });
 
     it('codes AQ, strict', () => {
