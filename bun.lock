@@ -10,7 +10,7 @@
       },
       "devDependencies": {
         "@arethetypeswrong/cli": "^0.18.5",
-        "@mapbox/geojson-rewind": "^0.5.2",
+        "@mapbox/geojson-rewind": "^0.6.0",
         "@types/bun": "^1.4.4",
         "@types/which-polygon": "^2.2.5",
         "oxlint": "^1.93.0",
@@ -32,7 +32,7 @@
 
     "@loaderkit/resolve": ["@loaderkit/resolve@1.0.6", "", { "dependencies": { "@braidai/lang": "^1.0.0" } }, "sha512-G8FdIoF5CypfwmD9rl8BXod5HDn8JqB0CCNBXDTaRZ+yRYhARrrSToX1zg1zy9jX3zLqigsELwhT4gNtkdQAUg=="],
 
-    "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.5.2", "", { "dependencies": { "get-stream": "^6.0.1", "minimist": "^1.2.6" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA=="],
+    "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.6.0", "", { "dependencies": { "get-stream": "^6.0.1", "minimist": "^1.2.7" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-Czl20jh8AqLKKVZ4nQ5B6sJV3P6NntOhz2MfAjVeNB1oKcAip6EygjD6u8KE+JtwlShU5JO8AE0PjLetKOR+kg=="],
 
     "@oxlint/binding-android-arm-eabi": ["@oxlint/binding-android-arm-eabi@1.93.0", "", { "os": "android", "cpu": "arm" }, "sha512-KKw70pbD5Pvq3G2lJ+WQ71XPMjCmg37rkSe2+mDqCRP3PoTSdDMuEi4UOnE8JBtyNM7bek61EC2s0Jt7S7u+Sg=="],
 

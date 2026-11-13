@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@mapbox/geojson-rewind": "^0.5.2",
+    "@mapbox/geojson-rewind": "^0.6.0",
     "@types/bun": "^1.4.4",
     "@types/which-polygon": "^2.2.5",
     "oxlint": "^1.93.0",
