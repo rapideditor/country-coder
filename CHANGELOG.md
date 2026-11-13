@@ -16,6 +16,32 @@ _Breaking changes, which may affect downstream projects, are marked with a_ ⚠�
 [#xxx]: https://github.com/rapideditor/country-coder/issues/xxx
 -->
 
+# 6.0.0
+##### 2026-Nov-13
+* ⚠️ country-coder is published as an ES module only ([#180])
+  * The CommonJS build (`dist/country-coder.cjs`) is removed. `require()` loads the ES module instead, which needs Node 20.19+ or 22.12+
+  * The browser bundle (`dist/country-coder.iife.js`) is unchanged
+* ⚠️ TypeScript improvements ([#179])
+  * All public types are exported: `RegionFeature`, `RegionFeatureProperties`, `RegionFeatureCollection`, `CodingOptions`, `Location`, `Vec2`, `Bbox`, `PointGeometry`, `PointFeature`
+  * New `Level` type for the `level` and `maxLevel` options, so typos are caught at compile time
+  * The `withProp` option takes a property name of `RegionFeatureProperties` instead of any string
+  * `PointGeometry` and `PointFeature` are the GeoJSON `Point` and `Feature<Point>` types, so GeoJSON values can be passed as locations
+  * `aggregateFeature()` is typed as returning a `Feature<MultiPolygon>`
+  * TypeScript projects need TypeScript 5.0 or later
+* `@types/geojson` is a dependency now, so the GeoJSON types resolve for TypeScript users ([#180])
+* Fix invalid codes like `de-by` resolving to a real feature (Belarus) ([#152],[#173])
+* Fix coding functions like `iso1A2Code()` modifying the options passed to them, which also leaked those options into later calls ([#181])
+* Recommend string identifiers over numeric ones in the docs ([#170])
+* Development: switch to oxlint and TypeScript 7, check the package with publint and arethetypeswrong ([#179],[#180])
+
+[#152]: https://github.com/rapideditor/country-coder/issues/152
+[#170]: https://github.com/rapideditor/country-coder/issues/170
+[#173]: https://github.com/rapideditor/country-coder/issues/173
+[#179]: https://github.com/rapideditor/country-coder/issues/179
+[#180]: https://github.com/rapideditor/country-coder/issues/180
+[#181]: https://github.com/rapideditor/country-coder/issues/181
+
+
 # 5.6.1
 ##### 2026-Jan-31
 * Fix TypeScript for node resolution packages ([#163],[#164])
