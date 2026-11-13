@@ -44,7 +44,7 @@ function roundCoordinatePrecision(feature) {
     for (const k in polygon) {
       const part = polygon[k];
       for (const l in part) {
-        let point = part[l];
+        const point = part[l];
         part[l] = point.map((coord) => Math.round(coord * 100000) / 100000);
       }
     }
@@ -104,7 +104,7 @@ function validateFeature(feature) {
 }
 
 for (const i in features) {
-  let feature = features[i];
+  const feature = features[i];
 
   processProperties(feature); // sort properties and strip unrecognized ones
   roundCoordinatePrecision(feature); // remove any unncessary precision

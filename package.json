@@ -33,15 +33,12 @@
     "which-polygon": "^2.2.1"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@mapbox/geojson-rewind": "^0.5.2",
     "@types/bun": "^1.3.11",
     "@types/geojson": "^7946.0.16",
     "@types/which-polygon": "^2.2.5",
-    "eslint": "^9.39.4",
-    "globals": "^17.4.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.1"
+    "oxlint": "^1.93.0",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "all": "bun run --sequential clean check build test",
@@ -49,7 +46,7 @@
     "build:js": "bun ./scripts/build_js.ts",
     "build:ts": "tsc",
     "check": "bun run --parallel 'check:*'",
-    "check:lint": "eslint ./scripts ./src ./test",
+    "check:lint": "oxlint ./scripts ./src ./test",
     "check:ts": "tsc --noEmit",
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
