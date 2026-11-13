@@ -14,12 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
 
-    // Emit
-    "emitDeclarationOnly": true,
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "dist",
-    "sourceMap": true,
+    // Emit (type-check only; tsconfig.build.json emits the published declarations)
+    "noEmit": true,
 
     // Interop
     "esModuleInterop": true,
@@ -41,11 +37,12 @@
     "noPropertyAccessFromIndexSignature": false
   },
   "include": [
-    "src/country-coder.ts"
+    "src/**/*",
+    "scripts/**/*",
+    "test/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "scripts"
+    "dist"
   ]
 }

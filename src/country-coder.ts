@@ -1,4 +1,4 @@
-import type { Feature, FeatureCollection, Geometry, Position } from 'geojson';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Point, Position } from 'geojson';
 import whichPolygon from 'which-polygon';
 import rawBorders from './data/borders.json';
 
@@ -95,16 +95,8 @@ type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperti
 type Vec2 = [number, number]; // [lon, lat]
 type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 
-interface PointGeometry {
-  type: string;
-  coordinates: Vec2
-};
-
-interface PointFeature {
-  type: string;
-  geometry: PointGeometry;
-  properties: any
-};
+type PointGeometry = Point;
+type PointFeature = Feature<Point>;
 type Location = Vec2 | PointGeometry | PointFeature;
 
 interface CodingOptions {
@@ -497,9 +489,9 @@ function locArray(loc: Location): Vec2 {
   if (Array.isArray(loc)) {
     return loc as Vec2;
   } else if ((loc as PointGeometry).coordinates) {
-    return (loc as PointGeometry).coordinates;
+    return (loc as PointGeometry).coordinates as Vec2;
   } else {
-    return (loc as PointFeature).geometry.coordinates;
+    return (loc as PointFeature).geometry.coordinates as Vec2;
   }
 }
 
@@ -760,7 +752,7 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
 
 // Returns a new feature with the properties of the feature matching `id`
 // and the combined geometry of all its component features
-export function aggregateFeature(id: string | number): RegionFeature | null {
+export function aggregateFeature(id: string | number): Feature<MultiPolygon, RegionFeatureProperties> | null {
   const features = featuresIn(id, false);
   if (features.length === 0) return null;
 
