@@ -163,6 +163,7 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [PointFeature](#PointFeature): a GeoJSON feature object with a Point geometry type
 * [Location](#Location): Vec2 | PointGeometry | PointFeature
 * [CodingOptions](#CodingOptions)
+* [Level](#Level): the geographic classification of a feature
 * [RegionFeature](#RegionFeature)
 * [RegionFeatureProperties](#RegionFeatureProperties)
 * [RegionFeatureCollection](#RegionFeatureCollection)
@@ -747,8 +748,13 @@ A geographic location in one of the supported formats.
 
 An object containing options used for geocoding.
 
-- `level`: `string`, for overlapping features, the preferred geographic classification of the one to code. If no feature exists at the specified level, the feature at the next-highest level is coded, if any. For possible values, see the `level` property of [RegionFeatureProperties](#RegionFeatureProperties).
-- `maxLevel`: `string`, the highest-level that a returned feature may have. Must be greater than or equal to `level`.
+- `level`: [`Level`](#Level), for overlapping features, the preferred geographic classification of the one to code. If no feature exists at the specified level, the feature at the next-highest level is coded, if any.
+- `maxLevel`: [`Level`](#Level), the highest-level that a returned feature may have. Must be greater than or equal to `level`.
+
+
+<a name="Level" href="#Level">#</a> <b>Level</b>
+
+The rough geographic classification of a feature, one of these strings (from most to least granular): `subterritory`, `territory`, `subcountryGroup`, `country`, `sharedLandform`, `intermediateRegion`, `subregion`, `region`, `subunion`, `union`, `unitedNations`, `world`. See the `level` property of [RegionFeatureProperties](#RegionFeatureProperties) for examples of each.
 
 
 <a name="RegionFeature" href="#RegionFeature">#</a> <b>RegionFeature</b>
@@ -773,7 +779,7 @@ An object containing the attributes of a RegionFeature object.
 - `country`: `string`, for features entirely within a country, the id for that country
 - `groups`: `[string]`, the ids other features this feature is entirely within
 - `members`: `[string]`, the ids of other features this feature entirely contains, the inverse of `groups`
-- `level`: `string`, the rough geographic classification of this feature
+- `level`: [`Level`](#Level), the rough geographic classification of this feature
     - `world`
     - `unitedNations`: United Nations
     - `union`: European Union
