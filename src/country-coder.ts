@@ -410,11 +410,12 @@ function countryFeature(loc: Location): RegionFeature | null {
   return (countryCode && _featuresByCode[countryCode]) || null;
 }
 
-const defaultOpts = {
+// Shared by every call that doesn't pass options, so it must never be modified
+const defaultOpts: Readonly<CodingOptions> = Object.freeze({
   level: undefined,
   maxLevel: undefined,
   withProp: undefined
-};
+});
 
 // Returns the feature containing `loc` for the `opts`, if any
 function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null {
@@ -497,48 +498,42 @@ export function feature(query: Location | string | number, opts: CodingOptions =
 
 // Returns the ISO 3166-1 alpha-2 code for the feature matching the arguments, if any
 export function iso1A2Code(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'iso1A2';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'iso1A2' });
   if (!match) return null;
   return match.properties.iso1A2 || null;
 }
 
 // Returns the ISO 3166-1 alpha-3 code for the feature matching the arguments, if any
 export function iso1A3Code(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'iso1A3';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'iso1A3' });
   if (!match) return null;
   return match.properties.iso1A3 || null;
 }
 
 // Returns the ISO 3166-1 numeric-3 code for the feature matching the arguments, if any
 export function iso1N3Code(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'iso1N3';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'iso1N3' });
   if (!match) return null;
   return match.properties.iso1N3 || null;
 }
 
 // Returns the UN M49 code for the feature matching the arguments, if any
 export function m49Code(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'm49';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'm49' });
   if (!match) return null;
   return match.properties.m49 || null;
 }
 
 // Returns the Wikidata QID code for the feature matching the arguments, if any
 export function wikidataQID(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'wikidata';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'wikidata' });
   if (!match) return null;
   return match.properties.wikidata;
 }
 
 // Returns the emoji emojiFlag sequence for the feature matching the arguments, if any
 export function emojiFlag(query: Location | string | number, opts: CodingOptions = defaultOpts): string | null {
-  opts.withProp = 'emojiFlag';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'emojiFlag' });
   if (!match) return null;
   return match.properties.emojiFlag || null;
 }
@@ -548,8 +543,7 @@ export function ccTLD(
   query: Location | string | number,
   opts: CodingOptions = defaultOpts
 ): string | null {
-  opts.withProp = 'ccTLD';
-  const match = feature(query, opts);
+  const match = feature(query, { ...opts, withProp: 'ccTLD' });
   if (!match) return null;
   return match.properties.ccTLD || null;
 }

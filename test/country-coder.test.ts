@@ -449,6 +449,33 @@ describe('country-coder', () => {
     });
   });
 
+  describe('coding options', () => {
+    const codingFunctions = [
+      coder.iso1A2Code,
+      coder.iso1A3Code,
+      coder.iso1N3Code,
+      coder.m49Code,
+      coder.wikidataQID,
+      coder.emojiFlag,
+      coder.ccTLD
+    ];
+
+    it('does not modify the options passed in', () => {
+      for (const codingFunction of codingFunctions) {
+        const opts: coder.CodingOptions = { level: 'territory' };
+        codingFunction([-4.5, 54.2], opts);
+        assert.deepEqual(opts, { level: 'territory' });
+      }
+    });
+
+    it('does not carry options over to later calls', () => {
+      // Kosovo has no ISO 3166-1 numeric-3 code
+      assert.equal(coder.feature([21, 42.6])?.properties.nameEn, 'Kosovo');
+      coder.iso1N3Code('Q145');
+      assert.equal(coder.feature([21, 42.6])?.properties.nameEn, 'Kosovo');
+    });
+  });
+
   describe('iso1A2Code', () => {
     describe('by ISO 3166-1 alpha-2', () => {
       it('finds by ISO 3166-1 alpha-2 code: US', () => {
