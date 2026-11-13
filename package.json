@@ -23,25 +23,28 @@
   "source": "./src/country-coder.ts",
   "types": "./dist/country-coder.d.ts",
   "exports": {
-    "bun": "./src/country-coder.ts",
     "types": "./dist/country-coder.d.ts",
+    "bun": "./src/country-coder.ts",
     "import": "./dist/country-coder.mjs",
-    "require": "./dist/country-coder.cjs",
-    "browser": "./dist/country-coder.iife.js"
+    "require": "./dist/country-coder.mjs",
+    "browser": "./dist/country-coder.iife.js",
+    "default": "./dist/country-coder.mjs"
   },
   "dependencies": {
+    "@types/geojson": "^7946.0.16",
     "which-polygon": "^2.2.1"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@mapbox/geojson-rewind": "^0.5.2",
     "@types/bun": "^1.4.4",
-    "@types/geojson": "^7946.0.16",
     "@types/which-polygon": "^2.2.5",
     "oxlint": "^1.93.0",
+    "publint": "^0.3.25",
     "typescript": "^7.0.2"
   },
   "scripts": {
-    "all": "bun run --sequential clean check build test",
+    "all": "bun run --sequential clean check build test package",
     "build": "bun run --sequential format 'build:*'",
     "build:js": "bun ./scripts/build_js.ts",
     "build:ts": "tsc -p tsconfig.build.json",
@@ -50,6 +53,10 @@
     "check:ts": "tsc",
     "clean": "bun ./scripts/clean.ts",
     "format": "bun ./scripts/format-json.js",
+    "package": "bun run --sequential package:pack package:publint package:attw",
+    "package:pack": "bun pm pack --quiet --ignore-scripts --destination ./build",
+    "package:publint": "publint --level warning ./build/*.tgz",
+    "package:attw": "attw --profile esm-only --no-summary ./build/*.tgz",
     "postpublish": "bun ./scripts/postpublish.ts",
     "start": "bun ./scripts/server.ts",
     "test": "bun test --dots --coverage ./test"

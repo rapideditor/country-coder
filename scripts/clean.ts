@@ -18,6 +18,7 @@ for (const f of files) {
 
 // Remove these specific folders
 const folders = [
+  './build',
   './coverage',
   './dist'
 ];

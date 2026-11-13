@@ -13,16 +13,6 @@ await Promise.all([
     entrypoints: ['./src/country-coder.ts'],
     outdir: './dist',
     target: 'node',
-    format: 'cjs',
-    sourcemap: 'linked',
-    external: ['which-polygon'],
-    naming: 'country-coder.c[ext]'  // .cjs
-  }),
-
-  Bun.build({
-    entrypoints: ['./src/country-coder.ts'],
-    outdir: './dist',
-    target: 'node',
     format: 'esm',
     sourcemap: 'linked',
     external: ['which-polygon'],
