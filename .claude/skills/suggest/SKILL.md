@@ -1,5 +1,6 @@
 ---
-description: Review the codebase and suggest improvements
+name: suggest
+description: Review the codebase and suggest improvements, without making edits. Use when asked for a review, an audit, or ideas for what to improve.
 argument-hint: additional optional context
 ---
 
@@ -39,8 +40,7 @@ Skip categories where things look fine. Don't invent problems.
 
 ## How to respond
 
-Group findings by category. Number each suggestion sequentially across all categories (1, 2, 3…) so the user can refer to them by number.
-For each finding:
+Group findings by category. Number each suggestion sequentially across all categories (1, 2, 3…) so the user can refer to them by number. For each finding:
 - 🔥 Actionable issue (bug, broken) — should be fixed soon
 - 👉 Improvement (best practice, clarity) — worth doing
 - 💡 Suggestion (optional, bigger change) — idea to track for future work

@@ -3,12 +3,14 @@
     // Language and Environment
     "target": "ES2022",
     "lib": ["ESNext"],
+    "types": ["bun"],
 
     // Modules
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
 
@@ -25,11 +27,13 @@
 
     // Type Checking
     "strict": true,
+    "noImplicitReturns": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": false,
     "noImplicitOverride": true,
+    "erasableSyntaxOnly": true,
 
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,

@@ -14,7 +14,7 @@ bun run all
 
 Pick a version, see https://semver.org/ - for example: 'A.B.C' or 'A.B.C-pre.D'
 
-Optionally, use the `/release` prompt in Copilot Chat — it will:
+Optionally, use the `/release` skill in your agent (Claude Code, Copilot Chat, etc.) — it will:
 - Validate the version number
 - Identify commits since the last release and look up PR numbers
 - Update `CHANGELOG.md` with a new entry

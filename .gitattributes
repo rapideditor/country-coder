@@ -4,7 +4,12 @@
 
 *.css linguist-detectable
 *.json linguist-detectable
+*.jsonc linguist-detectable
+*.json5 linguist-detectable
 *.md linguist-documentation
+*.svg linguist-detectable
+*.yaml linguist-detectable
+*.yml linguist-detectable
 
 docs/** linguist-documentation
 dist/** linguist-generated
