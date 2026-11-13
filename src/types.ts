@@ -115,7 +115,7 @@ export type Location = Vec2 | PointGeometry | PointFeature;
 export interface CodingOptions {
   // For overlapping features, the division level of the one to get. If no feature
   // exists at the given level, the feature at the next higher level is returned.
-  // See the `level` property of `RegionFeatureProperties` for possible values.
+  // See `Level` for possible values.
   level?: Level | undefined;
   // Only a feature at the specified level or lower will be returned.
   maxLevel?: Level | undefined;

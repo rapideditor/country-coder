@@ -142,12 +142,12 @@ This package is kept intentionally minimal. However, if you find a bug or have a
 * [emojiFlags](#emojiFlags)(query: Location | Bbox): [string]
 * [ccTLD](#ccTLD)(query: Location | string | number, opts?: CodingOptions): string?
 * [ccTLDs](#ccTLDs)(query: Location | Bbox): [string]
-* [featuresContaining](#featuresContaining)(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
-* [featuresIn](#featuresIn)(id: string | number, strict: boolean): [RegionFeature]
-* [aggregateFeature](#aggregateFeature)(id: string | number): [RegionFeature]
-* [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean
-* [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean
-* [isInUnitedNations](#isInUnitedNations)(query: Location | string | number): boolean
+* [featuresContaining](#featuresContaining)(query: Location | Bbox | string | number, strict?: boolean): [RegionFeature]
+* [featuresIn](#featuresIn)(id: string | number, strict?: boolean): [RegionFeature]
+* [aggregateFeature](#aggregateFeature)(id: string | number): RegionFeature?
+* [isIn](#isIn)(query: Location | string | number, bounds: string | number): boolean?
+* [isInEuropeanUnion](#isInEuropeanUnion)(query: Location | string | number): boolean?
+* [isInUnitedNations](#isInUnitedNations)(query: Location | string | number): boolean?
 * [driveSide](#driveSide)(query: Location | string | number): string?
 * [roadSpeedUnit](#roadSpeedUnit)(query: Location | string | number): string?
 * [roadHeightUnit](#roadHeightUnit)(query: Location | string | number): string?
@@ -460,7 +460,7 @@ ccTLDs(pointGeoJSON.geometry);  // returns ['.im', '.uk']
 ```
 
 
-<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | Bbox | string | number, strict: boolean): [RegionFeature]
+<a name="featuresContaining" href="#featuresContaining">#</a> <b>featuresContaining</b>(query: Location | Bbox | string | number, strict?: boolean): [RegionFeature]
 
 Returns all the the features of any type that contain or match the given location, bounding box, or identifier, if any. If `strict` is `true` and `query` is an identifier, then only features that are strictly containing are returned.
 
@@ -486,7 +486,7 @@ featuresContaining(pointGeoJSON.geometry);   // returns [{Antarctica}]
 ```
 
 
-<a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number, strict: boolean): [RegionFeature]
+<a name="featuresIn" href="#featuresIn">#</a> <b>featuresIn</b>(id: string | number, strict?: boolean): [RegionFeature]
 
 Returns all the the features that match or are contained within the given identifier, if any. If `strict` is `true` then only features that are strictly contained are returned.
 
@@ -502,7 +502,7 @@ featuresIn('CN', true);    // returns [{Mainland China}, {Hong Kong}, {Macau}]
 ```
 
 
-<a name="aggregateFeature" href="#aggregateFeature">#</a> <b>aggregateFeature</b>(id: string | number): [RegionFeature]
+<a name="aggregateFeature" href="#aggregateFeature">#</a> <b>aggregateFeature</b>(id: string | number): RegionFeature?
 
 Returns a new feature with the `properties` of the feature matching `id` and the combined `geometry` of it and all its component features. This step is not necessary when only accessing a feature's properties.
 
@@ -517,7 +517,7 @@ aggregateFeature('China');       // returns Mainland China, Hong Kong, and Macau
 ```
 
 
-<a name="isIn" href="#isIn">#</a> <b>isIn</b>(query: Location | string | number, bounds: string | number): boolean
+<a name="isIn" href="#isIn">#</a> <b>isIn</b>(query: Location | string | number, bounds: string | number): boolean?
 
 Returns `true` if the feature matching `query` is, or is within, the feature matching `bounds`.
 
@@ -543,7 +543,7 @@ isIn(pointGeoJSON.geometry, 'GB');  // returns true
 ```
 
 
-<a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(query: Location | string | number): boolean
+<a name="isInEuropeanUnion" href="#isInEuropeanUnion">#</a> <b>isInEuropeanUnion</b>(query: Location | string | number): boolean?
 
 Returns `true` if the feature with the given location or identifier is found to be part of the European Union. This is a convenience method for `isIn(query, 'EU')`.
 
@@ -573,7 +573,7 @@ isInEuropeanUnion(pointGeoJSON.geometry);  // returns true (Germany)
 ```
 
 
-<a name="isInUnitedNations" href="#isInUnitedNations">#</a> <b>isInUnitedNations</b>(query: Location | string | number): boolean
+<a name="isInUnitedNations" href="#isInUnitedNations">#</a> <b>isInUnitedNations</b>(query: Location | string | number): boolean?
 
 Returns `true` if the feature with the given location or identifier is found to be part of a member state of the United Nations. This is a convenience method for `isIn(query, 'UN')`.
 
@@ -714,6 +714,12 @@ The base GeoJSON feature collection used for feature lookup. While this property
 
 ## Types
 
+In TypeScript, all of these types can be imported from the package:
+
+```ts
+import type { Level, Location, RegionFeature } from '@rapideditor/country-coder';
+```
+
 <a name="Vec2" href="#Vec2">#</a> <b>Vec2</b>
 
 An array of two numbers as `[longitude, latitude]` referenced to the WGS 84 datum.
@@ -750,6 +756,7 @@ An object containing options used for geocoding.
 
 - `level`: [`Level`](#Level), for overlapping features, the preferred geographic classification of the one to code. If no feature exists at the specified level, the feature at the next-highest level is coded, if any.
 - `maxLevel`: [`Level`](#Level), the highest-level that a returned feature may have. Must be greater than or equal to `level`.
+- `withProp`: a property name of [RegionFeatureProperties](#RegionFeatureProperties), only return a feature that has a value for this property. The code methods like `iso1A2Code` set this themselves.
 
 
 <a name="Level" href="#Level">#</a> <b>Level</b>

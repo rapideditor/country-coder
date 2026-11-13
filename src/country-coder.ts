@@ -94,7 +94,7 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
     }
   }
 
-  // must load `members` only after fully loading `featuresByID`
+  // must load `members` only after fully loading `_featuresByCode`
   for (const feature of borders.features) {
     // ensure all groups are listed by their ID
     feature.properties.groups = feature.properties.groups.map(groupID => {
