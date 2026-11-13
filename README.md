@@ -58,15 +58,15 @@ Client-side coding has a number of benefits over server-side solutions:
 
 `npm install @rapideditor/country-coder`
 
-**country-coder** is distributed in CJS and ESM module formats for maxmimum compatibility. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
+**country-coder** is distributed as an ES module. ([Read more about Javascript module formats](https://dev.to/iggredible/what-the-heck-are-cjs-amd-umd-and-esm-ikm))
 
 
 ```js
-const countryCoder = require('@rapideditor/country-coder');           // CommonJS import all
-const iso1A2Code = require('@rapideditor/country-coder').iso1A2Code;  // CommonJS import named
-// or
 import * as countryCoder from '@rapideditor/country-coder';           // ESM import all
 import { iso1A2Code } from '@rapideditor/country-coder';              // ESM import named
+// or, in Node 20.19+ or 22.12+
+const countryCoder = require('@rapideditor/country-coder');           // CommonJS require all
+const iso1A2Code = require('@rapideditor/country-coder').iso1A2Code;  // CommonJS require named
 ```
 
 
