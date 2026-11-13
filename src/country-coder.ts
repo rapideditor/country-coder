@@ -98,6 +98,7 @@ type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat
 type PointGeometry = Point;
 type PointFeature = Feature<Point>;
 type Location = Vec2 | PointGeometry | PointFeature;
+type IdentifierProp = 'iso1A2' | 'iso1A3' | 'iso1N3' | 'm49' | 'wikidata' | 'emojiFlag' | 'ccTLD' | 'nameEn';
 
 interface CodingOptions {
   // For overlapping features, the division level of the one to get. If no feature
@@ -107,11 +108,12 @@ interface CodingOptions {
   // Only a feature at the specified level or lower will be returned.
   maxLevel?: string | undefined;
   // Only a feature with the specified property will be returned.
-  withProp?: string | undefined;
+  withProp?: keyof RegionFeatureProperties | undefined;
 };
 
 // The base GeoJSON feature collection
-export const borders: RegionFeatureCollection = rawBorders as RegionFeatureCollection;
+// (cast through `unknown` because `id`, `emojiFlag`, `members` etc. are filled in at load time)
+export const borders: RegionFeatureCollection = rawBorders as unknown as RegionFeatureCollection;
 
 // The whichPolygon interface for looking up a feature by point
 let _whichPolygon: any = {};
@@ -156,8 +158,8 @@ const levels = [
 loadDerivedDataAndCaches(borders);
 
 // Loads implicit feature data and the getter index caches
-function loadDerivedDataAndCaches(borders) {
-  const identifierProps = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
+function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
+  const identifierProps: Array<IdentifierProp> = ['iso1A2', 'iso1A3', 'm49', 'wikidata', 'emojiFlag', 'ccTLD', 'nameEn'];
   const geometryFeatures: Array<RegionFeature> = [];
 
   for (const feature of borders.features) {
@@ -287,7 +289,7 @@ function loadDerivedDataAndCaches(borders) {
 
     props.members.forEach((memberID, index) => {
       const member = _featuresByCode[memberID];
-      const memberGroups = member.properties.groups.filter((groupID) => {
+      const memberGroups = member.properties.groups.filter((groupID: string) => {
         return (
           groupID !== feature.properties.id &&
           featureLevelIndex < levels.indexOf(_featuresByCode[groupID].properties.level)
@@ -416,7 +418,7 @@ function loadDerivedDataAndCaches(borders) {
     }
 
     // Support a few regional flags - #157
-    const regionStrings = {
+    const regionStrings: Record<string, string> = {
       Q21: 'gbeng',  // GB-ENG (England)
       Q22: 'gbsct',  // GB-SCT (Scotland)
       Q25: 'gbwls'   // GB-WLS (Wales)
@@ -579,8 +581,8 @@ function featureForID(id: string | number): RegionFeature | null {
   return _featuresByCode[stringID] || null;
 }
 
-function smallestFeaturesForBbox(bbox: Bbox): [RegionFeature] {
-  return _whichPolygon.bbox(bbox).map(props => _featuresByCode[props.id]);
+function smallestFeaturesForBbox(bbox: Bbox): Array<RegionFeature> {
+  return _whichPolygon.bbox(bbox).map((props: RegionFeatureProperties) => _featuresByCode[props.id]);
 }
 
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
@@ -657,9 +659,9 @@ export function ccTLD(
   return match.properties.ccTLD || null;
 }
 
-function propertiesForQuery(query: Location | Bbox, property: string): Array<string> {
+function propertiesForQuery(query: Location | Bbox, property: IdentifierProp): Array<string> {
   const features = featuresContaining(query, false);
-  return features.map(feature => feature.properties[property]).filter(Boolean);
+  return features.map(feature => feature.properties[property]).filter((value): value is string => Boolean(value));
 }
 
 // Returns all the ISO 3166-1 alpha-2 codes of features at the location
@@ -754,7 +756,8 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
 // and the combined geometry of all its component features
 export function aggregateFeature(id: string | number): Feature<MultiPolygon, RegionFeatureProperties> | null {
   const features = featuresIn(id, false);
-  if (features.length === 0) return null;
+  const firstFeature = features[0];
+  if (!firstFeature) return null;
 
   let aggregateCoordinates: Position[][][] = [];
   for (const feature of features) {
@@ -765,7 +768,7 @@ export function aggregateFeature(id: string | number): Feature<MultiPolygon, Reg
 
   return {
     type: 'Feature',
-    properties: features[0].properties,
+    properties: firstFeature.properties,
     geometry: {
       type: 'MultiPolygon',
       coordinates: aggregateCoordinates
