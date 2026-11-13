@@ -9,7 +9,7 @@
       },
       "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@mapbox/geojson-rewind": "^0.5.2",
+        "@mapbox/geojson-rewind": "^0.6.0",
         "@types/bun": "^1.3.11",
         "@types/geojson": "^7946.0.16",
         "@types/which-polygon": "^2.2.5",
@@ -47,7 +47,7 @@
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
 
-    "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.5.2", "", { "dependencies": { "get-stream": "^6.0.1", "minimist": "^1.2.6" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA=="],
+    "@mapbox/geojson-rewind": ["@mapbox/geojson-rewind@0.6.0", "", { "dependencies": { "get-stream": "^6.0.1", "minimist": "^1.2.7" }, "bin": { "geojson-rewind": "geojson-rewind" } }, "sha512-Czl20jh8AqLKKVZ4nQ5B6sJV3P6NntOhz2MfAjVeNB1oKcAip6EygjD6u8KE+JtwlShU5JO8AE0PjLetKOR+kg=="],
 
     "@types/bun": ["@types/bun@1.3.11", "", { "dependencies": { "bun-types": "1.3.11" } }, "sha512-5vPne5QvtpjGpsGYXiFyycfpDF2ECyPcTSsFBMa0fraoxiQyMJ3SmuQIGhzPg2WJuWxVBoxWJ2kClYTcw/4fAg=="],
 
