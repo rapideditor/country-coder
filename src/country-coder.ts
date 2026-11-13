@@ -2,7 +2,7 @@ import type { Feature, FeatureCollection, Geometry, MultiPolygon, Point, Positio
 import whichPolygon from 'which-polygon';
 import rawBorders from './data/borders.json';
 
-interface RegionFeatureProperties {
+export interface RegionFeatureProperties {
   // Unique identifier specific to country-coder
   id: string;
 
@@ -90,17 +90,17 @@ interface RegionFeatureProperties {
   callingCodes: Array<string> | undefined;
 };
 
-type RegionFeature = Feature<Geometry, RegionFeatureProperties>;
-type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperties>;
-type Vec2 = [number, number]; // [lon, lat]
-type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
+export type RegionFeature = Feature<Geometry, RegionFeatureProperties>;
+export type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperties>;
+export type Vec2 = [number, number]; // [lon, lat]
+export type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 
-type PointGeometry = Point;
-type PointFeature = Feature<Point>;
-type Location = Vec2 | PointGeometry | PointFeature;
+export type PointGeometry = Point;
+export type PointFeature = Feature<Point>;
+export type Location = Vec2 | PointGeometry | PointFeature;
 type IdentifierProp = 'iso1A2' | 'iso1A3' | 'iso1N3' | 'm49' | 'wikidata' | 'emojiFlag' | 'ccTLD' | 'nameEn';
 
-interface CodingOptions {
+export interface CodingOptions {
   // For overlapping features, the division level of the one to get. If no feature
   // exists at the given level, the feature at the next higher level is returned.
   // See the `level` property of `RegionFeatureProperties` for possible values.
@@ -116,10 +116,16 @@ interface CodingOptions {
 export const borders: RegionFeatureCollection = rawBorders as unknown as RegionFeatureCollection;
 
 // The whichPolygon interface for looking up a feature by point
-let _whichPolygon: any = {};
+let _whichPolygon: whichPolygon.Query<RegionFeatureProperties>;
 // The cache for looking up a feature by identifier
-const _featuresByCode: any = {};
+const _featuresByCode: Record<string, RegionFeature> = {};
 const _featuresByName: Record<string, RegionFeature> = {};
+
+// Returns the feature for an ID that comes from the data itself (a group, a member,
+// or a whichPolygon result), so it's always in the cache once loading is done
+function knownFeature(id: string): RegionFeature {
+  return _featuresByCode[id]!;
+}
 
 // discard special characters from identifiers and short words from names
 const idFilterRegex = /[-_ .,'()&[\]/]/g;
@@ -185,7 +191,7 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
   for (const feature of borders.features) {
     // ensure all groups are listed by their ID
     feature.properties.groups = feature.properties.groups.map(groupID => {
-      return _featuresByCode[groupID].properties.id;
+      return knownFeature(groupID).properties.id;
     });
     loadMembersForGroupsOf(feature);
   }
@@ -203,20 +209,20 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
     // order groups by their `level`
     feature.properties.groups.sort((groupID1, groupID2) => {
       return (
-        levels.indexOf(_featuresByCode[groupID1].properties.level) -
-        levels.indexOf(_featuresByCode[groupID2].properties.level)
+        levels.indexOf(knownFeature(groupID1).properties.level) -
+        levels.indexOf(knownFeature(groupID2).properties.level)
       );
     });
     // order members by their `level` and then by order in borders
     if (feature.properties.members) {
       feature.properties.members.sort((id1, id2) => {
         const diff =
-          levels.indexOf(_featuresByCode[id1].properties.level) -
-          levels.indexOf(_featuresByCode[id2].properties.level);
+          levels.indexOf(knownFeature(id1).properties.level) -
+          levels.indexOf(knownFeature(id2).properties.level);
         if (diff === 0) {
           return (
-            borders.features.indexOf(_featuresByCode[id1]) -
-            borders.features.indexOf(_featuresByCode[id2])
+            borders.features.indexOf(knownFeature(id1)) -
+            borders.features.indexOf(knownFeature(id2))
           );
         }
         return diff;
@@ -288,11 +294,11 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
     let sharedGroups: Array<string> = [];
 
     props.members.forEach((memberID, index) => {
-      const member = _featuresByCode[memberID];
-      const memberGroups = member.properties.groups.filter((groupID: string) => {
+      const member = knownFeature(memberID);
+      const memberGroups = member.properties.groups.filter((groupID) => {
         return (
           groupID !== feature.properties.id &&
-          featureLevelIndex < levels.indexOf(_featuresByCode[groupID].properties.level)
+          featureLevelIndex < levels.indexOf(knownFeature(groupID).properties.level)
         );
       });
       if (index === 0) {
@@ -307,9 +313,9 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
     );
 
     for (const groupID of sharedGroups) {
-      const groupFeature = _featuresByCode[groupID];
-      if (groupFeature.properties.members.indexOf(props.id) === -1) {
-        groupFeature.properties.members.push(props.id);
+      const groupMembers = (knownFeature(groupID).properties.members ??= []);
+      if (groupMembers.indexOf(props.id) === -1) {
+        groupMembers.push(props.id);
       }
     }
   }
@@ -323,15 +329,9 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
       const vals = Array.from(
         new Set(
           props.members
-            .map(id => {
-              const member = _featuresByCode[id];
-              if (member.geometry) {
-                return member.properties.roadSpeedUnit || 'km/h';
-              } else {
-                return null;
-              }
-            })
-            .filter(Boolean)
+            .map(knownFeature)
+            .filter(member => member.geometry)
+            .map(member => member.properties.roadSpeedUnit || 'km/h')
         )
       );
       // if all members have the same value then that's also the value for this feature
@@ -348,15 +348,9 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
       const vals = Array.from(
         new Set(
           props.members
-            .map(id => {
-              const member = _featuresByCode[id];
-              if (member.geometry) {
-                return member.properties.roadHeightUnit || 'm';
-              } else {
-                return null;
-              }
-            })
-            .filter(Boolean)
+            .map(knownFeature)
+            .filter(member => member.geometry)
+            .map(member => member.properties.roadHeightUnit || 'm')
         )
       );
       // if all members have the same value then that's also the value for this feature
@@ -373,15 +367,9 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
       const vals = Array.from(
         new Set(
           props.members
-            .map(id => {
-              const member = _featuresByCode[id];
-              if (member.geometry) {
-                return member.properties.driveSide || 'right';
-              } else {
-                return null;
-              }
-            })
-            .filter(Boolean)
+            .map(knownFeature)
+            .filter(member => member.geometry)
+            .map(member => member.properties.driveSide || 'right')
         )
       );
       // if all members have the same value then that's also the value for this feature
@@ -394,8 +382,8 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
     if (!feature.geometry && props.members) {
       props.callingCodes = Array.from(
         new Set(
-          props.members.reduce((array, id) => {
-            const member = _featuresByCode[id];
+          props.members.reduce<Array<string>>((array, id) => {
+            const member = knownFeature(id);
             if (member.geometry && member.properties.callingCodes) {
               return array.concat(member.properties.callingCodes);
             }
@@ -454,7 +442,7 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
   // Populate `members` as the inverse relationship of `groups`
   function loadMembersForGroupsOf(feature: RegionFeature) {
     for (const groupID of feature.properties.groups) {
-      const groupFeature = _featuresByCode[groupID];
+      const groupFeature = knownFeature(groupID);
 
       if (!groupFeature.properties.members) {
         groupFeature.properties.members = [];
@@ -500,9 +488,9 @@ function locArray(loc: Location): Vec2 {
 // Returns the smallest feature of any kind containing `loc`, if any
 function smallestFeature(loc: Location): RegionFeature | null {
   const query = locArray(loc);
-  const featureProperties: RegionFeatureProperties = _whichPolygon(query);
+  const featureProperties = _whichPolygon(query);
   if (!featureProperties) return null;
-  return _featuresByCode[featureProperties.id];
+  return knownFeature(featureProperties.id);
 }
 
 // Returns the country feature containing `loc`, if any
@@ -512,7 +500,7 @@ function countryFeature(loc: Location): RegionFeature | null {
 
   // a feature without `country` but with geometry is itself a country
   const countryCode = feature.properties.country || feature.properties.iso1A2;
-  return _featuresByCode[countryCode as string] || null;
+  return (countryCode && _featuresByCode[countryCode]) || null;
 }
 
 const defaultOpts = {
@@ -582,7 +570,7 @@ function featureForID(id: string | number): RegionFeature | null {
 }
 
 function smallestFeaturesForBbox(bbox: Bbox): Array<RegionFeature> {
-  return _whichPolygon.bbox(bbox).map((props: RegionFeatureProperties) => _featuresByCode[props.id]);
+  return _whichPolygon.bbox(bbox).map(props => knownFeature(props.id));
 }
 
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
@@ -723,7 +711,7 @@ export function featuresContaining(query: Location | Bbox | string | number, str
   for (const feature of matchingFeatures) {
     const properties = feature.properties;
     for (const groupID of properties.groups) {
-      const groupFeature = _featuresByCode[groupID];
+      const groupFeature = knownFeature(groupID);
       if (returnFeatures.indexOf(groupFeature) === -1) {
         returnFeatures.push(groupFeature);
       }
@@ -746,7 +734,7 @@ export function featuresIn(id: string | number, strict?: boolean): Array<RegionF
 
   const properties = feature.properties;
   for (const memberID of (properties.members || [])) {
-    features.push(_featuresByCode[memberID]);
+    features.push(knownFeature(memberID));
   }
 
   return features;
