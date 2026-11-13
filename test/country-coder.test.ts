@@ -430,7 +430,9 @@ describe('country-coder', () => {
       });
 
       it('returns null for invalid level options', () => {
+        // @ts-expect-error testing invalid input
         assert.equal(coder.feature([-12.3, -37.1], { level: 'planet' }), null);
+        // @ts-expect-error testing invalid input
         assert.equal(coder.feature([-12.3, -37.1], { maxLevel: 'mars' }), null);
         assert.equal(coder.feature([-12.3, -37.1], { maxLevel: 'subterritory' }), null);
         assert.equal(coder.feature([-12.3, -37.1], { level: 'country', maxLevel: 'subterritory' }), null);
