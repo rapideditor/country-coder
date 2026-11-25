@@ -433,7 +433,7 @@ function featureForLoc(loc: Location, opts: CodingOptions): RegionFeature | null
   if (targetLevel === 'country') {
     // attempt fast path for country-level coding
     const fastFeature = countryFeature(loc);
-    if (fastFeature) {
+    if (fastFeature && fastFeature.properties.level === targetLevel) {
       if (!withProp || fastFeature.properties[withProp]) {
         return fastFeature;
       }
