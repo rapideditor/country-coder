@@ -478,7 +478,7 @@ function featureForID(id: string | number): RegionFeature | null {
 }
 
 function smallestFeaturesForBbox(bbox: Bbox): Array<RegionFeature> {
-  return _whichPolygon.bbox(bbox).map(props => knownFeature(props.id));
+  return Array.from(new Set(_whichPolygon.bbox(bbox).map(props => knownFeature(props.id))));
 }
 
 function smallestOrMatchingFeature(query: Location | string | number): RegionFeature | null {
