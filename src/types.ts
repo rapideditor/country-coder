@@ -23,7 +23,7 @@ export interface RegionFeatureProperties {
   emojiFlag: string | undefined;
 
   // The ccTLD (country code top-level domain)
-  ccTLD: string | undefined;
+  ccTLD: string | null | undefined;
 
   // The common English name
   nameEn: string;
@@ -103,8 +103,8 @@ export type Level =
   | 'unitedNations'
   | 'world';
 
-export type RegionFeature = Feature<Geometry, RegionFeatureProperties>;
-export type RegionFeatureCollection = FeatureCollection<Geometry, RegionFeatureProperties>;
+export type RegionFeature = Feature<Geometry | null, RegionFeatureProperties>;
+export type RegionFeatureCollection = FeatureCollection<Geometry | null, RegionFeatureProperties>;
 export type Vec2 = [number, number]; // [lon, lat]
 export type Bbox = [number, number, number, number]; // [minLon, minLat, maxLon, maxLat]
 
