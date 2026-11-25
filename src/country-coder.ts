@@ -1,4 +1,4 @@
-import type { Feature, MultiPolygon, Position } from 'geojson';
+import type { Feature, FeatureCollection, Geometry, MultiPolygon, Position } from 'geojson';
 import whichPolygon from 'which-polygon';
 import rawBorders from './data/borders.json';
 import type {
@@ -138,9 +138,9 @@ function loadDerivedDataAndCaches(borders: RegionFeatureCollection) {
   }
 
   // whichPolygon doesn't support null geometry even though GeoJSON does
-  const geometryOnlyCollection: RegionFeatureCollection = {
+  const geometryOnlyCollection: FeatureCollection<Geometry, RegionFeatureProperties> = {
     type: 'FeatureCollection',
-    features: geometryFeatures
+    features: geometryFeatures as Array<Feature<Geometry, RegionFeatureProperties>>
   };
   _whichPolygon = whichPolygon(geometryOnlyCollection);
 
